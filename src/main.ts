@@ -10,7 +10,7 @@ import './tokens.css';
 import './emotes.css';
 import './styles.css';
 
-import { completeNote, createNote, deleteNote, moveNote, restoreNote, rollover } from './actions';
+import { completeNote, createNote, deleteNote, moveNote, restoreNote, rollover, setInProgress } from './actions';
 import { play, type SoundName } from './audio';
 import { lookFor } from './avatar';
 import { BoardView, type NewMode } from './board';
@@ -257,6 +257,11 @@ const gestures = new Gestures(app, board, topbar, {
   openWrite: (id) => sheet.open(id, 'write'),
   newNoteAt: (zone) => newNote(zone, 'write'),
   complete,
+  start: (id) => {
+    setInProgress(id, true);
+    sound('pop');
+    toast('In progress — hold it again to complete', { label: 'Undo', run: undo }, 2800);
+  },
   move,
   undo,
   sheetOpen: () => sheet.isOpen || lockerOpen() || trackOpen() || loginOpen() || sheetOpen(),

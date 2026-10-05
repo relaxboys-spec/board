@@ -19,7 +19,7 @@ notes, and **Nova**, a hero who celebrates every finished note.
 | Tap the 🎤 or 📷 on a + New Task tile | Finger | New note straight into **Speak** (keyboard up) or **Photo** (picker open) |
 | Touch a note | Pencil | Opens it for writing |
 | Tap a note | Finger | Opens it: note info, actions, **Start · In progress** / **Pause**, **Complete** |
-| Hold a note still | Finger | It lifts, a yellow bar fills, and it's **complete** |
+| Hold a note still | Finger | It lifts and a bar fills: a to-do task **starts** (cyan bar, In progress); hold an in-progress one again to **complete** it (yellow bar) |
 | Hold a note, then move (or swipe it sideways) | Finger | Drag it: to the other column, the other board's tab, the Backlog, or the Vault / hero (= complete) |
 | Swipe up and down in a column | Finger | Scroll |
 | Tap with two fingers | Fingers | Undo (also the ↶ button) |

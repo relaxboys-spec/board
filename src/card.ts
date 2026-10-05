@@ -69,7 +69,7 @@ export class Card {
     const what = hasText(note) ? note.text!.trim().slice(0, 80) : note.imageIds?.length ? 'photo note' : 'handwritten note';
     this.el.setAttribute(
       'aria-label',
-      `${what}. ${pr.label} priority, ${pr.xp} XP${note.status === 'done' ? ', complete' : inProgress ? ', in progress' : ''}. Tap to open, hold to complete.`,
+      `${what}. ${pr.label} priority, ${pr.xp} XP${note.status === 'done' ? ', complete' : inProgress ? ', in progress' : ''}. Tap to open${note.status === 'done' ? '' : inProgress ? ', hold to complete' : ', hold to start'}.`,
     );
 
     const headKey = [kind, note.priority, note.due, note.dueDate, note.reminder?.due, note.status, note.startedAt, this.ageDays(note), weekEndKey()].join('|');

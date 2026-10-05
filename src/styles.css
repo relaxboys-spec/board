@@ -578,6 +578,10 @@ button:disabled {
   box-shadow: 0 0 12px rgba(255, 225, 77, 0.8);
   animation: qbHold 0.54s linear forwards;
 }
+.qb-card.holding.to-start::after {
+  background: var(--qb-cyan);
+  box-shadow: 0 0 12px rgba(59, 224, 255, 0.8);
+}
 @keyframes qbHold {
   to {
     width: calc(100% - 8px);

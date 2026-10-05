@@ -11,7 +11,8 @@ import { prefersReducedMotion } from './util';
  *   Pencil on a card ............ open it for writing
  *   Pencil on empty column space  new note there, open for writing
  *   Finger tap on a card ......... open it (note info)
- *   Finger hold (still) .......... card lifts; keep holding → the ring fills → complete
+ *   Finger hold (still) .......... card lifts; keep holding → the bar fills → a to-do task
+ *                                  starts (In progress); an in-progress one completes
  *   Finger hold, then move ....... drag: to another column, the other board's tab,
  *                                  the Backlog, or the Vault / hero (= complete)
  *   Finger swipe sideways ........ drag straight away
@@ -24,6 +25,7 @@ export interface GestureHost {
   openWrite(id: string): void;
   newNoteAt(zone: ZoneId): void;
   complete(id: string, from: DOMRect | null): void;
+  start(id: string): void;
   move(id: string, dest: { board?: BoardId; zone?: ZoneId; index?: number }): void;
   undo(): void;
   sheetOpen(): boolean;
@@ -207,7 +209,7 @@ export class Gestures {
     this.twoTap = null;
   };
 
-  // ---- hold → lift → complete ---------------------------------------------------------------
+  // ---- hold → lift → start / complete ---------------------------------------------------------------
 
   private lift(p: Press) {
     if (this.press !== p) return;
@@ -217,12 +219,16 @@ export class Gestures {
     if (prefersReducedMotion()) p.card.classList.add('rm');
     const note = store.get(p.id);
     if (note?.status === 'active') {
+      // Two steps: hold a to-do task to start it, hold an in-progress one to complete it.
+      const starting = !note.startedAt;
       p.card.classList.add('holding');
+      if (starting) p.card.classList.add('to-start');
       p.doneTimer = window.setTimeout(() => {
         if (this.press !== p) return;
         const rect = p.card.getBoundingClientRect();
         this.cancelPress();
-        this.host.complete(p.id, rect);
+        if (starting) this.host.start(p.id);
+        else this.host.complete(p.id, rect);
       }, COMPLETE_MS - LIFT_MS);
     }
   }
@@ -232,7 +238,7 @@ export class Gestures {
     if (!p) return;
     clearTimeout(p.liftTimer);
     clearTimeout(p.doneTimer);
-    p.card.classList.remove('lifted', 'holding', 'rm');
+    p.card.classList.remove('lifted', 'holding', 'to-start', 'rm');
     this.press = null;
     if (!this.drag) setScrollLock(false);
   }
@@ -243,13 +249,13 @@ export class Gestures {
     const rect = p.card.getBoundingClientRect();
     clearTimeout(p.liftTimer);
     clearTimeout(p.doneTimer);
-    p.card.classList.remove('holding', 'lifted', 'rm');
+    p.card.classList.remove('holding', 'to-start', 'lifted', 'rm');
     this.press = null;
     setScrollLock(true);
     const card = this.board.card(p.id);
     const ghost = card ? card.ghost() : (p.card.cloneNode(true) as HTMLElement);
     ghost.classList.add('qb-ghost');
-    ghost.classList.remove('holding', 'lifted');
+    ghost.classList.remove('holding', 'to-start', 'lifted');
     ghost.style.width = rect.width + 'px';
     ghost.style.height = rect.height + 'px';
     document.body.append(ghost);
