@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hero Avatar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 200px; height: 300px; position: relative">
+  <svg width="200" height="300" viewBox="0 0 200 300" role="img" aria-label="{{label}}">
+    <defs>
+      <linearGradient id="{{uid}}Skin" x1="0" y1="0" x2="1" y2="0.2"><stop offset="0" stop-color="{{skinL}}"></stop><stop offset="0.5" stop-color="{{skin}}"></stop><stop offset="1" stop-color="{{skinD}}"></stop></linearGradient>
+      <linearGradient id="{{uid}}Hair" x1="0" y1="0" x2="0.5" y2="1"><stop offset="0" stop-color="{{hairL}}"></stop><stop offset="0.55" stop-color="{{hair}}"></stop><stop offset="1" stop-color="{{hairD}}"></stop></linearGradient>
+      <linearGradient id="{{uid}}Top" x1="0" y1="0" x2="1" y2="0.25"><stop offset="0" stop-color="{{topL}}"></stop><stop offset="0.5" stop-color="{{topC}}"></stop><stop offset="1" stop-color="{{topD}}"></stop></linearGradient>
+      <linearGradient id="{{uid}}Outer" x1="0" y1="0" x2="1" y2="0.35"><stop offset="0" stop-color="{{outL}}"></stop><stop offset="0.45" stop-color="{{outC}}"></stop><stop offset="1" stop-color="{{outD}}"></stop></linearGradient>
+      <linearGradient id="{{uid}}Bot" x1="0" y1="0" x2="1" y2="0.1"><stop offset="0" stop-color="{{botL}}"></stop><stop offset="0.45" stop-color="{{botC}}"></stop><stop offset="1" stop-color="{{botD}}"></stop></linearGradient>
+      <linearGradient id="{{uid}}Sleeve" x1="0" y1="0" x2="1" y2="0.3"><stop offset="0" stop-color="{{slvL}}"></stop><stop offset="0.45" stop-color="{{slvC}}"></stop><stop offset="1" stop-color="{{slvD}}"></stop></linearGradient>
+      <linearGradient id="{{uid}}Shoe" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="{{shoeL}}"></stop><stop offset="1" stop-color="{{shoeD}}"></stop></linearGradient>
+      <linearGradient id="{{uid}}Gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9A8"></stop><stop offset="0.5" stop-color="#E2B13C"></stop><stop offset="1" stop-color="#A87A1C"></stop></linearGradient>
+      <pattern id="{{uid}}Twill" width="3" height="3" patternUnits="userSpaceOnUse"><path d="M0 3 L3 0" stroke="#FFFFFF" stroke-opacity="0.09" stroke-width="0.6"></path><path d="M0 0 L3 3" stroke="#000000" stroke-opacity="0.1" stroke-width="0.5"></path></pattern>
+      <pattern id="{{uid}}Butta" width="8" height="9" patternUnits="userSpaceOnUse"><path d="M4 2 L5.3 4.5 L4 7 L2.7 4.5 Z" fill="url(#{{uid}}Gold)"></path></pattern>
+      <pattern id="{{uid}}Seq" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="0.6" fill="#FFFFFF" opacity="0.9"></circle><circle cx="5.5" cy="5" r="0.55" fill="{{accent}}"></circle></pattern>
+      <filter id="{{uid}}B1" filterUnits="userSpaceOnUse" x="-20" y="-40" width="240" height="360"><feGaussianBlur stdDeviation="0.7"></feGaussianBlur></filter>
+      <filter id="{{uid}}B2" filterUnits="userSpaceOnUse" x="-20" y="-40" width="240" height="360"><feGaussianBlur stdDeviation="1.8"></feGaussianBlur></filter>
+      <filter id="{{uid}}Rim" filterUnits="userSpaceOnUse" x="-20" y="-40" width="240" height="360">
+        <feOffset in="SourceAlpha" dx="-2.4" dy="0.6" result="off"></feOffset>
+        <feComposite in="SourceAlpha" in2="off" operator="out" result="edge"></feComposite>
+        <feGaussianBlur in="edge" stdDeviation="0.6" result="edgeB"></feGaussianBlur>
+        <feFlood flood-color="#8EEBFF" flood-opacity="0.8" result="col"></feFlood>
+        <feComposite in="col" in2="edgeB" operator="in" result="rim"></feComposite>
+        <feComposite in="rim" in2="SourceAlpha" operator="in" result="rimIn"></feComposite>
+        <feMerge><feMergeNode in="SourceGraphic"></feMergeNode><feMergeNode in="rimIn"></feMergeNode></feMerge>
+      </filter>
+
+      <!-- footwear, placed under or over the bottoms -->
+      <g id="{{uid}}Shoes">
+        <sc-if value="{{sSneakers}}" hint-placeholder-val="{{true}}">
+          <path d="M87 266 L102 266 L103 282 L80 282 C77 282 76 279 78 277 C82 274 86 272 87 266 Z" fill="url(#{{uid}}Shoe)"></path>
+          <path d="M113 266 L127 266 C129 271 134 273 138 276 C140 278 139 281 136 281 L112 281 C111 276 112 270 113 266 Z" fill="url(#{{uid}}Shoe)"></path>
+          <path d="M77 281 L103.5 281 L103.5 285 L78 285 C76.5 285 76 283 77 281 Z M111.5 280 L137 280 C138.5 281 138 284 136.5 284 L112 284 Z" fill="{{sole}}"></path>
+          <path d="M83 277 L98 273 M117 274 L132 277.5" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round"></path>
+          <path d="M90 270 L99 269 M115 270 L124 270.5" stroke="{{shoeD}}" stroke-width="0.8" stroke-dasharray="1 1"></path>
+        </sc-if>
+        <sc-if value="{{sHigh}}" hint-placeholder-val="{{false}}">
+          <path d="M87 250 L102 250 L103 282 L80 282 C77 282 76 279 78 277 C82 274 86 270 87 250 Z" fill="url(#{{uid}}Shoe)"></path>
+          <path d="M113 250 L127 250 C128 266 133 272 138 276 C140 278 139 281 136 281 L112 281 C111 270 112 260 113 250 Z" fill="url(#{{uid}}Shoe)"></path>
+          <path d="M77 281 L103.5 281 L103.5 285 L78 285 C76.5 285 76 283 77 281 Z M111.5 280 L137 280 C138.5 281 138 284 136.5 284 L112 284 Z" fill="{{sole}}"></path>
+          <path d="M91 254 L99 256 M91 258 L99 260 M91 262 L99 264 M91 266 L99 268 M116 254 L124 256 M116 258 L124 260 M116 262 L124 264 M117 266 L125 268" stroke="{{sole}}" stroke-width="0.9"></path>
+          <circle cx="89" cy="262" r="2.6" fill="{{accent}}"></circle><circle cx="126" cy="262" r="2.6" fill="{{accent}}"></circle>
+        </sc-if>
+        <sc-if value="{{sBoots}}" hint-placeholder-val="{{false}}">
+          <path d="M87 246 L102 246 L102.5 280 L86 280 L85 285 L81 285 L81 280 C77 280 76 278 78 276 C82 273 86 266 87 246 Z" fill="url(#{{uid}}Shoe)"></path>
+          <path d="M113 246 L127 246 C128 264 133 271 137 274 C139 276 139 279 136 279 L118 279 L117 284 L113 284 C112 270 112 258 113 246 Z" fill="url(#{{uid}}Shoe)"></path>
+          <path d="M87.5 250 L101.5 250 M113.5 250 L126.5 250" stroke="{{shoeD}}" stroke-width="1.4"></path>
+          <path d="M100 252 L100 276 M125 252 L126 272" stroke="{{shoeL}}" stroke-width="0.6" stroke-dasharray="1.2 1"></path>
+        </sc-if>
+        <sc-if value="{{sHeels}}" hint-placeholder-val="{{false}}">
+          <path d="M84 272 C88 270 96 270 101.5 272 L102 281 L81 281 C79 281 78.5 278 81 277 Z" fill="url(#{{uid}}Shoe)"></path>
+          <path d="M100 280 L102.4 280 L102.2 287 L100.8 287 Z" fill="{{shoeD}}"></path>
+          <path d="M116 272 C120 271 126 271 128 272 C130 274 134 275 136 277 C137 279 136 280 134 280 L114 280 Z" fill="url(#{{uid}}Shoe)"></path>
+          <path d="M114.5 279 L116.6 279 L116 286 L114.8 286 Z" fill="{{shoeD}}"></path>
+        </sc-if>
+        <sc-if value="{{sLoafers}}" hint-placeholder-val="{{false}}">
+          <path d="M86 270 L102 270 L102.5 282 L80 282 C77 282 76 279 78 277 C81 275 84 273 86 270 Z" fill="url(#{{uid}}Shoe)"></path>
+          <path d="M113 270 L127 270 C129 273 134 275 137 277 C139 279 138 281 135 281 L112 281 C112 277 112.5 273 113 270 Z" fill="url(#{{uid}}Shoe)"></path>
+          <path d="M84 275 L96 273 M117 274 L130 276" stroke="{{shoeD}}" stroke-width="1.6"></path>
+          <path d="M78 282 L102.5 282 L102.5 284.5 L78 284.5 Z M112 281 L136 281 L136 283.5 L112 283.5 Z" fill="{{shoeD}}"></path>
+        </sc-if>
+        <sc-if value="{{sSandals}}" hint-placeholder-val="{{false}}">
+          <path d="M78 281 L103 281 L103 284 L78 284 Z M112 280 L137 280 L137 283 L112 283 Z" fill="{{shoeD}}"></path>
+          <path d="M82 278 L100 274 M86 273 L100 270 M116 273 L133 277 M118 270 L127 270" stroke="url(#{{uid}}Shoe)" stroke-width="2.2" stroke-linecap="round"></path>
+        </sc-if>
+        <sc-if value="{{sFlats}}" hint-placeholder-val="{{false}}">
+          <path d="M86 271 L102 271 L102.5 282 L79 282 C75 282 74 279 76 278 C80 276 84 274 86 271 Z" fill="url(#{{uid}}Shoe)"></path>
+          <path d="M113 271 L127 271 C129 274 134 276 139 277 C141 279 139 281 136 281 L112 281 C112 277 112.5 274 113 271 Z" fill="url(#{{uid}}Shoe)"></path>
+          <path d="M82 278 C86 276 90 275 94 275 M118 275 C122 275 127 276 132 278" stroke="url(#{{uid}}Gold)" stroke-width="1.2" stroke-dasharray="1 1"></path>
+          <circle cx="86" cy="277" r="1" fill="url(#{{uid}}Gold)"></circle><circle cx="128" cy="277" r="1" fill="url(#{{uid}}Gold)"></circle>
+        </sc-if>
+      </g>
+    </defs>
+
+    <ellipse class="av-shadow" cx="106" cy="286" rx="46" ry="7" fill="rgba(0,0,0,0.42)"></ellipse>
+
+    <g class="av-body">
+      <g filter="{{rimFilter}}">
+        <sc-if value="{{full}}" hint-placeholder-val="{{true}}">
+          <ellipse cx="91" cy="283" rx="14" ry="2.6" fill="#000000" opacity="0.55" filter="url(#{{uid}}B2)"></ellipse>
+          <ellipse cx="125" cy="282" rx="13" ry="2.4" fill="#000000" opacity="0.45" filter="url(#{{uid}}B2)"></ellipse>
+        </sc-if>
+
+        <!-- ============ LOWER BODY ============ -->
+        <path d="M78 146 C77 168 80 190 85 210 C87 230 88 250 89 268 L100 268 C100 250 100 230 100 210 C101 190 101 168 100 148 Z" fill="url(#{{uid}}Skin)"></path>
+        <path d="M101 150 C100 172 100 194 101 212 C105 232 111 250 114 268 L126 268 C125 250 120 230 117 212 C120 192 124 170 123 150 Z" fill="url(#{{uid}}Skin)"></path>
+        <path d="M84 206 C88 208 93 208 97 206 M104 208 C108 211 112 211 116 209" stroke="{{skinD}}" stroke-width="0.8" fill="none" opacity="0.6"></path>
+        <path d="M89 266 L100 266 L101 280 L82 280 C80 280 79 278 81 276 C84 273 87 271 89 266 Z" fill="url(#{{uid}}Skin)"></path>
+        <path d="M114 266 L126 266 C128 271 132 273 136 275 C138 277 137 279 135 279 L113 279 C112 275 113 270 114 266 Z" fill="url(#{{uid}}Skin)"></path>
+        <path d="M77 132 L123 138 L124 152 L76 147 Z" fill="url(#{{uid}}Skin)"></path>
+
+        <sc-if value="{{shoesUnder}}" hint-placeholder-val="{{false}}"><use href="#{{uid}}Shoes"></use></sc-if>
+
+        <!-- trousers: joggers / cargo / jeans -->
+        <sc-if value="{{bPants}}" hint-placeholder-val="{{true}}">
+          <path d="M76 144 C75 168 79 190 84 210 C86 230 87 250 88 268 L101 268 C101 250 101 230 101 210 C102 190 102 168 101 148 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M101 150 C100 172 99 194 100 212 C104 232 110 250 113 268 L127 268 C126 250 121 230 118 212 C121 192 126 170 125 150 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M77 130 L123 136 L126 153 L74 147 Z" fill="url(#{{uid}}Bot)"></path>
+          <sc-if value="{{botDenim}}" hint-placeholder-val="{{false}}">
+            <path d="M76 144 C75 168 79 190 84 210 C86 230 87 250 88 268 L101 268 C101 250 101 230 101 210 C102 190 102 168 101 148 Z M101 150 C100 172 99 194 100 212 C104 232 110 250 113 268 L127 268 C126 250 121 230 118 212 C121 192 126 170 125 150 Z M77 130 L123 136 L126 153 L74 147 Z" fill="url(#{{uid}}Twill)"></path>
+            <path d="M78 144 C82 150 88 152 92 150 M122 150 C118 155 112 157 108 155" stroke="{{botL}}" stroke-width="0.7" stroke-dasharray="1.2 1" fill="none"></path>
+          </sc-if>
+          <sc-if value="{{full}}" hint-placeholder-val="{{true}}">
+            <path d="M97 152 L103 152 L101.5 206 L99 206 Z" fill="#0A0A14" opacity="0.5" filter="url(#{{uid}}B2)"></path>
+            <path d="M80 160 C80 180 82 196 86 206" stroke="#FFFFFF" stroke-width="3" opacity="0.13" fill="none" filter="url(#{{uid}}B2)"></path>
+          </sc-if>
+          <path d="M85 205 C89 207.5 94 207.5 98.5 205.5 M86 212 C89.5 213.5 93.5 213.5 97 212 M101 206 C106 210 112 211 118 208 M102.5 215 C107 218 112 218 116.5 215.5" stroke="{{botD}}" stroke-width="1" fill="none"></path>
+          <path d="M78.5 158 C80 182 83 206 86.5 238 M123 160 C121 184 118.5 206 120 236" stroke="{{botL}}" stroke-width="0.6" stroke-dasharray="1.6 1.4" fill="none" opacity="0.7"></path>
+          <sc-if value="{{bJoggers}}" hint-placeholder-val="{{true}}">
+            <path d="M87 259 L101.5 259 L101.5 268 L88 268 Z M112 259 L126.5 259 L127.5 268 L113.5 268 Z" fill="{{botD}}"></path>
+          </sc-if>
+          <sc-if value="{{bCargo}}" hint-placeholder-val="{{false}}">
+            <path d="M76.5 176 L85 176 L86 196 L78.5 196 Z M118 178 L126 178 L124.5 198 L117 198 Z" fill="{{botD}}" opacity="0.85"></path>
+            <path d="M76.5 180 L85.2 180 M118 182 L126 182" stroke="{{botL}}" stroke-width="0.6"></path>
+            <path d="M87 259 L101.5 259 L101.5 268 L88 268 Z M112 259 L126.5 259 L127.5 268 L113.5 268 Z" fill="{{botD}}"></path>
+          </sc-if>
+          <sc-if value="{{bJeans}}" hint-placeholder-val="{{false}}">
+            <path d="M88 262 L101 262 M113 262 L127 262" stroke="{{botL}}" stroke-width="1.2"></path>
+          </sc-if>
+        </sc-if>
+
+        <sc-if value="{{bLeggings}}" hint-placeholder-val="{{false}}">
+          <path d="M78 146 C77 168 80 190 85 210 C87 230 88 250 89 268 L100 268 C100 250 100 230 100 210 C101 190 101 168 100 148 Z M101 150 C100 172 100 194 101 212 C105 232 111 250 114 268 L126 268 C125 250 120 230 117 212 C120 192 124 170 123 150 Z M77 132 L123 138 L124 152 L76 147 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M77 132 L123 138 L123.3 142 L76.8 136.5 Z" fill="{{botD}}"></path>
+          <path d="M80 158 C81 180 84 200 88 230" stroke="#FFFFFF" stroke-width="2.6" opacity="0.14" fill="none"></path>
+        </sc-if>
+
+        <sc-if value="{{bWide}}" hint-placeholder-val="{{false}}">
+          <path d="M75 144 C73 170 74 200 76 230 C77 250 77 262 77 279 L101 279 C101 260 101 240 101 212 C101 190 101 168 101 148 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M101 150 C101 172 101 194 102 214 C104 240 106 262 107 279 L133 279 C132 260 129 236 126 212 C126 190 126 170 125 150 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M77 130 L123 136 L126 153 L74 147 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M88 150 C88 190 89 230 89 278 M114 156 C115 196 118 236 120 278" stroke="{{botD}}" stroke-width="1" fill="none" opacity="0.8"></path>
+          <path d="M86 150 C86 190 87 230 87 278" stroke="{{botL}}" stroke-width="0.8" fill="none" opacity="0.5"></path>
+          <path d="M101 160 L101 279" stroke="#0A0A14" stroke-width="2" opacity="0.3"></path>
+        </sc-if>
+
+        <sc-if value="{{bShorts}}" hint-placeholder-val="{{false}}">
+          <path d="M76 132 L124 138 L126 176 C120 178 110 178 103 174 L101 162 L99 172 C92 176 82 176 75 174 Z" fill="url(#{{uid}}Bot)"></path>
+          <sc-if value="{{botDenim}}" hint-placeholder-val="{{false}}">
+            <path d="M76 132 L124 138 L126 176 C120 178 110 178 103 174 L101 162 L99 172 C92 176 82 176 75 174 Z" fill="url(#{{uid}}Twill)"></path>
+            <path d="M75.5 172 l1 3 l1.2 -2.6 l1 3 l1.2 -2.8 l1 3 l1.2 -2.6 l1 3 l1.2 -2.6 l1 3 l1.2 -2.6 l1 3 M104 172.5 l1 3 l1.2 -2.6 l1 3 l1.2 -2.8 l1 3 l1.2 -2.6 l1 3 l1.2 -2.6 l1 3 l1.2 -2.6 l1 3" stroke="{{botL}}" stroke-width="0.7" fill="none"></path>
+          </sc-if>
+          <path d="M79 146 C84 152 90 153 94 150 M121 152 C116 157 110 158 106 156" stroke="{{botD}}" stroke-width="0.8" fill="none"></path>
+          <path d="M101 145 L101 162" stroke="{{botD}}" stroke-width="0.9"></path>
+        </sc-if>
+
+        <sc-if value="{{bPleated}}" hint-placeholder-val="{{false}}">
+          <path d="M77 132 L123 138 L135 184 C112 190 88 190 66 182 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M82 136 L76 184 M88 137 L85 187 M94 137.5 L94 188 M100 138 L102 188.5 M106 139 L110 188 M112 139.5 L118 187 M118 140 L126 185" stroke="{{botD}}" stroke-width="0.9"></path>
+          <path d="M85 137 L80 185 M97 138 L98 188 M109 139 L114 188" stroke="{{botL}}" stroke-width="0.6" opacity="0.7"></path>
+        </sc-if>
+
+        <sc-if value="{{bMidi}}" hint-placeholder-val="{{false}}">
+          <path d="M77 132 L123 138 C128 170 134 205 138 236 C114 242 86 242 62 234 C66 205 72 170 77 132 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M86 150 C82 180 78 210 74 236 M100 152 C100 184 100 214 100 240 M112 152 C116 184 120 214 124 238" stroke="{{botD}}" stroke-width="1" fill="none" opacity="0.7"></path>
+          <path d="M92 152 C90 184 88 214 86 240" stroke="{{botL}}" stroke-width="1.2" fill="none" opacity="0.4"></path>
+        </sc-if>
+
+        <sc-if value="{{bPencil}}" hint-placeholder-val="{{false}}">
+          <path d="M77 132 L123 138 C125 160 124 185 121 212 C108 215 92 215 79 212 C76 185 75 160 77 132 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M100 196 L100 213" stroke="{{botD}}" stroke-width="0.9"></path>
+          <path d="M84 160 C86 176 87 192 87 208" stroke="#FFFFFF" stroke-width="2.4" opacity="0.13" fill="none"></path>
+        </sc-if>
+
+        <sc-if value="{{bAline}}" hint-placeholder-val="{{false}}">
+          <path d="M77 132 L123 138 C127 160 131 185 134 208 C112 214 88 214 66 206 C70 185 73 160 77 132 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M88 150 C84 170 80 190 77 210 M112 152 C116 172 120 192 123 212" stroke="{{botD}}" stroke-width="0.9" fill="none" opacity="0.8"></path>
+        </sc-if>
+
+        <!-- saree skirt (Nivi, Kanjivaram, Party drapes) -->
+        <sc-if value="{{skirtSaree}}" hint-placeholder-val="{{false}}">
+          <sc-if value="{{party}}" hint-placeholder-val="{{false}}">
+            <path d="M80 130 L120 135 C122 170 124 220 125 276 L79 276 C78 220 78 170 80 130 Z" fill="{{botD}}"></path>
+          </sc-if>
+          <g opacity="{{sheerSkirt}}">
+            <path d="M76 128 L124 134 C127 170 130 220 132 278 L72 278 C72 220 73 170 76 128 Z" fill="url(#{{uid}}Bot)"></path>
+            <sc-if value="{{kanji}}" hint-placeholder-val="{{false}}">
+              <path d="M76 128 L124 134 C127 170 130 220 132 278 L72 278 C72 220 73 170 76 128 Z" fill="url(#{{uid}}Butta)"></path>
+            </sc-if>
+            <sc-if value="{{party}}" hint-placeholder-val="{{false}}">
+              <path d="M76 128 L124 134 C127 170 130 220 132 278 L72 278 C72 220 73 170 76 128 Z" fill="url(#{{uid}}Seq)"></path>
+            </sc-if>
+            <path d="M98 144 L90 278 M100 144 L95 278 M102 144 L100 278 M104 144 L105 278 M106 144 L110 278" stroke="{{botD}}" stroke-width="0.9"></path>
+            <path d="M99 144 L92.5 278 M103 144 L102.5 278 M105 144 L107.5 278" stroke="{{botL}}" stroke-width="0.7" opacity="0.7"></path>
+          </g>
+          <sc-if value="{{kanji}}" hint-placeholder-val="{{false}}">
+            <path d="M72 250 L132 250 L132 278 L72 278 Z" fill="url(#{{uid}}Gold)"></path>
+            <path d="M72 257 L132 257 L132 263 L72 263 Z" fill="{{botD}}"></path>
+            <path d="M72 250 L75 244 L78 250 L81 244 L84 250 L87 244 L90 250 L93 244 L96 250 L99 244 L102 250 L105 244 L108 250 L111 244 L114 250 L117 244 L120 250 L123 244 L126 250 L129 244 L132 250 Z" fill="url(#{{uid}}Gold)"></path>
+            <path d="M74 260 L132 260" stroke="url(#{{uid}}Gold)" stroke-width="1.2" stroke-dasharray="1.2 2"></path>
+            <path d="M72 269 L132 269 M72 274 L132 274" stroke="#A87A1C" stroke-width="0.6" stroke-dasharray="1.5 1"></path>
+          </sc-if>
+          <sc-if value="{{party}}" hint-placeholder-val="{{false}}">
+            <path d="M72 272 L132 272 L132 278 L72 278 Z" fill="{{accent}}" opacity="0.95"></path>
+            <path d="M72 270 L132 270" stroke="#FFFFFF" stroke-width="1" stroke-dasharray="0.8 1.6" opacity="0.9"></path>
+          </sc-if>
+          <sc-if value="{{niviBorder}}" hint-placeholder-val="{{true}}">
+            <path d="M72 268 L132 268 L132 278 L72 278 Z" fill="{{accent}}"></path>
+            <path d="M72 270.5 L132 270.5 M72 275.5 L132 275.5" stroke="{{botD}}" stroke-width="0.6" stroke-dasharray="1.5 1"></path>
+          </sc-if>
+          <path d="M76 128 L124 134 L124 137 L76 131 Z" fill="{{botD}}"></path>
+        </sc-if>
+
+        <!-- Nauvari: nine-yard drape worn dhoti-style -->
+        <sc-if value="{{bNauvari}}" hint-placeholder-val="{{false}}">
+          <path d="M76 130 L101 136 L100 210 C99 226 98 238 97 249 L84 249 C82 236 80 220 78 200 C76 176 75 152 76 130 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M101 138 L125 140 C126 165 124 190 119 210 C118 226 119 238 121 249 L108 249 C106 238 103 224 101 210 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M78 150 C84 160 92 166 100 168 M79 176 C85 186 92 192 99 194 M81 204 C86 212 92 218 98 220 M124 152 C118 162 110 168 102 170 M122 180 C116 190 109 196 102 198 M119 210 C114 218 109 224 104 226" stroke="{{botD}}" stroke-width="1" fill="none"></path>
+          <path d="M80 160 C86 170 93 174 100 176 M123 162 C117 172 110 176 102 178" stroke="{{botL}}" stroke-width="0.8" fill="none" opacity="0.6"></path>
+          <path d="M84 243 L97.3 243 L97 249 L84 249 Z M108 243 L120.7 243 L121 249 L108 249 Z" fill="{{accent}}"></path>
+          <path d="M94 136 L106 138 L108 236 L96 238 Z" fill="url(#{{uid}}Bot)"></path>
+          <path d="M98 138 L99 237 M101 138 L102 237 M104 138 L105.5 236.5" stroke="{{botD}}" stroke-width="0.8"></path>
+          <path d="M95.6 231 L107.7 229 L108 236 L96 238 Z" fill="{{accent}}"></path>
+          <path d="M76 130 L124 136 L124 141 L76 135 Z" fill="url(#{{uid}}Gold)"></path>
+          <path d="M77 132.5 L123 138.5" stroke="#A87A1C" stroke-width="0.5" stroke-dasharray="1.2 1"></path>
+        </sc-if>
+
+        <sc-if value="{{belt}}" hint-placeholder-val="{{true}}">
+          <path d="M76 132 L124 138 L124 144 L76 138 Z" fill="{{beltC}}"></path>
+          <path d="M77 134.5 L123 140.5" stroke="{{beltL}}" stroke-width="0.5" stroke-dasharray="1.2 1"></path>
+          <rect x="96" y="133.2" width="8" height="8" rx="1" fill="url(#{{uid}}Gold)" transform="rotate(7 100 137)"></rect>
+          <rect x="97.6" y="134.8" width="4.8" height="4.8" rx="0.6" fill="{{beltC}}" transform="rotate(7 100 137)"></rect>
+        </sc-if>
+        <sc-if value="{{full}}" hint-placeholder-val="{{true}}">
+          <path d="M76 141 L124 147" stroke="#0A0A14" stroke-width="3" opacity="0.35" filter="url(#{{uid}}B2)"></path>
+        </sc-if>
+
+        <sc-if value="{{shoesOver}}" hint-placeholder-val="{{true}}"><use href="#{{uid}}Shoes"></use></sc-if>
+
+        <!-- ============ UPPER BODY ============ -->
+        <g transform="rotate(-3 100 138)">
+
+          <!-- hair that falls behind the body -->
+          <sc-if value="{{hBraid}}" hint-placeholder-val="{{true}}">
+            <g fill="url(#{{uid}}Hair)" stroke="{{hairD}}" stroke-width="0.8">
+              <ellipse cx="114" cy="30" rx="6" ry="8"></ellipse>
+              <ellipse cx="118" cy="44" rx="6" ry="8" transform="rotate(-12 118 44)"></ellipse>
+              <ellipse cx="121" cy="58" rx="5.6" ry="7.6" transform="rotate(8 121 58)"></ellipse>
+              <ellipse cx="122" cy="72" rx="5.2" ry="7.2" transform="rotate(-8 122 72)"></ellipse>
+              <ellipse cx="122" cy="85" rx="4.8" ry="6.8" transform="rotate(8 122 85)"></ellipse>
+              <ellipse cx="121" cy="97" rx="4.2" ry="6.2" transform="rotate(-8 121 97)"></ellipse>
+            </g>
+            <rect x="117" y="103" width="8" height="4" rx="2" fill="{{accent}}"></rect>
+            <path d="M118 107 C117 113 119 118 121 121 C123 118 125 113 124 107 Z" fill="url(#{{uid}}Hair)"></path>
+          </sc-if>
+          <sc-if value="{{hPony}}" hint-placeholder-val="{{false}}">
+            <path d="M108 12 C126 12 133 32 131 54 C129 74 133 90 127 106 C122 98 119 86 119 74 C117 56 115 36 106 20 Z" fill="url(#{{uid}}Hair)"></path>
+            <path d="M114 20 C122 34 124 52 123 70 M118 18 C127 32 128 52 126 76" stroke="{{hairL}}" stroke-width="0.8" fill="none" opacity="0.6"></path>
+          </sc-if>
+          <sc-if value="{{hLong}}" hint-placeholder-val="{{false}}">
+            <path d="M82 30 C76 52 74 82 77 112 C86 116 114 116 123 112 C126 82 124 52 118 30 Z" fill="url(#{{uid}}Hair)"></path>
+          </sc-if>
+          <sc-if value="{{hCurly}}" hint-placeholder-val="{{false}}">
+            <g fill="url(#{{uid}}Hair)">
+              <circle cx="78" cy="58" r="11"></circle><circle cx="76" cy="74" r="10"></circle><circle cx="84" cy="86" r="9"></circle>
+              <circle cx="122" cy="58" r="11"></circle><circle cx="124" cy="74" r="10"></circle><circle cx="116" cy="86" r="9"></circle>
+            </g>
+          </sc-if>
+
+          <!-- saree pallu, back drop -->
+          <sc-if value="{{palluBack}}" hint-placeholder-val="{{false}}">
+            <g opacity="{{sheerPallu}}">
+              <path d="M120 62 L136 70 C142 110 146 160 150 205 L132 208 C128 160 124 110 120 62 Z" fill="url(#{{uid}}Bot)"></path>
+              <sc-if value="{{kanji}}" hint-placeholder-val="{{false}}">
+                <path d="M120 62 L136 70 C142 110 146 160 150 205 L132 208 C128 160 124 110 120 62 Z" fill="url(#{{uid}}Butta)"></path>
+                <path d="M129 170 L148 167 L150 205 L132 208 Z" fill="url(#{{uid}}Gold)"></path>
+                <path d="M130 180 L148.6 177 M131 190 L149.3 187" stroke="{{botD}}" stroke-width="1.6"></path>
+              </sc-if>
+              <path d="M132 204 L150 201 L150.6 207 L132.4 210 Z" fill="{{palluEdge}}"></path>
+              <path d="M134 210 l0 4 M138 209.5 l0 4 M142 209 l0 4 M146 208.5 l0 4" stroke="{{palluEdge}}" stroke-width="1.2" stroke-linecap="round"></path>
+            </g>
+          </sc-if>
+
+          <sc-if value="{{aBackpack}}" hint-placeholder-val="{{false}}">
+            <path d="M64 80 C64 74 70 70 78 70 L122 70 C130 70 136 74 136 80 L134 130 L66 130 Z" fill="#2A3040"></path>
+            <path d="M92 70 C92 62 108 62 108 70" stroke="#2A3040" stroke-width="3" fill="none"></path>
+          </sc-if>
+
+          <!-- arm, viewer's left -->
+          <g class="av-arm av-arm-l">
+            <path d="M68 72 C63 76 61 88 62 104 L63 122 L73 122 L74 104 C75 92 74 80 72 73 Z" fill="url(#{{uid}}Skin)"></path>
+            <path d="M63 120 C62 134 63 148 64 156 L72 156 C73 148 74 134 73 120 Z" fill="url(#{{uid}}Skin)"></path>
+            <sc-if value="{{slvLong}}" hint-placeholder-val="{{true}}">
+              <path d="M67 70 C61 75 59 88 60 104 L61 122 L74 122 L75 104 C76 92 75 80 73 72 Z" fill="url(#{{uid}}Sleeve)"></path>
+              <path d="M61 120 C60 134 61 148 63 156 L73 156 C74 148 75 134 74 120 Z" fill="url(#{{uid}}Sleeve)"></path>
+              <path d="M62 116 C65 119.5 69.5 119.5 73.5 116 M62.5 123 C66 121 70 121.5 73.5 124.5 M64 128 C67 127 70 128 72.5 130" stroke="{{slvD}}" stroke-width="1" fill="none"></path>
+              <rect x="62.5" y="151" width="11" height="6" rx="2" fill="{{slvD}}"></rect>
+              <sc-if value="{{slvStripe}}" hint-placeholder-val="{{false}}"><path d="M60.5 78 L62 152 M63 78 L64.2 152" stroke="{{accent}}" stroke-width="1.2"></path></sc-if>
+              <sc-if value="{{slvPuffy}}" hint-placeholder-val="{{false}}">
+                <path d="M66 70 C58 76 56 88 57 104 L58 122 L75 122 L76 104 C77 92 76 80 73 72 Z M58 120 C57 134 58 148 61 156 L74 156 C75 148 76 134 75 120 Z" fill="url(#{{uid}}Sleeve)"></path>
+                <path d="M58 92 C64 94 70 94 76 92 M57.5 108 C64 110 70 110 75.5 108 M58 136 C64 138 70 138 75 136" stroke="{{slvD}}" stroke-width="1.2" fill="none"></path>
+              </sc-if>
+            </sc-if>
+            <sc-if value="{{slvShort}}" hint-placeholder-val="{{false}}">
+              <path d="M67 70 C61 75 59 86 60 100 L75 100 C76 90 75 80 73 72 Z" fill="url(#{{uid}}Sleeve)"></path>
+              <path d="M60 97 L75 97" stroke="{{slvD}}" stroke-width="1.2"></path>
+            </sc-if>
+            <path d="M63 157 C61 163 61.5 170 63.5 175 C64.5 178 66 179.6 67.6 179.2 C69.6 179.6 71.6 178 72.6 175 C74 170 74 163 73 157 Z" fill="url(#{{uid}}Skin)"></path>
+            <path d="M63 160 C60.6 163 60.6 167 62.2 169.5" stroke="{{skinD}}" stroke-width="1" fill="none"></path>
+            <path d="M66 171.5 v6.5 M68.6 172 v6.8 M71.1 171.6 v5.8" stroke="{{skinD}}" stroke-width="0.6" opacity="0.7"></path>
+            <sc-if value="{{aWatch}}" hint-placeholder-val="{{false}}">
+              <rect x="62.4" y="152.5" width="11.2" height="4" rx="1.4" fill="#1B1F2A"></rect>
+              <circle cx="68" cy="154.5" r="3" fill="#C9CED8" stroke="#1B1F2A" stroke-width="0.8"></circle>
+            </sc-if>
+            <sc-if value="{{aBangles}}" hint-placeholder-val="{{false}}">
+              <path d="M62.6 153.5 h10.8 M62.6 155.5 h10.8 M62.8 157.5 h10.4" stroke="url(#{{uid}}Gold)" stroke-width="1.3"></path>
+              <path d="M62.6 154.5 h10.8" stroke="{{accent}}" stroke-width="0.8"></path>
+            </sc-if>
+          </g>
+
+          <!-- arm, viewer's right -->
+          <g class="av-arm av-arm-r">
+            <path d="M132 72 C137 76 139 88 138 104 L137 122 L127 122 L126 104 C125 92 126 80 128 73 Z" fill="url(#{{uid}}Skin)"></path>
+            <path d="M137 120 C139 132 140 144 139 154 L132 156 C131 146 129 134 127 120 Z" fill="url(#{{uid}}Skin)"></path>
+            <sc-if value="{{slvLong}}" hint-placeholder-val="{{true}}">
+              <path d="M133 70 C139 75 141 88 140 104 L139 122 L126 122 L125 104 C124 92 125 80 127 72 Z" fill="url(#{{uid}}Sleeve)"></path>
+              <path d="M139 120 C141 132 142 144 141 154 L131 156 C130 146 128 134 126 120 Z" fill="url(#{{uid}}Sleeve)"></path>
+              <path d="M126 116 C130 119.5 134.5 119.5 138.5 116 M126.5 124 C130 121.5 134 121.5 139 124 M127.5 130 C131 128.5 134.5 129 139.5 131" stroke="{{slvD}}" stroke-width="1" fill="none"></path>
+              <rect x="130.5" y="150" width="11" height="6" rx="2" fill="{{slvD}}" transform="rotate(-6 136 153)"></rect>
+              <sc-if value="{{slvStripe}}" hint-placeholder-val="{{false}}"><path d="M139.5 78 L140.5 150 M137 78 L138.4 151" stroke="{{accent}}" stroke-width="1.2"></path></sc-if>
+              <sc-if value="{{slvPuffy}}" hint-placeholder-val="{{false}}">
+                <path d="M134 70 C142 76 144 88 143 104 L142 122 L125 122 L124 104 C123 92 124 80 127 72 Z M142 120 C144 132 145 144 143 155 L130 156 C129 146 126 134 125 120 Z" fill="url(#{{uid}}Sleeve)"></path>
+                <path d="M124 92 C130 94 136 94 142 92 M124.5 108 C130 110 136 110 142.5 108 M126 136 C132 138 138 138 144 136" stroke="{{slvD}}" stroke-width="1.2" fill="none"></path>
+              </sc-if>
+            </sc-if>
+            <sc-if value="{{slvShort}}" hint-placeholder-val="{{false}}">
+              <path d="M133 70 C139 75 141 86 140 100 L125 100 C124 90 125 80 127 72 Z" fill="url(#{{uid}}Sleeve)"></path>
+              <path d="M125 97 L140 97" stroke="{{slvD}}" stroke-width="1.2"></path>
+            </sc-if>
+            <path d="M141 155 C143 161 142.5 168 140 173 C138.8 176 137 177.4 135.4 176.8 C133.4 177 131.6 175.2 130.8 172.2 C129.6 167 130 161 131.2 156 Z" fill="url(#{{uid}}Skin)"></path>
+            <path d="M140.6 158 C143 161 143 165 141.6 168" stroke="{{skinD}}" stroke-width="1" fill="none"></path>
+            <path d="M133.5 169.5 v6 M136 170 v6.4 M138.4 169.4 v5.2" stroke="{{skinD}}" stroke-width="0.6" opacity="0.7"></path>
+            <sc-if value="{{aBangles}}" hint-placeholder-val="{{false}}">
+              <path d="M130.8 152.5 l10.6 -1.2 M131 154.5 l10.6 -1.2 M131.2 156.5 l10.4 -1.2" stroke="url(#{{uid}}Gold)" stroke-width="1.3"></path>
+            </sc-if>
+          </g>
+
+          <!-- neck + bare torso -->
+          <path d="M93 48 L107 48 L108 66 L92 66 Z" fill="url(#{{uid}}Skin)"></path>
+          <path d="M70 74 C74 67 84 63 92 62 L108 62 C116 63 126 67 130 74 L126 104 L124.5 130 L75.5 129 L74 104 Z" fill="url(#{{uid}}Skin)"></path>
+          <path d="M88 74 C92 77 96 78 100 78 M112 74 C108 77 104 78 100 78" stroke="{{skinD}}" stroke-width="0.8" fill="none" opacity="0.5"></path>
+          <sc-if value="{{full}}" hint-placeholder-val="{{true}}">
+            <ellipse cx="100" cy="52" rx="9" ry="3.6" fill="#2A140C" opacity="0.5" filter="url(#{{uid}}B2)"></ellipse>
+          </sc-if>
+
+          <!-- ===== tops ===== -->
+          <sc-if value="{{tTeeBody}}" hint-placeholder-val="{{true}}">
+            <path d="M71 72 C77 66 85 63 88 62 C93 67 107 67 112 62 C115 63 123 66 129 72 L125 104 L125 136 L75 136 L75 104 Z" fill="url(#{{uid}}Top)"></path>
+            <path d="M89 64 C94 69 106 69 111 64" stroke="{{topD}}" stroke-width="1" fill="none"></path>
+            <path d="M80 100 C88 104 112 104 120 100 M79 118 C88 122 112 122 121 118" stroke="{{topD}}" stroke-width="0.7" fill="none" opacity="0.6"></path>
+          </sc-if>
+          <sc-if value="{{tTank}}" hint-placeholder-val="{{false}}">
+            <path d="M80 66 C82 64 84 63 86 63 C90 73 110 73 114 63 C116 63 118 64 120 66 L124 104 L124.5 136 L75.5 136 L76 104 Z" fill="url(#{{uid}}Top)"></path>
+            <path d="M86.4 63.6 C90.5 73.6 109.5 73.6 113.6 63.6" stroke="{{topD}}" stroke-width="0.9" fill="none"></path>
+          </sc-if>
+          <sc-if value="{{tTurtle}}" hint-placeholder-val="{{false}}">
+            <path d="M91.5 46 L108.5 46 L109.5 66 L90.5 66 Z" fill="url(#{{uid}}Top)"></path>
+            <path d="M92 50 h16 M91.8 54 h16.6 M91.6 58 h17 M91.4 62 h17.4" stroke="{{topD}}" stroke-width="0.7"></path>
+          </sc-if>
+          <sc-if value="{{tCollar}}" hint-placeholder-val="{{false}}">
+            <path d="M87 61 L93 74 L100 66 L107 74 L113 61 L108 59 L100 64 L92 59 Z" fill="{{topL}}"></path>
+            <path d="M87 61 L93 74 L100 66 L107 74 L113 61" stroke="{{topD}}" stroke-width="0.8" fill="none"></path>
+            <path d="M100 66 L100 134" stroke="{{topD}}" stroke-width="0.8"></path>
+            <circle cx="101.5" cy="80" r="0.9" fill="{{topD}}"></circle><circle cx="101.5" cy="94" r="0.9" fill="{{topD}}"></circle><circle cx="101.5" cy="108" r="0.9" fill="{{topD}}"></circle><circle cx="101.5" cy="122" r="0.9" fill="{{topD}}"></circle>
+          </sc-if>
+          <sc-if value="{{tSweater}}" hint-placeholder-val="{{false}}">
+            <path d="M75 128 L125 128 L125 137 L75 137 Z" fill="{{topD}}"></path>
+            <path d="M84 74 L84 126 M92 72 L92 126 M108 72 L108 126 M116 74 L116 126" stroke="{{topD}}" stroke-width="1.6" stroke-dasharray="2 1.4" opacity="0.6"></path>
+            <path d="M77 129 v7 M80 129 v7 M83 129 v7 M86 129 v7 M89 129 v7 M92 129 v7 M95 129 v7 M98 129 v7 M101 129 v7 M104 129 v7 M107 129 v7 M110 129 v7 M113 129 v7 M116 129 v7 M119 129 v7 M122 129 v7" stroke="{{topC}}" stroke-width="0.5" opacity="0.7"></path>
+          </sc-if>
+          <sc-if value="{{tHoodie}}" hint-placeholder-val="{{false}}">
+            <path d="M68 74 C72 66 82 62 88 61 C93 66 107 66 112 61 C118 62 128 66 132 74 L130 108 L131 142 L69 142 L70 108 Z" fill="url(#{{uid}}Top)"></path>
+            <path d="M83 63 C84 54 116 54 117 63 C112 68 88 68 83 63 Z" fill="{{topD}}"></path>
+            <path d="M86 63 C90 66 110 66 114 63" stroke="{{topL}}" stroke-width="0.8" fill="none" opacity="0.7"></path>
+            <path d="M82 116 L118 116 L121 136 L79 136 Z" fill="{{topD}}" opacity="0.55"></path>
+            <path d="M82 116 L79 136 M118 116 L121 136" stroke="{{topD}}" stroke-width="1"></path>
+            <path d="M95 66 L94 88 M105 66 L106 88" stroke="{{accent}}" stroke-width="1.2" stroke-linecap="round"></path>
+            <path d="M69 136 L131 136 L131 142 L69 142 Z" fill="{{topD}}"></path>
+          </sc-if>
+          <sc-if value="{{tSareeB}}" hint-placeholder-val="{{false}}">
+            <path d="{{blouseD}}" fill="url(#{{uid}}Top)"></path>
+            <sc-if value="{{party}}" hint-placeholder-val="{{false}}"><path d="{{blouseD}}" fill="url(#{{uid}}Seq)"></path></sc-if>
+            <path d="M88.4 62.6 C93.4 70.6 106.6 70.6 111.6 62.6" stroke="url(#{{uid}}Gold)" stroke-width="1.4" fill="none"></path>
+            <path d="M74 104 C88 107 112 107 126 104" stroke="url(#{{uid}}Gold)" stroke-width="1.4" fill="none"></path>
+            <ellipse cx="100" cy="116" rx="1.4" ry="1.8" fill="{{skinD}}"></ellipse>
+          </sc-if>
+          <sc-if value="{{full}}" hint-placeholder-val="{{true}}">
+            <ellipse cx="100" cy="64" rx="11" ry="2.6" fill="#0A0A14" opacity="0.35" filter="url(#{{uid}}B2)"></ellipse>
+          </sc-if>
+
+          <sc-if value="{{aNecklace}}" hint-placeholder-val="{{false}}">
+            <path d="M90 64 C92 78 108 78 110 64" stroke="url(#{{uid}}Gold)" stroke-width="0.8" fill="none"></path>
+            <path d="M100 75 L102 78 L100 81 L98 78 Z" fill="url(#{{uid}}Gold)"></path>
+          </sc-if>
+
+          <!-- ===== outer layers ===== -->
+          <sc-if value="{{hasOuter}}" hint-placeholder-val="{{true}}">
+            <sc-if value="{{full}}" hint-placeholder-val="{{true}}">
+              <path d="M90.5 70 L91.5 132 M109.5 70 L108.5 132" stroke="#0A0A14" stroke-width="3.2" opacity="0.4" filter="url(#{{uid}}B2)"></path>
+            </sc-if>
+          </sc-if>
+
+          <sc-if value="{{oBomber}}" hint-placeholder-val="{{true}}">
+            <path d="M67 74 C69 68 77 64.5 87 62.5 L89 78 L90 133 L75 134 C73 116 69.5 96 67 74 Z M133 74 C131 68 123 64.5 113 62.5 L111 78 L110 133 L124 134 C126 116 129.5 96 133 74 Z" fill="url(#{{uid}}Outer)"></path>
+            <path d="M75 127 L90 126 L90 134 L75.5 135 Z M124 127 L110 126 L110 134 L123.5 135 Z M87 62.5 C92 59.5 108 59.5 113 62.5 L111.5 70 C106 66.5 94 66.5 88.5 70 Z" fill="{{outD}}"></path>
+            <path d="M77.5 127 v7 M80 127 v7 M82.5 127 v7 M85 126.6 v7 M87.5 126.4 v7 M112.5 126.4 v7 M115 126.6 v7 M117.5 127 v7 M120 127 v7 M122.5 127 v7" stroke="{{outC}}" stroke-width="0.5" opacity="0.6"></path>
+            <path d="M89 78 L90 126 M111 78 L110 126" stroke="{{accent}}" stroke-width="1.4"></path>
+            <path d="M76 118 C79 121 84 121 88 118 M112 118 C116 121 121 121 124 118" stroke="{{outD}}" stroke-width="0.9" fill="none"></path>
+            <path d="M70 75 C76 71 82 68.5 87 66.5 M130 75 C124 71 118 68.5 113 66.5" stroke="{{outL}}" stroke-width="0.6" stroke-dasharray="1.6 1.2" fill="none" opacity="0.8"></path>
+            <sc-if value="{{oBadge}}" hint-placeholder-val="{{true}}"><rect x="77" y="84" width="9" height="6" rx="1" fill="{{accent}}"></rect></sc-if>
+            <sc-if value="{{slvStripe}}" hint-placeholder-val="{{false}}"><path d="M68 76 L74 132 M132 76 L126 132" stroke="{{accent}}" stroke-width="1.6"></path></sc-if>
+          </sc-if>
+
+          <sc-if value="{{oDenim}}" hint-placeholder-val="{{false}}">
+            <path d="M67 74 C69 68 77 64.5 87 62.5 L90 80 L90 130 L74 131 C72 114 69.5 96 67 74 Z M133 74 C131 68 123 64.5 113 62.5 L110 80 L110 130 L126 131 C128 114 130.5 96 133 74 Z" fill="url(#{{uid}}Outer)"></path>
+            <path d="M67 74 C69 68 77 64.5 87 62.5 L90 80 L90 130 L74 131 C72 114 69.5 96 67 74 Z M133 74 C131 68 123 64.5 113 62.5 L110 80 L110 130 L126 131 C128 114 130.5 96 133 74 Z" fill="url(#{{uid}}Twill)"></path>
+            <path d="M87 62 L80 74 L90 79 Z M113 62 L120 74 L110 79 Z" fill="{{outL}}"></path>
+            <path d="M76 86 L88 86 L88 90 L82 92 L76 90 Z M112 86 L124 86 L124 90 L118 92 L112 90 Z" fill="{{outD}}"></path>
+            <path d="M74 124 L90 123 M110 123 L126 124 M76 86 L76 100 M124 86 L124 100" stroke="{{outL}}" stroke-width="0.6" stroke-dasharray="1.2 1"></path>
+            <circle cx="88.5" cy="96" r="1" fill="url(#{{uid}}Gold)"></circle><circle cx="88.5" cy="110" r="1" fill="url(#{{uid}}Gold)"></circle><circle cx="82" cy="89.5" r="0.9" fill="url(#{{uid}}Gold)"></circle><circle cx="118" cy="89.5" r="0.9" fill="url(#{{uid}}Gold)"></circle>
+          </sc-if>
+
+          <sc-if value="{{oBlazer}}" hint-placeholder-val="{{false}}">
+            <path d="M66 74 C68 68 77 64.5 87 62.5 L101 108 L101 150 L74 152 C72 130 69 100 66 74 Z" fill="url(#{{uid}}Outer)"></path>
+            <path d="M134 74 C132 68 123 64.5 113 62.5 L99 108 L99 150 L126 152 C128 130 131 100 134 74 Z" fill="url(#{{uid}}Outer)"></path>
+            <path d="M87 62.5 L80 76 L88 80 L99 106 Z" fill="{{outD}}"></path>
+            <path d="M113 62.5 L120 76 L112 80 L101 106 Z" fill="{{outL}}" opacity="0.6"></path>
+            <path d="M99 108 L99 150" stroke="{{outD}}" stroke-width="1"></path>
+            <circle cx="100.5" cy="114" r="1.6" fill="{{accent}}"></circle>
+            <path d="M77 132 L90 131 M110 131 L123 132" stroke="{{outD}}" stroke-width="1.4"></path>
+            <path d="M68 76 C70 74 74 72 80 71 M132 76 C130 74 126 72 120 71" stroke="{{outL}}" stroke-width="0.8" fill="none"></path>
+          </sc-if>
+
+          <sc-if value="{{oLeather}}" hint-placeholder-val="{{false}}">
+            <path d="M67 74 C69 68 77 64.5 87 62.5 L90 82 L91 132 L75 134 C73 116 69.5 96 67 74 Z M133 74 C131 68 123 64.5 113 62.5 L110 82 L109 132 L125 134 C127 116 130.5 96 133 74 Z" fill="url(#{{uid}}Outer)"></path>
+            <path d="M87 62.5 L78 72 L84 84 L90 82 Z M113 62.5 L122 72 L116 84 L110 82 Z" fill="{{outL}}" opacity="0.5"></path>
+            <path d="M78 96 L86 92 M114 92 L122 96 M77 112 L85 110" stroke="#C9CED8" stroke-width="1"></path>
+            <path d="M90 82 L91 132 M110 82 L109 132" stroke="#C9CED8" stroke-width="0.9" stroke-dasharray="0.8 0.6"></path>
+            <path d="M72 82 C74 96 75 108 76 120" stroke="#FFFFFF" stroke-width="2" opacity="0.18" fill="none"></path>
+            <path d="M75 128 L91 127 L91 134 L75.5 134.5 Z M125 128 L109 127 L109 134 L124.5 134.5 Z" fill="{{outD}}"></path>
+          </sc-if>
+
+          <sc-if value="{{oTrench}}" hint-placeholder-val="{{false}}">
+            <path d="M65 74 C67 68 77 64.5 87 62.5 L101 106 L101 236 L66 236 C65 190 65 130 65 74 Z" fill="url(#{{uid}}Outer)"></path>
+            <path d="M135 74 C133 68 123 64.5 113 62.5 L99 106 L99 236 L136 236 C136 190 136 130 135 74 Z" fill="url(#{{uid}}Outer)"></path>
+            <path d="M87 62.5 L79 78 L88 82 L99 106 Z" fill="{{outD}}"></path>
+            <path d="M113 62.5 L121 78 L112 82 L101 106 Z" fill="{{outL}}" opacity="0.6"></path>
+            <path d="M65 128 L136 128 L136 136 L65 136 Z" fill="{{outD}}"></path>
+            <rect x="96" y="127" width="8" height="10" rx="1" fill="url(#{{uid}}Gold)"></rect>
+            <path d="M104 136 L108 160 M106 136 L111 158" stroke="{{outD}}" stroke-width="2.2" stroke-linecap="round"></path>
+            <circle cx="92" cy="112" r="1.4" fill="{{accent}}"></circle><circle cx="108" cy="112" r="1.4" fill="{{accent}}"></circle><circle cx="92" cy="122" r="1.4" fill="{{accent}}"></circle><circle cx="108" cy="122" r="1.4" fill="{{accent}}"></circle>
+            <path d="M99 136 L99 236 M78 150 C76 180 74 210 72 234 M122 150 C124 180 127 210 129 234" stroke="{{outD}}" stroke-width="1" fill="none"></path>
+            <path d="M84 150 C82 180 81 210 80 234" stroke="{{outL}}" stroke-width="1.2" fill="none" opacity="0.5"></path>
+          </sc-if>
+
+          <sc-if value="{{oPuffer}}" hint-placeholder-val="{{false}}">
+            <path d="M62 72 C78 63 122 63 138 72 L140 146 L60 146 Z" fill="url(#{{uid}}Outer)"></path>
+            <path d="M62 92 H138 M61 112 H139 M60 130 H140" stroke="{{outD}}" stroke-width="1.6"></path>
+            <path d="M62 90 H138 M61 110 H139 M60 128 H140" stroke="{{outL}}" stroke-width="0.8" opacity="0.6"></path>
+            <path d="M100 66 V146" stroke="{{accent}}" stroke-width="1.4"></path>
+            <path d="M86 62 C90 56 110 56 114 62 L113 70 C108 67 92 67 87 70 Z" fill="{{outD}}"></path>
+          </sc-if>
+
+          <sc-if value="{{oVest}}" hint-placeholder-val="{{false}}">
+            <path d="M74 70 C78 66 84 64 87 63 L90 80 L90 138 L76 140 C75 116 74 92 74 70 Z M126 70 C122 66 116 64 113 63 L110 80 L110 138 L124 140 C125 116 126 92 126 70 Z" fill="url(#{{uid}}Outer)"></path>
+            <path d="M77 98 L88 98 L88 110 L77 110 Z M112 98 L123 98 L123 110 L112 110 Z M77 118 L88 118 L88 132 L77 132 Z M112 118 L123 118 L123 132 L112 132 Z" fill="{{outD}}"></path>
+            <path d="M77 101 L88 101 M112 101 L123 101 M77 121 L88 121 M112 121 L123 121" stroke="{{outL}}" stroke-width="0.6"></path>
+            <path d="M77 98 L88 98 L88 110 L77 110 Z M112 98 L123 98 L123 110 L112 110 Z" fill="none" stroke="{{outL}}" stroke-width="0.5" stroke-dasharray="1 0.8"></path>
+            <path d="M90 80 L90 138 M110 80 L110 138" stroke="{{accent}}" stroke-width="1"></path>
+          </sc-if>
+
+          <sc-if value="{{oCardigan}}" hint-placeholder-val="{{false}}">
+            <path d="M67 74 C69 68 77 64.5 87 62.5 L93 100 L94 150 L75 152 C72 128 69 100 67 74 Z M133 74 C131 68 123 64.5 113 62.5 L107 100 L106 150 L125 152 C128 128 131 100 133 74 Z" fill="url(#{{uid}}Outer)"></path>
+            <path d="M87 62.5 L93 100 L94 150 M113 62.5 L107 100 L106 150" stroke="{{outD}}" stroke-width="2.2" fill="none"></path>
+            <circle cx="91.5" cy="104" r="1.2" fill="{{accent}}"></circle><circle cx="92" cy="116" r="1.2" fill="{{accent}}"></circle><circle cx="92.3" cy="128" r="1.2" fill="{{accent}}"></circle><circle cx="92.5" cy="140" r="1.2" fill="{{accent}}"></circle>
+            <path d="M75 144 L94 143 L94 151 L75 152 Z M125 144 L106 143 L106 151 L125 152 Z" fill="{{outD}}"></path>
+            <path d="M80 80 L80 140 M120 80 L120 140" stroke="{{outD}}" stroke-width="1.2" stroke-dasharray="2 1.4" opacity="0.6"></path>
+          </sc-if>
+
+          <!-- accessories on the body -->
+          <sc-if value="{{aHeadphones}}" hint-placeholder-val="{{false}}">
+            <path d="M84 64 C86 78 114 78 116 64" stroke="#1B1F2A" stroke-width="3" fill="none"></path>
+            <ellipse cx="84" cy="64" rx="5" ry="6" fill="#1B1F2A"></ellipse><ellipse cx="116" cy="64" rx="5" ry="6" fill="#1B1F2A"></ellipse>
+            <ellipse cx="84" cy="64" rx="3" ry="4" fill="none" stroke="{{accent}}" stroke-width="1"></ellipse><ellipse cx="116" cy="64" rx="3" ry="4" fill="none" stroke="{{accent}}" stroke-width="1"></ellipse>
+          </sc-if>
+          <sc-if value="{{aCrossbody}}" hint-placeholder-val="{{true}}">
+            <path d="M88 64 L124 132" stroke="#1B1F2A" stroke-width="4" stroke-linecap="round"></path>
+            <path d="M89 63 L125 131" stroke="#3A4152" stroke-width="0.5" stroke-dasharray="1.2 1"></path>
+            <sc-if value="{{full}}" hint-placeholder-val="{{true}}"><ellipse cx="124" cy="147" rx="11" ry="3" fill="#0A0A14" opacity="0.5" filter="url(#{{uid}}B2)"></ellipse></sc-if>
+            <rect x="112" y="128" width="22" height="17" rx="4" fill="#1B1F2A"></rect>
+            <rect x="113" y="129" width="20" height="6" rx="3" fill="#2A3040"></rect>
+            <path d="M115 133 h16" stroke="{{accent}}" stroke-width="1.6" stroke-linecap="round"></path>
+            <rect x="112.6" y="128.6" width="20.8" height="15.8" rx="3.6" fill="none" stroke="#4A5266" stroke-width="0.5" stroke-dasharray="1.2 1"></rect>
+          </sc-if>
+          <sc-if value="{{aBackpack}}" hint-placeholder-val="{{false}}">
+            <path d="M78 66 C82 88 82 108 79 128 M122 66 C118 88 118 108 121 128" stroke="#1B1F2A" stroke-width="4" fill="none" stroke-linecap="round"></path>
+            <rect x="77" y="96" width="5" height="6" rx="1" fill="{{accent}}"></rect><rect x="118" y="96" width="5" height="6" rx="1" fill="{{accent}}"></rect>
+          </sc-if>
+
+          <!-- saree pallu across the front (Nivi, Kanjivaram, Party, Nauvari) -->
+          <sc-if value="{{palluDiag}}" hint-placeholder-val="{{false}}">
+            <g opacity="{{sheerPallu}}">
+              <path d="M74 122 L100 140 L135 76 L118 61 Z" fill="url(#{{uid}}Bot)"></path>
+              <sc-if value="{{kanji}}" hint-placeholder-val="{{false}}"><path d="M74 122 L100 140 L135 76 L118 61 Z" fill="url(#{{uid}}Butta)"></path></sc-if>
+              <sc-if value="{{party}}" hint-placeholder-val="{{false}}"><path d="M74 122 L100 140 L135 76 L118 61 Z" fill="url(#{{uid}}Seq)"></path></sc-if>
+              <path d="M80 122 L120 68 M88 128 L124 72 M94 134 L128 74" stroke="{{botD}}" stroke-width="0.9"></path>
+              <path d="M84 120 L121 70" stroke="{{botL}}" stroke-width="0.8" opacity="0.6"></path>
+            </g>
+            <path d="M74 122 L118 61 M100 140 L135 76" stroke="{{palluEdge}}" stroke-width="{{borderW}}"></path>
+            <sc-if value="{{party}}" hint-placeholder-val="{{false}}">
+              <path d="M75 119.5 L118.5 63 M98.6 137 L133.6 76.5" stroke="#FFFFFF" stroke-width="0.9" stroke-dasharray="0.8 1.6" opacity="0.9"></path>
+            </sc-if>
+            <path d="M76.5 119 L119.5 64 M97.5 136.5 L132.5 78" stroke="{{botD}}" stroke-width="0.6" stroke-dasharray="1.4 1" opacity="{{sheerPallu}}"></path>
+          </sc-if>
+
+
+          <!-- ===== head ===== -->
+          <g transform="rotate(5 100 52)">
+            <g class="av-head">
+              <sc-if value="{{hCapBack}}" hint-placeholder-val="{{true}}"><path d="M82 34 C80 14 92 6 101 6 C113 6 122 15 120 34 C120 44 118 50 116 54 L84 54 C82 48 82 42 82 34 Z" fill="url(#{{uid}}Hair)"></path></sc-if>
+              <sc-if value="{{hBob}}" hint-placeholder-val="{{false}}"><path d="M80 30 C78 12 92 5 101 5 C114 5 124 14 121 30 C122 40 122 48 121 54 L80 54 C79 48 79 40 80 30 Z" fill="url(#{{uid}}Hair)"></path></sc-if>
+              <sc-if value="{{hCurly}}" hint-placeholder-val="{{false}}">
+                <g fill="url(#{{uid}}Hair)"><circle cx="86" cy="16" r="12"></circle><circle cx="100" cy="10" r="13"></circle><circle cx="114" cy="16" r="12"></circle><circle cx="80" cy="30" r="11"></circle><circle cx="120" cy="30" r="11"></circle><circle cx="80" cy="44" r="10"></circle><circle cx="120" cy="44" r="10"></circle></g>
+              </sc-if>
+              <sc-if value="{{hPixie}}" hint-placeholder-val="{{false}}"><path d="M84 32 C82 14 92 7 101 7 C112 7 119 15 117 32 C117 36 116 40 115 42 L85 42 C84 39 84 36 84 32 Z" fill="url(#{{uid}}Hair)"></path></sc-if>
+
+              <ellipse cx="85.5" cy="35" rx="3" ry="5" fill="{{skinD}}"></ellipse>
+              <ellipse cx="114.5" cy="35" rx="3" ry="5" fill="{{skin}}"></ellipse>
+              <path d="M86 30 C86 18 93 13 100 13 C107 13 114 18 114 30 C114 40 112 47 107 51 C104 53 96 53 93 51 C88 47 86 40 86 30 Z" fill="url(#{{uid}}Skin)"></path>
+
+              <sc-if value="{{full}}" hint-placeholder-val="{{true}}">
+                <path d="M108 22 C112 28 113 38 110 46 C108 49 106 51 104 52 C108 46 110 38 108 22 Z" fill="{{skinD}}" opacity="0.3" filter="url(#{{uid}}B1)"></path>
+                <ellipse cx="95" cy="20" rx="5" ry="2.4" fill="#FFFFFF" opacity="0.2" filter="url(#{{uid}}B1)"></ellipse>
+                <ellipse cx="91" cy="38" rx="3.4" ry="2.2" fill="#FFFFFF" opacity="0.22" filter="url(#{{uid}}B1)"></ellipse>
+                <ellipse cx="93.5" cy="30" rx="5" ry="2.6" fill="{{skinD}}" opacity="0.28" filter="url(#{{uid}}B1)"></ellipse>
+                <ellipse cx="106.5" cy="30" rx="5" ry="2.6" fill="{{skinD}}" opacity="0.32" filter="url(#{{uid}}B1)"></ellipse>
+                <ellipse cx="100" cy="49.5" rx="4" ry="1.4" fill="{{skinD}}" opacity="0.4" filter="url(#{{uid}}B1)"></ellipse>
+                <path d="M100.6 31.5 L100.4 38" stroke="#FFFFFF" stroke-width="1.1" opacity="0.3" filter="url(#{{uid}}B1)"></path>
+                <ellipse cx="91" cy="40.5" rx="3.2" ry="1.9" fill="#E07A6A" opacity="0.2" filter="url(#{{uid}}B1)"></ellipse>
+                <ellipse cx="109" cy="40.5" rx="3.2" ry="1.9" fill="#E07A6A" opacity="0.2" filter="url(#{{uid}}B1)"></ellipse>
+              </sc-if>
+
+              <path d="M89 28 C91.5 26.4 95 26.2 97.6 27.2 M102.4 27.2 C105 26.2 108.5 26.4 111 28" stroke="{{hairD}}" stroke-width="1.7" stroke-linecap="round" fill="none"></path>
+              <path d="M90 32.2 C92 30.2 95.2 30.2 97.2 32.2 C95.2 33.8 92 33.8 90 32.2 Z M102.8 32.2 C104.8 30.2 108 30.2 110 32.2 C108 33.8 104.8 33.8 102.8 32.2 Z" fill="#F4EEE8"></path>
+              <circle cx="93.7" cy="32.1" r="1.7" fill="#5A3A26"></circle><circle cx="106.3" cy="32.1" r="1.7" fill="#5A3A26"></circle>
+              <circle cx="93.7" cy="32.1" r="0.8" fill="#140C08"></circle><circle cx="106.3" cy="32.1" r="0.8" fill="#140C08"></circle>
+              <circle cx="94.3" cy="31.5" r="0.45" fill="#FFFFFF"></circle><circle cx="106.9" cy="31.5" r="0.45" fill="#FFFFFF"></circle>
+              <path d="M89.4 32 C91.8 29.4 95.6 29.4 97.6 31.8 M102.4 31.8 C104.4 29.4 108.2 29.4 110.6 32" stroke="#1A100C" stroke-width="1.3" stroke-linecap="round" fill="none"></path>
+              <path d="M89.4 32 l-1.4 -0.9 M110.6 32 l1.4 -0.9" stroke="#1A100C" stroke-width="1" stroke-linecap="round"></path>
+              <path d="M100.2 31 C99.8 35.5 98.8 38.6 98.4 40.4 C99.4 41.4 101.6 41.4 102.4 40.5" stroke="{{skinD}}" stroke-width="1" stroke-linecap="round" fill="none"></path>
+              <path d="M95.4 45.1 C97.4 44 99 44.3 100 44.9 C101 44.3 102.6 44 104.6 45.1 C102.6 46.1 97.4 46.1 95.4 45.1 Z" fill="#9A4840"></path>
+              <path d="M96 45.4 C97.8 48 102.2 48 104 45.4 C102 46.2 98 46.2 96 45.4 Z" fill="#B65C53"></path>
+              <sc-if value="{{aBindi}}" hint-placeholder-val="{{false}}"><circle cx="100" cy="25.2" r="1.3" fill="#C8102E"></circle></sc-if>
+
+              <!-- front hair -->
+              <sc-if value="{{hBangsPart}}" hint-placeholder-val="{{true}}">
+                <path d="M100 9 C91 9 85 16 85 28 C85 35 85.6 41 86.8 45 C87.6 37 89 29 92 23.5 C95 18 98 15 100.4 13 Z M100 9 C109 9 115.5 16 115.5 28 C115.5 35 115 41 113.8 45 C113 37 111.4 29 108.4 23.5 C105.4 18 102.6 15 100.4 13 Z" fill="url(#{{uid}}Hair)"></path>
+                <path d="M95 11 C90 15 88 22 87.5 30 M105 11 C110 15 112.5 22 113 30" stroke="{{hairL}}" stroke-width="0.8" fill="none" opacity="0.7"></path>
+              </sc-if>
+              <sc-if value="{{hSleek}}" hint-placeholder-val="{{false}}">
+                <path d="M100 9 C91 9 85 16 85 28 C85.5 31 86 34 86.5 36 C88 28 91 20 100 15 C109 20 112 28 113.5 36 C114 34 114.5 31 115 28 C115 16 109 9 100 9 Z" fill="url(#{{uid}}Hair)"></path>
+                <path d="M92 12 C96 14 100 15 100 15 M108 12 C104 14 100 15 100 15 M88 18 C92 16 96 15 100 15" stroke="{{hairL}}" stroke-width="0.7" fill="none" opacity="0.7"></path>
+              </sc-if>
+              <sc-if value="{{hBob}}" hint-placeholder-val="{{false}}">
+                <path d="M100 8 C88 8 82 16 82 30 C86 22 94 18 106 18 C112 18 117 22 119 28 C118 14 110 8 100 8 Z" fill="url(#{{uid}}Hair)"></path>
+                <path d="M80 30 C80 40 81 48 82 54 L88 54 C87 46 86 38 86 30 Z M120 30 C120 40 119 48 118 54 L112 54 C113 46 114 38 114 30 Z" fill="url(#{{uid}}Hair)"></path>
+                <path d="M86 20 C92 16 102 15 112 18" stroke="{{hairL}}" stroke-width="0.9" fill="none" opacity="0.7"></path>
+              </sc-if>
+              <sc-if value="{{hCurly}}" hint-placeholder-val="{{false}}">
+                <g fill="url(#{{uid}}Hair)"><circle cx="90" cy="16" r="6"></circle><circle cx="98" cy="13" r="6"></circle><circle cx="106" cy="14" r="6"></circle><circle cx="112" cy="19" r="5"></circle><circle cx="86" cy="22" r="5"></circle></g>
+                <path d="M88 14 a3 3 0 0 1 4 1 M97 11 a3 3 0 0 1 4 1 M105 12 a3 3 0 0 1 4 1" stroke="{{hairL}}" stroke-width="0.8" fill="none"></path>
+              </sc-if>
+              <sc-if value="{{hPixie}}" hint-placeholder-val="{{false}}">
+                <path d="M85 30 C84 16 93 8 102 8 C111 8 117 14 117 24 C112 18 104 16 96 20 C91 23 88 27 85 30 Z" fill="url(#{{uid}}Hair)"></path>
+                <path d="M92 12 L95 18 M98 10 L100 17 M104 10 L105 16 M110 12 L109 18" stroke="{{hairL}}" stroke-width="0.8" opacity="0.7"></path>
+              </sc-if>
+              <sc-if value="{{showBun}}" hint-placeholder-val="{{false}}">
+                <circle cx="100" cy="5" r="8" fill="url(#{{uid}}Hair)"></circle>
+                <path d="M93 6 C97 3 103 3 107 6" stroke="{{hairL}}" stroke-width="0.8" fill="none"></path>
+                <path d="M93 9 C97 11 103 11 107 9" stroke="{{accent}}" stroke-width="1.4" fill="none"></path>
+              </sc-if>
+              <sc-if value="{{showBuns}}" hint-placeholder-val="{{false}}">
+                <circle cx="86" cy="9" r="7" fill="url(#{{uid}}Hair)"></circle><circle cx="114" cy="9" r="7" fill="url(#{{uid}}Hair)"></circle>
+                <path d="M81 9 C84 6 88 6 91 9 M109 9 C112 6 116 6 119 9" stroke="{{hairL}}" stroke-width="0.8" fill="none"></path>
+              </sc-if>
+              <sc-if value="{{hTie}}" hint-placeholder-val="{{true}}"><ellipse cx="112" cy="20" rx="3.4" ry="2.2" fill="{{accent}}" transform="rotate(-30 112 20)"></ellipse></sc-if>
+              <sc-if value="{{full}}" hint-placeholder-val="{{true}}">
+                <path d="M89 14 C93 9.5 99 8.6 104 9.4" stroke="#FFFFFF" stroke-width="2" opacity="0.3" fill="none" filter="url(#{{uid}}B1)"></path>
+              </sc-if>
+
+              <!-- face + head accessories -->
+              <sc-if value="{{aHoops}}" hint-placeholder-val="{{false}}">
+                <circle cx="85.2" cy="43.5" r="3.4" fill="none" stroke="url(#{{uid}}Gold)" stroke-width="1"></circle>
+                <circle cx="114.8" cy="43.5" r="3.4" fill="none" stroke="url(#{{uid}}Gold)" stroke-width="1"></circle>
+              </sc-if>
+              <sc-if value="{{aStuds}}" hint-placeholder-val="{{true}}">
+                <circle cx="85.3" cy="40" r="1.2" fill="{{accent}}"></circle><circle cx="114.7" cy="40" r="1.2" fill="{{accent}}"></circle>
+              </sc-if>
+              <sc-if value="{{aJhumkas}}" hint-placeholder-val="{{false}}">
+                <path d="M85.3 40 L85.3 42 M114.7 40 L114.7 42" stroke="url(#{{uid}}Gold)" stroke-width="0.8"></path>
+                <path d="M82.3 46 C82.3 42.5 88.3 42.5 88.3 46 Z M111.7 46 C111.7 42.5 117.7 42.5 117.7 46 Z" fill="url(#{{uid}}Gold)"></path>
+                <path d="M82.6 47.2 l0.1 0.1 M84.3 47.6 l0.1 0.1 M86 47.6 l0.1 0.1 M87.8 47.2 l0.1 0.1 M112 47.2 l0.1 0.1 M113.7 47.6 l0.1 0.1 M115.4 47.6 l0.1 0.1 M117.2 47.2 l0.1 0.1" stroke="#E2B13C" stroke-width="1.4" stroke-linecap="round"></path>
+              </sc-if>
+              <sc-if value="{{aGlasses}}" hint-placeholder-val="{{false}}">
+                <rect x="88" y="29" width="10.6" height="6.6" rx="1.8" fill="rgba(255,255,255,0.08)" stroke="#1B1F2A" stroke-width="0.9"></rect>
+                <rect x="101.4" y="29" width="10.6" height="6.6" rx="1.8" fill="rgba(255,255,255,0.08)" stroke="#1B1F2A" stroke-width="0.9"></rect>
+                <path d="M98.6 31.5 C99.5 30.6 100.5 30.6 101.4 31.5 M88 31 L85.5 32 M112 31 L114.5 32" stroke="#1B1F2A" stroke-width="0.8" fill="none"></path>
+                <path d="M89.5 30.5 L92 30.5" stroke="#FFFFFF" stroke-width="0.6" opacity="0.6"></path>
+              </sc-if>
+              <sc-if value="{{aSunglasses}}" hint-placeholder-val="{{false}}">
+                <path d="M87.6 29 L98.8 29 L98.2 34 C97.6 36 94 36.6 91 36 C88.6 35.4 87.6 33 87.6 29 Z M101.2 29 L112.4 29 C112.4 33 111.4 35.4 109 36 C106 36.6 102.4 36 101.8 34 Z" fill="#14161F"></path>
+                <path d="M98.8 30.5 C99.6 29.8 100.4 29.8 101.2 30.5 M87.6 29.6 L85.4 31 M112.4 29.6 L114.6 31" stroke="#14161F" stroke-width="1" fill="none"></path>
+                <path d="M89.5 30.5 L93 33.5 M103 30.5 L106.5 33.5" stroke="#FFFFFF" stroke-width="0.8" opacity="0.35"></path>
+              </sc-if>
+              <sc-if value="{{aCap}}" hint-placeholder-val="{{false}}">
+                <path d="M82 26 C81 8 119 8 118 26 Z" fill="{{capC}}"></path>
+                <path d="M100 9 L100 26 M90 11 C88 16 87 21 87 26 M110 11 C112 16 113 21 113 26" stroke="{{capD}}" stroke-width="0.7" fill="none"></path>
+                <path d="M80 26 C88 22 112 22 120 26 C118 30 82 30 80 26 Z" fill="{{capD}}"></path>
+                <circle cx="100" cy="9" r="1.4" fill="{{capD}}"></circle>
+              </sc-if>
+              <sc-if value="{{aBeanie}}" hint-placeholder-val="{{false}}">
+                <path d="M81 26 C79 2 121 2 119 26 Z" fill="{{capC}}"></path>
+                <rect x="80" y="20" width="40" height="9" rx="4.5" fill="{{capD}}"></rect>
+                <path d="M84 21 v7 M88 21 v7 M92 21 v7 M96 21 v7 M100 21 v7 M104 21 v7 M108 21 v7 M112 21 v7 M116 21 v7" stroke="{{capC}}" stroke-width="0.6" opacity="0.7"></path>
+                <path d="M88 8 L88 19 M96 5 L96 19 M104 5 L104 19 M112 8 L112 19" stroke="{{capD}}" stroke-width="0.7" opacity="0.6"></path>
+              </sc-if>
+            </g>
+          </g>
+
+          <!-- long hair falling in front of the shoulders -->
+          <sc-if value="{{hLong}}" hint-placeholder-val="{{false}}">
+            <path d="M86 34 C82 50 81 72 83 96 C85 100 89 100 90 96 C89 74 89 54 90 40 Z M114 34 C118 50 119 72 117 96 C115 100 111 100 110 96 C111 74 111 54 110 40 Z" fill="url(#{{uid}}Hair)"></path>
+            <path d="M85 50 C84 66 84 80 86 94 M115 50 C116 66 116 80 114 94" stroke="{{hairL}}" stroke-width="0.8" fill="none" opacity="0.6"></path>
+          </sc-if>
+        </g>
+      </g>
+    </g>
+  </svg>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"outfit":{"editor":"enum","options":["runner","denim","boardroom","biker","hoodie","trench","summer","tennis","cargo","knit","puffer","athleisure","lbd","sundress","jumpsuit","coverall","cardigan","varsity","shirtslacks","mono","skater","festival","officeknit","bodycon","shirtdress","track","rock","powershorts","utility","saree","sareeKanji","sareeParty","nauvari"],"default":"runner"},"primary":{"editor":"color","default":""},"secondary":{"editor":"color","default":""},"accent":{"editor":"color","default":""},"hairStyle":{"editor":"enum","options":["braid","ponytail","bun","bob","long","curly","pixie","spacebuns"],"default":"braid"},"hair":{"editor":"color","default":"#2A1A14"},"skin":{"editor":"color","default":"#C98B66"},"accessories":{"editor":"text","default":"crossbody"},"lite":{"editor":"boolean","default":false},"$preview":{"width":200,"height":300}}'>
+// Each outfit: top, outer, bottom, shoes; colour sources: p / s / a (player-chosen slots) or a fixed hex.
+var OUTFITS = {
+  runner:      { name: 'Street Runner',     top: 'tee',      outer: 'bomber',   bottom: 'joggers',  shoes: 'sneakers', c: { top: '#F2F6FF', outer: 'p', bottom: 's', shoe: '#F2F6FF' }, def: { p: '#1F7F86', s: '#2A3142', a: '#FFC83D' } },
+  denim:       { name: 'Denim Daze',        top: 'tee',      outer: 'denim',    bottom: 'jeans',    shoes: 'hightops', c: { top: 'a', outer: 'p', bottom: 's', shoe: '#F2F6FF' }, def: { p: '#4A6FA5', s: '#2A3F6B', a: '#F2F6FF' } },
+  boardroom:   { name: 'Boardroom',         top: 'blouse',   outer: 'blazer',   bottom: 'wide',     shoes: 'loafers',  c: { top: 's', outer: 'p', bottom: 'p', shoe: '#1B1F2A' }, def: { p: '#2A3142', s: '#F2F6FF', a: '#FFC83D' } },
+  biker:       { name: 'Biker Night',       top: 'tank',     outer: 'leather',  bottom: 'leggings', shoes: 'boots',    c: { top: 'a', outer: 'p', bottom: 's', shoe: '#1B1F2A' }, def: { p: '#1B1F2A', s: '#2A3142', a: '#B3122E' } },
+  hoodie:      { name: 'Cozy Hoodie',       top: 'hoodie',   outer: '',         bottom: 'joggers',  shoes: 'sneakers', c: { top: 'p', bottom: 's', shoe: '#F2F6FF' }, def: { p: '#C9B79C', s: '#2A3142', a: '#F2F6FF' } },
+  trench:      { name: 'Trench Classic',    top: 'turtle',   outer: 'trench',   bottom: 'jeans',    shoes: 'boots',    c: { top: 's', outer: 'p', bottom: '#2A3F6B', shoe: '#3A2A1E' }, def: { p: '#C9B79C', s: '#1B1F2A', a: '#FFC83D' } },
+  summer:      { name: 'Summer Sun',        top: 'tank',     outer: '',         bottom: 'shorts',   shoes: 'sandals',  denim: true, c: { top: 'p', bottom: 's', shoe: 'a' }, def: { p: '#FFC83D', s: '#4A6FA5', a: '#C9B79C' } },
+  tennis:      { name: 'Tennis Club',       top: 'shirt',    outer: '',         bottom: 'pleated',  shoes: 'sneakers', c: { top: 'p', bottom: 's', shoe: '#F2F6FF' }, def: { p: '#F2F6FF', s: '#F2F6FF', a: '#2BA36B' } },
+  cargo:       { name: 'Cargo Ops',         top: 'tank',     outer: 'vest',     bottom: 'cargo',    shoes: 'boots',    c: { top: 'a', outer: 'p', bottom: 's', shoe: '#3A2A1E' }, def: { p: '#5A6B3A', s: '#C9B79C', a: '#1B1F2A' } },
+  knit:        { name: 'Knit Weekend',      top: 'sweater',  outer: '',         bottom: 'midi',     shoes: 'boots',    c: { top: 'p', bottom: 's', shoe: '#3A2A1E' }, def: { p: '#FF8A3C', s: '#C9B79C', a: '#FFC83D' } },
+  puffer:      { name: 'Puffer Peak',       top: 'turtle',   outer: 'puffer',   bottom: 'leggings', shoes: 'boots',    c: { top: 's', outer: 'p', bottom: '#1B1F2A', shoe: '#1B1F2A' }, def: { p: '#FF8A3C', s: '#1B1F2A', a: '#FFC83D' } },
+  athleisure:  { name: 'Athleisure',        top: 'tank',     outer: '',         bottom: 'leggings', shoes: 'sneakers', c: { top: 'p', bottom: 's', shoe: '#F2F6FF' }, def: { p: '#6B3FD0', s: '#1B1F2A', a: '#2BA36B' } },
+  lbd:         { name: 'Little Black Dress', top: 'tank',    outer: '',         bottom: 'pencil',   shoes: 'heels',    c: { top: 'p', bottom: 'p', shoe: 's' }, def: { p: '#1B1F2A', s: '#1B1F2A', a: '#FFC83D' } },
+  sundress:    { name: 'Sundress',          top: 'tank',     outer: '',         bottom: 'midi',     shoes: 'sandals',  c: { top: 'p', bottom: 'p', shoe: 's' }, def: { p: '#FFC83D', s: '#C9B79C', a: '#F2F6FF' } },
+  jumpsuit:    { name: 'Jumpsuit',          top: 'tank',     outer: '',         bottom: 'wide',     shoes: 'heels',    belt: true, c: { top: 'p', bottom: 'p', shoe: 's' }, def: { p: '#2BA36B', s: '#C9B79C', a: '#FFC83D' } },
+  coverall:    { name: 'Mechanic',          top: 'longsleeve', outer: '',       bottom: 'cargo',    shoes: 'boots',    c: { top: 'p', bottom: 'p', shoe: 's' }, def: { p: '#2F5BD8', s: '#1B1F2A', a: '#FF8A3C' } },
+  cardigan:    { name: 'Cardigan Café',     top: 'tee',      outer: 'cardigan', bottom: 'jeans',    shoes: 'loafers',  c: { top: 's', outer: 'p', bottom: '#4A6FA5', shoe: '#7A4B2A' }, def: { p: '#FFC83D', s: '#F2F6FF', a: '#F2F6FF' } },
+  varsity:     { name: 'Varsity',           top: 'tee',      outer: 'bomber',   bottom: 'pleated',  shoes: 'hightops', sleeves: 'a', c: { top: '#F2F6FF', outer: 'p', bottom: 's', shoe: '#F2F6FF' }, def: { p: '#B3122E', s: '#1B1F2A', a: '#F2F6FF' } },
+  shirtslacks: { name: 'Shirt & Slacks',    top: 'blouse',   outer: '',         bottom: 'wide',     shoes: 'loafers',  belt: true, c: { top: 'p', bottom: 's', shoe: '#1B1F2A' }, def: { p: '#F2F6FF', s: '#2A3142', a: '#FFC83D' } },
+  mono:        { name: 'Monochrome',        top: 'turtle',   outer: '',         bottom: 'wide',     shoes: 'boots',    c: { top: 'p', bottom: 'p', shoe: 's' }, def: { p: '#1B1F2A', s: '#1B1F2A', a: '#FFC83D' } },
+  skater:      { name: 'Skater',            top: 'tee',      outer: '',         bottom: 'shorts',   shoes: 'hightops', c: { top: 'p', bottom: 's', shoe: '#1B1F2A' }, def: { p: '#FF8A3C', s: '#C9B79C', a: '#F2F6FF' } },
+  festival:    { name: 'Festival',          top: 'tank',     outer: '',         bottom: 'shorts',   shoes: 'boots',    denim: true, c: { top: 'p', bottom: 's', shoe: '#7A4B2A' }, def: { p: '#F2F6FF', s: '#4A6FA5', a: '#FF6FAE' } },
+  officeknit:  { name: 'Office Knit',       top: 'sweater',  outer: '',         bottom: 'wide',     shoes: 'loafers',  c: { top: 'p', bottom: 's', shoe: '#1B1F2A' }, def: { p: '#C9B79C', s: '#2A3142', a: '#FFC83D' } },
+  bodycon:     { name: 'Evening Bodycon',   top: 'longsleeve', outer: '',       bottom: 'pencil',   shoes: 'heels',    c: { top: 'p', bottom: 'p', shoe: 's' }, def: { p: '#B3122E', s: '#1B1F2A', a: '#FFC83D' } },
+  shirtdress:  { name: 'Shirt Dress',       top: 'shirt',    outer: '',         bottom: 'aline',    shoes: 'sneakers', belt: true, c: { top: 'p', bottom: 'p', shoe: 's' }, def: { p: '#C9B79C', s: '#F2F6FF', a: '#7A4B2A' } },
+  track:       { name: 'Track Star',        top: 'tee',      outer: 'bomber',   bottom: 'joggers',  shoes: 'sneakers', stripes: true, c: { top: 's', outer: 'p', bottom: 'p', shoe: '#F2F6FF' }, def: { p: '#2F5BD8', s: '#F2F6FF', a: '#F2F6FF' } },
+  rock:        { name: 'Rock Edit',         top: 'tee',      outer: 'leather',  bottom: 'pleated',  shoes: 'boots',    c: { top: 'a', outer: 'p', bottom: 's', shoe: '#1B1F2A' }, def: { p: '#1B1F2A', s: '#B3122E', a: '#F2F6FF' } },
+  powershorts: { name: 'Power Shorts',      top: 'blouse',   outer: 'blazer',   bottom: 'shorts',   shoes: 'heels',    c: { top: 's', outer: 'p', bottom: 'p', shoe: '#1B1F2A' }, def: { p: '#FF6FAE', s: '#F2F6FF', a: '#FFC83D' } },
+  utility:     { name: 'Utility Hoodie',    top: 'hoodie',   outer: 'vest',     bottom: 'cargo',    shoes: 'sneakers', c: { top: 's', outer: 'p', bottom: '#1B1F2A', shoe: '#F2F6FF' }, def: { p: '#5A6B3A', s: '#2A3142', a: '#FF8A3C' } },
+  saree:       { name: 'Nivi Silk Saree',   top: 'sareeb',   outer: '',         bottom: 'saree',    shoes: 'flats',    drape: 'nivi',     c: { top: 's', bottom: 'p', shoe: 'a' }, def: { p: '#B3122E', s: '#FFC83D', a: '#FFC83D' } },
+  sareeKanji:  { name: 'Kanjivaram Silk',   top: 'sareeb',   outer: '',         bottom: 'saree',    shoes: 'flats',    drape: 'kanjivaram', c: { top: 's', bottom: 'p', shoe: 'a' }, def: { p: '#C2185B', s: '#FFC83D', a: '#FFC83D' } },
+  sareeParty:  { name: 'Party Saree',       top: 'sareebsl', outer: '',         bottom: 'saree',    shoes: 'heels',    drape: 'party',    c: { top: 's', bottom: 'p', shoe: 'a' }, def: { p: '#6B3FD0', s: '#1B1F2A', a: '#E2C8FF' } },
+  nauvari:     { name: 'Nauvari Saree',     top: 'sareeb',   outer: '',         bottom: 'nauvari',  shoes: 'flats',    drape: 'nauvari',  c: { top: 's', bottom: 'p', shoe: 'a' }, def: { p: '#2BA36B', s: '#6B3FD0', a: '#FFC83D' } }
+};
+var SLEEVE = { tee: 'short', tank: 'none', shirt: 'short', sareeb: 'short', sareebsl: 'none', longsleeve: 'long', turtle: 'long', blouse: 'long', hoodie: 'long', sweater: 'long' };
+
+function hexToRgb(h) {
+  var s = String(h || '#000000').replace('#', '');
+  if (s.length === 3) s = s[0] + s[0] + s[1] + s[1] + s[2] + s[2];
+  var n = parseInt(s, 16);
+  if (isNaN(n)) n = 0;
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function mix(h, t, amt) {
+  var a = hexToRgb(h), b = hexToRgb(t);
+  var c = a.map(function (v, i) { return Math.round(v + (b[i] - v) * amt); });
+  return '#' + c.map(function (v) { return ('0' + v.toString(16)).slice(-2); }).join('');
+}
+function L(h, a) { return mix(h, '#FFFFFF', a); }
+function D(h, a) { return mix(h, '#000000', a); }
+function lum(h) { var c = hexToRgb(h); return (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) / 255; }
+
+class Component extends DCLogic {
+  renderVals() {
+    if (!this._uid) this._uid = 'nv' + Math.random().toString(36).slice(2, 8);
+    var P = this.props;
+    var id = OUTFITS[P.outfit] ? P.outfit : 'runner';
+    var o = OUTFITS[id];
+    var p = P.primary || o.def.p, s = P.secondary || o.def.s, a = P.accent || o.def.a;
+    function col(k) { return k === 'p' ? p : k === 's' ? s : k === 'a' ? a : (k || p); }
+    var topC = col(o.c.top), outC = col(o.c.outer), botC = col(o.c.bottom), shoeC = col(o.c.shoe);
+    var hasOuter = !!o.outer;
+    var sleeveKind = (hasOuter && o.outer !== 'vest') ? 'long' : (SLEEVE[o.top] || 'none');
+    var slvC = (hasOuter && o.outer !== 'vest') ? (o.sleeves ? col(o.sleeves) : outC) : topC;
+    var acc = {};
+    String(P.accessories == null ? 'crossbody' : P.accessories).split(',').forEach(function (k) { k = k.trim(); if (k) acc[k] = true; });
+    var hs = P.hairStyle || 'braid';
+    var hat = !!(acc.cap || acc.beanie);
+    var hair = P.hair || '#2A1A14', skin = P.skin || '#C98B66';
+    var full = !P.lite;
+    var b = o.bottom;
+    var capC = a;
+    return {
+      uid: this._uid,
+      label: 'Nova wearing ' + o.name,
+      full: full,
+      rimFilter: full ? 'url(#' + this._uid + 'Rim)' : 'none',
+      accent: a,
+      skin: skin, skinL: L(skin, 0.22), skinD: D(skin, 0.22),
+      hair: hair, hairL: L(hair, 0.3), hairD: D(hair, 0.4),
+      topC: topC, topL: L(topC, 0.22), topD: D(topC, 0.28),
+      outC: outC, outL: L(outC, 0.25), outD: D(outC, 0.35),
+      botC: botC, botL: L(botC, 0.18), botD: D(botC, 0.32),
+      slvC: slvC, slvL: L(slvC, 0.25), slvD: D(slvC, 0.32),
+      shoeL: L(shoeC, 0.25), shoeD: D(shoeC, 0.22),
+      sole: lum(shoeC) > 0.6 ? '#8A93A6' : '#E6E9F0',
+      beltC: b === 'wide' && (o.top === 'tank') ? a : '#1B1F2A',
+      beltL: '#3A4152',
+      capC: capC, capD: D(capC, 0.3),
+
+      sSneakers: o.shoes === 'sneakers', sHigh: o.shoes === 'hightops', sBoots: o.shoes === 'boots',
+      sHeels: o.shoes === 'heels', sLoafers: o.shoes === 'loafers', sSandals: o.shoes === 'sandals', sFlats: o.shoes === 'flats',
+      shoesUnder: b === 'wide' || b === 'saree',
+      shoesOver: !(b === 'wide' || b === 'saree'),
+
+      bPants: b === 'joggers' || b === 'cargo' || b === 'jeans',
+      bJoggers: b === 'joggers', bCargo: b === 'cargo', bJeans: b === 'jeans',
+      bLeggings: b === 'leggings', bWide: b === 'wide', bShorts: b === 'shorts', bPleated: b === 'pleated',
+      bMidi: b === 'midi', bPencil: b === 'pencil', bAline: b === 'aline',
+      skirtSaree: b === 'saree', bNauvari: b === 'nauvari',
+      kanji: o.drape === 'kanjivaram', party: o.drape === 'party',
+      niviBorder: o.drape === 'nivi',
+      sheerSkirt: o.drape === 'party' ? 0.62 : 1,
+      sheerPallu: o.drape === 'party' ? 0.48 : 1,
+      palluBack: !!o.drape,
+      palluDiag: !!o.drape,
+      palluEdge: o.drape === 'kanjivaram' ? 'url(#' + this._uid + 'Gold)' : a,
+      borderW: o.drape === 'kanjivaram' ? 6 : (o.drape === 'party' ? 2 : 3),
+      blouseD: o.top === 'sareebsl'
+        ? 'M79 67 C82 64.5 85 63 87.5 62.5 C92 73 108 73 112.5 62.5 C115 63 118 64.5 121 67 L126 104 C112 107 88 107 74 104 Z'
+        : 'M71 72 C77 66 85 63 88 62 C93 70 107 70 112 62 C115 63 123 66 129 72 L126 104 C112 107 88 107 74 104 Z',
+      botDenim: b === 'jeans' || (b === 'shorts' && !!o.denim),
+      belt: !!o.belt || b === 'jeans' || b === 'cargo' || (b === 'shorts' && !!o.denim) || id === 'runner',
+
+      tTeeBody: ['tee', 'longsleeve', 'turtle', 'blouse', 'shirt', 'sweater'].indexOf(o.top) >= 0,
+      tTank: o.top === 'tank', tTurtle: o.top === 'turtle', tCollar: o.top === 'blouse' || o.top === 'shirt',
+      tSweater: o.top === 'sweater', tHoodie: o.top === 'hoodie', tSareeB: o.top === 'sareeb' || o.top === 'sareebsl',
+
+      hasOuter: hasOuter,
+      oBomber: o.outer === 'bomber', oDenim: o.outer === 'denim', oBlazer: o.outer === 'blazer', oLeather: o.outer === 'leather',
+      oTrench: o.outer === 'trench', oPuffer: o.outer === 'puffer', oVest: o.outer === 'vest', oCardigan: o.outer === 'cardigan',
+      oBadge: o.outer === 'bomber' && !o.stripes && !o.sleeves,
+      slvLong: sleeveKind === 'long', slvShort: sleeveKind === 'short',
+      slvPuffy: o.outer === 'puffer', slvStripe: !!o.stripes,
+
+      hBraid: hs === 'braid', hPony: hs === 'ponytail', hLong: hs === 'long', hCurly: hs === 'curly',
+      hBob: hs === 'bob', hPixie: hs === 'pixie',
+      hCapBack: ['braid', 'ponytail', 'bun', 'long', 'spacebuns'].indexOf(hs) >= 0,
+      hBangsPart: hs === 'braid' || hs === 'long',
+      hSleek: hs === 'ponytail' || hs === 'bun' || hs === 'spacebuns',
+      showBun: hs === 'bun' && !hat, showBuns: hs === 'spacebuns' && !hat,
+      hTie: (hs === 'braid' || hs === 'ponytail') && !hat,
+
+      aGlasses: !!acc.glasses && !acc.sunglasses, aSunglasses: !!acc.sunglasses,
+      aHoops: !!acc.hoops, aJhumkas: !!acc.jhumkas && !acc.hoops, aStuds: !acc.hoops && !acc.jhumkas,
+      aNecklace: !!acc.necklace, aCap: !!acc.cap, aBeanie: !!acc.beanie && !acc.cap,
+      aHeadphones: !!acc.headphones, aCrossbody: !!acc.crossbody, aBackpack: !!acc.backpack,
+      aWatch: !!acc.watch, aBangles: !!acc.bangles, aBindi: !!acc.bindi
+    };
+  }
+}
+</script>
+</body>
+</html>

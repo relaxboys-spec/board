@@ -1,0 +1,133 @@
+/* Quest Board — design tokens, shapes and motion.
+   Drop-in plain CSS: copy what you need into the app's single stylesheet. */
+
+:root {
+  /* Ground */
+  --qb-bg-top: #0F2054;
+  --qb-bg-bottom: #070E26;
+  --qb-bg-glow: #2A5CD0;
+  --qb-bg: radial-gradient(ellipse 70% 55% at 50% -12%, var(--qb-bg-glow) 0%, rgba(42, 92, 208, 0) 70%),
+           linear-gradient(180deg, var(--qb-bg-top) 0%, var(--qb-bg-bottom) 100%);
+  --qb-stripes: repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 2px, transparent 2px 24px);
+
+  /* Surfaces */
+  --qb-panel: rgba(8, 18, 52, 0.74);
+  --qb-panel-solid: rgba(8, 18, 52, 0.92);
+  --qb-panel-border: rgba(120, 170, 255, 0.22);
+  --qb-card-ink: #0C1840;              /* inside of a note card */
+  --qb-card-dots: radial-gradient(rgba(255,255,255,.08) 1px, transparent 1.6px);
+  --qb-scrim: rgba(4, 9, 28, 0.72);    /* over the board when a sheet is open */
+  --qb-chip: rgba(255, 255, 255, 0.08);
+  --qb-chip-border: rgba(255, 255, 255, 0.2);
+
+  /* Text */
+  --qb-text: #FFFFFF;
+  --qb-text-soft: #DCE6FF;
+  --qb-text-muted: #B9C8EA;
+  --qb-text-dim: #8EA3CF;
+  --qb-text-faint: #6F84B6;
+  --qb-ink: #F2F6FF;                   /* handwriting */
+
+  /* Accents */
+  --qb-accent: #FFE14D;                /* selection, XP, primary CTA */
+  --qb-accent-ink: #0A1430;            /* text on accent */
+  --qb-accent-shadow: #B89A12;         /* CTA bottom lip */
+  --qb-cyan: #3BE0FF;
+  --qb-blue: #2F7BFF;
+  --qb-streak: #FF9A3C;
+  --qb-record: #FF4D6D;
+  --qb-danger-text: #FF9AAE;
+
+  /* Priority (shown as the card frame) */
+  --qb-low: linear-gradient(160deg, #5BE07A 0%, #1F8F3C 100%);
+  --qb-low-light: #7CF59A;
+  --qb-normal: linear-gradient(160deg, #4CB8FF 0%, #1652C4 100%);
+  --qb-normal-light: #7DCBFF;
+  --qb-high: linear-gradient(160deg, #D06BFF 0%, #5E1FC0 100%);
+  --qb-high-light: #DDA0FF;
+  --qb-urgent: linear-gradient(160deg, #FFB547 0%, #D2550E 100%);
+  --qb-urgent-light: #FFC46B;
+
+  /* Type */
+  --qb-font-display: 'Barlow Condensed', system-ui, sans-serif;  /* 700/800/900 + italic 800/900 */
+  --qb-font-body: 'Barlow', system-ui, sans-serif;               /* 500/600/700 */
+  --qb-font-hand: 'Caveat', cursive;                             /* 500–700, stand-in for ink */
+
+  /* Shape */
+  --qb-skew: -12deg;
+  --qb-cut-lg: 28px;   /* panels */
+  --qb-cut-md: 20px;   /* today cards */
+  --qb-cut-sm: 16px;   /* week cards */
+  --qb-touch: 44px;    /* minimum hit target */
+}
+
+/* ---------- Shapes ---------- */
+
+/* Slanted control: skew the box, un-skew the label */
+.qb-skew { transform: skewX(var(--qb-skew)); }
+.qb-skew > * { display: inline-flex; transform: skewX(calc(var(--qb-skew) * -1)); }
+
+/* Top-right corner cut */
+.qb-cut { --cut: var(--qb-cut-lg); clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%); }
+
+/* Level badge */
+.qb-hex { clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+
+/* Display headings */
+.qb-display { font-family: var(--qb-font-display); font-weight: 900; font-style: italic; text-transform: uppercase; line-height: .9; text-shadow: 0 3px 0 rgba(0,0,0,.4); }
+.qb-eyebrow { font-family: var(--qb-font-display); font-weight: 800; font-style: italic; font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: var(--qb-accent); }
+
+/* Primary CTA */
+.qb-cta { background: var(--qb-accent); color: var(--qb-accent-ink); box-shadow: 0 6px 0 var(--qb-accent-shadow); font-family: var(--qb-font-display); font-weight: 900; font-style: italic; text-transform: uppercase; }
+
+/* ---------- Hero avatar motion ----------
+   Markup: wrapper gets .av-idle | .av-cA | .av-cB.
+   Alternate cA/cB on every completion so the animation restarts even mid-play. */
+
+.av-body, .av-arm, .av-head, .av-shadow { transform-box: fill-box; }
+.av-body   { transform-origin: 50% 100%; }
+.av-shadow { transform-origin: 50% 50%; }
+.av-head   { transform-origin: 50% 90%; }
+.av-arm    { transform-origin: 50% 6%; }
+
+.av-idle .av-body { animation: avBreath 2.8s ease-in-out infinite; }
+.av-idle .av-head { animation: avLook 5.6s ease-in-out infinite; }
+.av-cA .av-body   { animation: avJumpA 1.5s cubic-bezier(.3,.7,.4,1); }
+.av-cB .av-body   { animation: avJumpB 1.5s cubic-bezier(.3,.7,.4,1); }
+.av-cA .av-shadow { animation: avShadowA 1.5s ease-out; }
+.av-cB .av-shadow { animation: avShadowB 1.5s ease-out; }
+.av-cA .av-arm-l  { animation: avArmLA 1.5s ease-in-out; }
+.av-cB .av-arm-l  { animation: avArmLB 1.5s ease-in-out; }
+.av-cA .av-arm-r  { animation: avArmRA 1.5s ease-in-out; }
+.av-cB .av-arm-r  { animation: avArmRB 1.5s ease-in-out; }
+
+@keyframes avBreath { 0%,100% { transform: translateY(0) scaleY(1); } 50% { transform: translateY(-3px) scaleY(1.015); } }
+@keyframes avLook   { 0%,40%,100% { transform: rotate(0); } 50%,60% { transform: rotate(-6deg); } 70%,80% { transform: rotate(5deg); } }
+@keyframes avJumpA  { 0% { transform: translateY(0); } 14% { transform: translateY(6px) scale(1.06,.92); } 34% { transform: translateY(-58px) scale(.96,1.06) rotate(-4deg); } 52% { transform: translateY(-62px) rotate(6deg); } 72% { transform: translateY(0) scale(1.06,.93); } 84% { transform: translateY(-8px); } 100% { transform: translateY(0); } }
+@keyframes avJumpB  { 0% { transform: translateY(0); } 14% { transform: translateY(6px) scale(1.06,.92); } 34% { transform: translateY(-58px) scale(.96,1.06) rotate(-4deg); } 52% { transform: translateY(-62px) rotate(6deg); } 72% { transform: translateY(0) scale(1.06,.93); } 84% { transform: translateY(-8px); } 100% { transform: translateY(0); } }
+@keyframes avShadowA { 0%,100% { transform: scale(1); opacity: 1; } 40%,55% { transform: scale(.55); opacity: .4; } }
+@keyframes avShadowB { 0%,100% { transform: scale(1); opacity: 1; } 40%,55% { transform: scale(.55); opacity: .4; } }
+@keyframes avArmLA { 0%,100% { transform: rotate(0); } 25% { transform: rotate(160deg); } 40% { transform: rotate(135deg); } 55% { transform: rotate(165deg); } 70% { transform: rotate(140deg); } 85% { transform: rotate(20deg); } }
+@keyframes avArmLB { 0%,100% { transform: rotate(0); } 25% { transform: rotate(160deg); } 40% { transform: rotate(135deg); } 55% { transform: rotate(165deg); } 70% { transform: rotate(140deg); } 85% { transform: rotate(20deg); } }
+@keyframes avArmRA { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-160deg); } 40% { transform: rotate(-135deg); } 55% { transform: rotate(-165deg); } 70% { transform: rotate(-140deg); } 85% { transform: rotate(-20deg); } }
+@keyframes avArmRB { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-160deg); } 40% { transform: rotate(-135deg); } 55% { transform: rotate(-165deg); } 70% { transform: rotate(-140deg); } 85% { transform: rotate(-20deg); } }
+
+/* Celebration extras */
+@keyframes avConf { 0% { transform: translateY(0) rotate(0); opacity: 1; } 70% { opacity: 1; } 100% { transform: translateY(-120px) rotate(540deg); opacity: 0; } }
+@keyframes avPop  { 0% { transform: translateY(10px) scale(.6); opacity: 0; } 20% { transform: translateY(0) scale(1.1); opacity: 1; } 75% { transform: translateY(-14px); opacity: 1; } 100% { transform: translateY(-30px); opacity: 0; } }
+@keyframes avRing { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(1.7); opacity: 0; } }
+.av-conf { animation: avConf 1.3s cubic-bezier(.2,.6,.4,1) forwards; }
+.av-pop  { animation: avPop 1.6s ease-out forwards; }
+.av-ring { animation: avRing .9s ease-out forwards; }
+
+/* Dictation */
+@keyframes qbPulse { 0% { box-shadow: 0 0 0 0 rgba(255,77,109,.55); } 100% { box-shadow: 0 0 0 18px rgba(255,77,109,0); } }
+@keyframes qbBar   { 0%,100% { transform: scaleY(.45); } 50% { transform: scaleY(1); } }
+@keyframes qbCaret { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+.qb-rec   { animation: qbPulse 1.2s ease-out infinite; }
+.qb-bar   { animation: qbBar .9s ease-in-out infinite; transform-origin: center; }
+.qb-caret { animation: qbCaret 1s step-end infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .av-idle *, .av-cA *, .av-cB *, .av-conf, .av-ring, .qb-rec, .qb-bar, .qb-caret { animation: none !important; }
+}

@@ -1,0 +1,291 @@
+/* ===== EMOTES (wrapper class em-<id>) =====
+   Rewritten for the full rig (scripts/rig.mjs): shoulders (.av-arm), elbows (.av-fore),
+   waist (.av-torso), neck (.av-head) and the whole figure (.av-body). Pivots are fixed
+   points in Nova's 200×300 drawing, so they don't drift as limbs move.
+
+   Angles: viewer's-left arm (.av-arm-l) +90 = straight out, +180 = straight up, negative
+   swings it across the body. The right arm is the mirror image (−90 out, −180 up). A
+   forearm angle adds to its upper arm's. Emotes with hands at the chest or face have
+   their arms brought in front of the body by emotes.ts (front / face).
+   ================================================================================ */
+
+.av-body, .av-torso, .av-arm, .av-fore, .av-head, .av-shadow { transform-box: view-box; }
+.av-body   { transform-origin: 102px 281px; }
+.av-shadow { transform-origin: 106px 286px; }
+.av-torso  { transform-origin: 100px 136px; }
+.av-head   { transform-origin: 100px 53px; }
+.av-arm-l  { transform-origin: 67.5px 76px; }
+.av-arm-r  { transform-origin: 132.5px 76px; }
+.av-fore-l { transform-origin: 68px 121px; }
+.av-fore-r { transform-origin: 132px 121px; }
+
+/* Victory: crouch, leap with both arms in a V, two fist pumps, land */
+.em-victory .av-body{animation:emVicBody 1.5s cubic-bezier(.3,.7,.4,1)}
+.em-victory .av-shadow{animation:emShadow 1.5s ease-out}
+.em-victory .av-arm-l{animation:emVicL 1.5s ease-in-out}
+.em-victory .av-arm-r{animation:emVicR 1.5s ease-in-out}
+.em-victory .av-fore-l{animation:emVicFL 1.5s ease-in-out}
+.em-victory .av-fore-r{animation:emVicFR 1.5s ease-in-out}
+@keyframes emVicBody{0%{transform:translateY(0)}14%{transform:translateY(6px) scale(1.06,.92)}34%{transform:translateY(-58px) scale(.96,1.06) rotate(-4deg)}52%{transform:translateY(-62px) rotate(6deg)}72%{transform:translateY(0) scale(1.06,.93)}84%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+@keyframes emShadow{0%,100%{transform:scale(1);opacity:1}40%,55%{transform:scale(.55);opacity:.4}}
+@keyframes emVicL{0%,100%{transform:rotate(0)}20%{transform:rotate(155deg)}36%{transform:rotate(125deg)}52%{transform:rotate(160deg)}68%{transform:rotate(125deg)}86%{transform:rotate(20deg)}}
+@keyframes emVicR{0%,100%{transform:rotate(0)}20%{transform:rotate(-155deg)}36%{transform:rotate(-125deg)}52%{transform:rotate(-160deg)}68%{transform:rotate(-125deg)}86%{transform:rotate(-20deg)}}
+@keyframes emVicFL{0%,100%{transform:rotate(0)}20%{transform:rotate(10deg)}36%{transform:rotate(55deg)}52%{transform:rotate(5deg)}68%{transform:rotate(55deg)}86%{transform:rotate(-10deg)}}
+@keyframes emVicFR{0%,100%{transform:rotate(0)}20%{transform:rotate(-10deg)}36%{transform:rotate(-55deg)}52%{transform:rotate(-5deg)}68%{transform:rotate(-55deg)}86%{transform:rotate(10deg)}}
+
+/* Thumkas: hip pops side to side (hips swing, shoulders stay level), one hand on the hip,
+   the other raised with a twirling wrist */
+.em-thumkas .av-body{animation:emThumBody .6s cubic-bezier(.6,0,.3,1) 5}
+.em-thumkas .av-torso{animation:emThumTorso .6s cubic-bezier(.6,0,.3,1) 5}
+.em-thumkas .av-head{animation:emThumHead .6s ease-in-out 5}
+.em-thumkas .av-arm-l{animation:emHipL 3s ease-in-out}
+.em-thumkas .av-fore-l{animation:emHipFL 3s ease-in-out}
+.em-thumkas .av-arm-r{animation:emThumR 3s ease-in-out}
+.em-thumkas .av-fore-r{animation:emThumFR 3s ease-in-out}
+@keyframes emThumBody{0%,50%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-7px) rotate(3deg)}75%{transform:translateX(7px) rotate(-3deg)}}
+@keyframes emThumTorso{0%,50%,100%{transform:rotate(0)}25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+@keyframes emThumHead{0%,50%,100%{transform:rotate(0)}25%{transform:rotate(6deg)}75%{transform:rotate(-6deg)}}
+@keyframes emHipL{0%,100%{transform:rotate(0)}10%,90%{transform:rotate(35deg)}}
+@keyframes emHipFL{0%,100%{transform:rotate(0)}10%,90%{transform:rotate(-89deg)}}
+@keyframes emThumR{0%,100%{transform:rotate(0)}8%,92%{transform:rotate(-162deg)}30%,70%{transform:rotate(-168deg)}50%{transform:rotate(-158deg)}}
+@keyframes emThumFR{0%,100%{transform:rotate(0)}8%{transform:rotate(-25deg)}18%{transform:rotate(-62deg)}28%{transform:rotate(-25deg)}38%{transform:rotate(-62deg)}48%{transform:rotate(-25deg)}58%{transform:rotate(-62deg)}68%{transform:rotate(-25deg)}78%{transform:rotate(-62deg)}90%{transform:rotate(-25deg)}}
+
+/* Wave: upper arm out to the side, forearm up, hand waving from the elbow */
+.em-wave .av-arm-r{animation:emWaveR 2s ease-in-out}
+.em-wave .av-fore-r{animation:emWaveFR 2s ease-in-out}
+.em-wave .av-head{animation:emWaveHead 2s ease-in-out}
+.em-wave .av-body{animation:emWaveBody 2s ease-in-out}
+@keyframes emWaveR{0%,100%{transform:rotate(0)}14%,86%{transform:rotate(-108deg)}}
+@keyframes emWaveFR{0%,100%{transform:rotate(0)}14%{transform:rotate(-70deg)}26%{transform:rotate(-45deg)}38%{transform:rotate(-90deg)}50%{transform:rotate(-45deg)}62%{transform:rotate(-90deg)}74%{transform:rotate(-48deg)}86%{transform:rotate(-70deg)}}
+@keyframes emWaveHead{0%,100%{transform:rotate(0)}18%,82%{transform:rotate(6deg)}}
+@keyframes emWaveBody{0%,100%{transform:rotate(0)}18%,82%{transform:rotate(-1.5deg)}}
+
+/* Dab: one arm thrust up and out, the other folded across the face, head tucked into the elbow */
+.em-dab .av-arm-l{animation:emDabL 1.6s cubic-bezier(.2,.9,.3,1)}
+.em-dab .av-fore-l{animation:emDabFL 1.6s cubic-bezier(.2,.9,.3,1)}
+.em-dab .av-arm-r{animation:emDabR 1.6s cubic-bezier(.2,.9,.3,1)}
+.em-dab .av-fore-r{animation:emDabFR 1.6s cubic-bezier(.2,.9,.3,1)}
+.em-dab .av-head{animation:emDabHead 1.6s cubic-bezier(.2,.9,.3,1)}
+.em-dab .av-torso{animation:emDabTorso 1.6s cubic-bezier(.2,.9,.3,1)}
+@keyframes emDabL{0%,100%{transform:rotate(0)}16%,80%{transform:rotate(140deg)}}
+@keyframes emDabFL{0%,100%{transform:rotate(0)}16%,80%{transform:rotate(115deg)}}
+@keyframes emDabR{0%,100%{transform:rotate(0)}16%,80%{transform:rotate(-128deg)}}
+@keyframes emDabFR{0%,100%{transform:rotate(0)}16%,80%{transform:rotate(-6deg)}}
+@keyframes emDabHead{0%,100%{transform:rotate(0)}16%,80%{transform:rotate(-20deg) translate(-2px,3px)}}
+@keyframes emDabTorso{0%,100%{transform:rotate(0)}16%,80%{transform:rotate(-5deg)}}
+
+/* Floss: straight arms swing together side to side, one passing in front of the body,
+   hips swinging the other way */
+.em-floss .av-arm-l,.em-floss .av-arm-r{animation:emFlossArm .4s ease-in-out 6}
+.em-floss .av-body{animation:emFlossBody .4s ease-in-out 6}
+.em-floss .av-torso{animation:emFlossTorso .4s ease-in-out 6}
+@keyframes emFlossArm{0%,100%{transform:rotate(-30deg)}50%{transform:rotate(30deg)}}
+@keyframes emFlossBody{0%,100%{transform:translateX(-6px)}50%{transform:translateX(6px)}}
+@keyframes emFlossTorso{0%,100%{transform:rotate(4deg)}50%{transform:rotate(-4deg)}}
+
+/* Clap: elbows out, hands meet in front of the chest */
+.em-clap .av-arm-l{animation:emClapL 2s ease-in-out}
+.em-clap .av-arm-r{animation:emClapR 2s ease-in-out}
+.em-clap .av-fore-l{animation:emClapFL 2s ease-in-out}
+.em-clap .av-fore-r{animation:emClapFR 2s ease-in-out}
+.em-clap .av-body{animation:emBob .4s ease-in-out 5}
+.em-clap .av-head{animation:emNod .4s ease-in-out 5}
+@keyframes emClapL{0%,100%{transform:rotate(0)}12%,88%{transform:rotate(35deg)}}
+@keyframes emClapR{0%,100%{transform:rotate(0)}12%,88%{transform:rotate(-35deg)}}
+@keyframes emClapFL{0%,100%{transform:rotate(0)}12%,32%,52%,72%{transform:rotate(-162deg)}22%,42%,62%,82%{transform:rotate(-139deg)}88%{transform:rotate(-150deg)}}
+@keyframes emClapFR{0%,100%{transform:rotate(0)}12%,32%,52%,72%{transform:rotate(162deg)}22%,42%,62%,82%{transform:rotate(139deg)}88%{transform:rotate(150deg)}}
+@keyframes emBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes emNod{0%,100%{transform:rotate(0)}50%{transform:rotate(3deg) translateY(1px)}}
+
+/* Spin: a pirouette with arms out and softly bent */
+.em-spin .av-body{animation:emSpinBody 1.4s ease-in-out}
+.em-spin .av-arm-l{animation:emArmsOutL 1.4s ease-in-out}
+.em-spin .av-arm-r{animation:emArmsOutR 1.4s ease-in-out}
+.em-spin .av-fore-l{animation:emSoftL 1.4s ease-in-out}
+.em-spin .av-fore-r{animation:emSoftR 1.4s ease-in-out}
+.em-spin .av-shadow{animation:emShadow 1.4s ease-in-out}
+@keyframes emSpinBody{0%,100%{transform:scaleX(1) translateY(0)}25%{transform:scaleX(.08) translateY(-8px)}50%{transform:scaleX(-1) translateY(-14px)}75%{transform:scaleX(.08) translateY(-8px)}}
+@keyframes emArmsOutL{0%,100%{transform:rotate(0)}12%,88%{transform:rotate(80deg)}}
+@keyframes emArmsOutR{0%,100%{transform:rotate(0)}12%,88%{transform:rotate(-80deg)}}
+@keyframes emSoftL{0%,100%{transform:rotate(0)}12%,88%{transform:rotate(20deg)}}
+@keyframes emSoftR{0%,100%{transform:rotate(0)}12%,88%{transform:rotate(-20deg)}}
+
+/* Jumping jacks: hands meet over the head at the top of each jump */
+.em-jacks .av-body{animation:emJackBody .6s ease-in-out 4}
+.em-jacks .av-arm-l{animation:emJackL .6s ease-in-out 4}
+.em-jacks .av-arm-r{animation:emJackR .6s ease-in-out 4}
+.em-jacks .av-fore-l{animation:emJackFL .6s ease-in-out 4}
+.em-jacks .av-fore-r{animation:emJackFR .6s ease-in-out 4}
+.em-jacks .av-shadow{animation:emJackShadow .6s ease-in-out 4}
+@keyframes emJackBody{0%,100%{transform:translateY(0) scale(1.03,.96)}50%{transform:translateY(-22px) scale(.98,1.03)}}
+@keyframes emJackL{0%,100%{transform:rotate(8deg)}50%{transform:rotate(168deg)}}
+@keyframes emJackR{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(-168deg)}}
+@keyframes emJackFL{0%,100%{transform:rotate(0)}50%{transform:rotate(45deg)}}
+@keyframes emJackFR{0%,100%{transform:rotate(0)}50%{transform:rotate(-45deg)}}
+@keyframes emJackShadow{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.5}}
+
+/* Salute: elbow out, fingertips to the brow, chin up */
+.em-salute .av-arm-r{animation:emSaluteR 2s cubic-bezier(.3,.9,.3,1)}
+.em-salute .av-fore-r{animation:emSaluteFR 2s cubic-bezier(.3,.9,.3,1)}
+.em-salute .av-body{animation:emStandTall 2s ease-in-out}
+.em-salute .av-head{animation:emChinUp 2s ease-in-out}
+@keyframes emSaluteR{0%,100%{transform:rotate(0)}16%,82%{transform:rotate(-119deg)}}
+@keyframes emSaluteFR{0%,100%{transform:rotate(0)}16%,82%{transform:rotate(-127deg)}}
+@keyframes emStandTall{0%,100%{transform:scaleY(1)}16%,82%{transform:scaleY(1.02)}}
+@keyframes emChinUp{0%,100%{transform:rotate(0)}16%,82%{transform:rotate(-3deg) translateY(-1px)}}
+
+/* Namaste: palms pressed together at the chest, a gentle bow of the head and shoulders */
+.em-namaste .av-arm-l{animation:emPalmL 2.2s ease-in-out}
+.em-namaste .av-arm-r{animation:emPalmR 2.2s ease-in-out}
+.em-namaste .av-fore-l{animation:emPalmFL 2.2s ease-in-out}
+.em-namaste .av-fore-r{animation:emPalmFR 2.2s ease-in-out}
+.em-namaste .av-torso{animation:emNamTorso 2.2s ease-in-out}
+.em-namaste .av-head{animation:emNamHead 2.2s ease-in-out}
+@keyframes emPalmL{0%,100%{transform:rotate(0)}18%,84%{transform:rotate(-6deg)}}
+@keyframes emPalmR{0%,100%{transform:rotate(0)}18%,84%{transform:rotate(6deg)}}
+@keyframes emPalmFL{0%,100%{transform:rotate(0)}18%,84%{transform:rotate(-140deg)}}
+@keyframes emPalmFR{0%,100%{transform:rotate(0)}18%,84%{transform:rotate(140deg)}}
+@keyframes emNamTorso{0%,22%,80%,100%{transform:translateY(0) scaleY(1)}40%,62%{transform:translateY(2px) scaleY(.97)}}
+@keyframes emNamHead{0%,22%,80%,100%{transform:translateY(0) rotate(0)}40%,62%{transform:translateY(4px) rotate(2deg) scale(.98)}}
+
+/* Bhangra: both arms up with open palms, shoulders bouncing, knees bobbing */
+.em-bhangra .av-arm-l{animation:emBhangL .6s ease-in-out 4}
+.em-bhangra .av-arm-r{animation:emBhangR .6s ease-in-out 4}
+.em-bhangra .av-fore-l{animation:emBhangFL .6s ease-in-out 4}
+.em-bhangra .av-fore-r{animation:emBhangFR .6s ease-in-out 4}
+.em-bhangra .av-body{animation:emBhangBody .6s ease-in-out 4}
+.em-bhangra .av-torso{animation:emShimmy .3s ease-in-out 8}
+.em-bhangra .av-head{animation:emSway .6s ease-in-out 4}
+@keyframes emBhangL{0%,100%{transform:rotate(148deg)}50%{transform:rotate(172deg)}}
+@keyframes emBhangR{0%,100%{transform:rotate(-172deg)}50%{transform:rotate(-148deg)}}
+@keyframes emBhangFL{0%,100%{transform:rotate(-28deg)}50%{transform:rotate(-6deg)}}
+@keyframes emBhangFR{0%,100%{transform:rotate(6deg)}50%{transform:rotate(28deg)}}
+@keyframes emBhangBody{0%,100%{transform:translateY(0) scale(1,1)}25%{transform:translateY(3px) scale(1.03,.96)}60%{transform:translateY(-10px) scale(.98,1.02)}}
+@keyframes emShimmy{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-4px) rotate(2deg)}}
+@keyframes emSway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+
+/* Shrug: shoulders up, elbows in, forearms out with palms up, head tilted */
+.em-shrug .av-arm-l{animation:emShrugL 1.6s ease-in-out}
+.em-shrug .av-arm-r{animation:emShrugR 1.6s ease-in-out}
+.em-shrug .av-fore-l{animation:emShrugFL 1.6s ease-in-out}
+.em-shrug .av-fore-r{animation:emShrugFR 1.6s ease-in-out}
+.em-shrug .av-torso{animation:emShrugTorso 1.6s ease-in-out}
+.em-shrug .av-head{animation:emShrugHead 1.6s ease-in-out}
+@keyframes emShrugL{0%,100%{transform:translateY(0) rotate(0)}20%,70%{transform:translateY(-4px) rotate(12deg)}}
+@keyframes emShrugR{0%,100%{transform:translateY(0) rotate(0)}20%,70%{transform:translateY(-4px) rotate(-12deg)}}
+@keyframes emShrugFL{0%,100%{transform:rotate(0)}20%,70%{transform:rotate(68deg)}}
+@keyframes emShrugFR{0%,100%{transform:rotate(0)}20%,70%{transform:rotate(-68deg)}}
+@keyframes emShrugTorso{0%,100%{transform:translateY(0)}20%,70%{transform:translateY(-2px)}}
+@keyframes emShrugHead{0%,100%{transform:rotate(0)}20%,70%{transform:rotate(-9deg)}}
+
+/* Laugh: holding her belly, head thrown back, shaking */
+.em-laugh .av-arm-l{animation:emBellyL 2s ease-in-out}
+.em-laugh .av-arm-r{animation:emBellyR 2s ease-in-out}
+.em-laugh .av-fore-l{animation:emBellyFL 2s ease-in-out}
+.em-laugh .av-fore-r{animation:emBellyFR 2s ease-in-out}
+.em-laugh .av-body{animation:emShake .2s ease-in-out 10}
+.em-laugh .av-head{animation:emLaughHead 2s ease-in-out}
+@keyframes emBellyL{0%,100%{transform:rotate(0)}15%,85%{transform:rotate(25deg)}}
+@keyframes emBellyR{0%,100%{transform:rotate(0)}15%,85%{transform:rotate(-25deg)}}
+@keyframes emBellyFL{0%,100%{transform:rotate(0)}15%,85%{transform:rotate(-85deg)}}
+@keyframes emBellyFR{0%,100%{transform:rotate(0)}15%,85%{transform:rotate(85deg)}}
+@keyframes emShake{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px) rotate(-1deg)}}
+@keyframes emLaughHead{0%,100%{transform:rotate(0)}15%{transform:rotate(-10deg) translateY(-1px)}30%{transform:rotate(5deg) translateY(2px)}45%{transform:rotate(-10deg) translateY(-1px)}60%{transform:rotate(5deg) translateY(2px)}85%{transform:rotate(-6deg)}}
+
+/* Flex: double biceps, pumping */
+.em-flex .av-arm-l{animation:emFlexL 2s ease-in-out}
+.em-flex .av-arm-r{animation:emFlexR 2s ease-in-out}
+.em-flex .av-fore-l{animation:emFlexFL 2s ease-in-out}
+.em-flex .av-fore-r{animation:emFlexFR 2s ease-in-out}
+.em-flex .av-body{animation:emFlexBody 2s ease-in-out}
+@keyframes emFlexL{0%,100%{transform:rotate(0)}15%,85%{transform:rotate(95deg)}}
+@keyframes emFlexR{0%,100%{transform:rotate(0)}15%,85%{transform:rotate(-95deg)}}
+@keyframes emFlexFL{0%,100%{transform:rotate(0)}15%,60%{transform:rotate(85deg)}38%,80%{transform:rotate(105deg)}}
+@keyframes emFlexFR{0%,100%{transform:rotate(0)}15%,60%{transform:rotate(-85deg)}38%,80%{transform:rotate(-105deg)}}
+@keyframes emFlexBody{0%,100%{transform:scale(1,1)}15%,85%{transform:scale(1.03,.97)}38%,80%{transform:scale(1.04,.96)}}
+
+/* Heart hands: arms curved over the head into a heart, swaying */
+.em-heart .av-arm-l{animation:emHeartL 2.2s ease-in-out}
+.em-heart .av-arm-r{animation:emHeartR 2.2s ease-in-out}
+.em-heart .av-fore-l{animation:emHeartFL 2.2s ease-in-out}
+.em-heart .av-fore-r{animation:emHeartFR 2.2s ease-in-out}
+.em-heart .av-body{animation:emSwayBody .55s ease-in-out 4}
+.em-heart .av-head{animation:emSway .55s ease-in-out 4}
+@keyframes emHeartL{0%,100%{transform:rotate(0)}18%,82%{transform:rotate(160deg)}}
+@keyframes emHeartR{0%,100%{transform:rotate(0)}18%,82%{transform:rotate(-160deg)}}
+@keyframes emHeartFL{0%,100%{transform:rotate(0)}18%,82%{transform:rotate(70deg)}}
+@keyframes emHeartFR{0%,100%{transform:rotate(0)}18%,82%{transform:rotate(-70deg)}}
+@keyframes emSwayBody{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+
+/* Headbang: fast head nods, rock-on hand pumping, the other strumming */
+.em-headbang .av-head{animation:emBang .25s ease-in-out 8}
+.em-headbang .av-arm-r{animation:emRockR 2s ease-in-out}
+.em-headbang .av-fore-r{animation:emRockFR 2s ease-in-out}
+.em-headbang .av-arm-l{animation:emStrumL 2s ease-in-out}
+.em-headbang .av-fore-l{animation:emStrumFL .25s ease-in-out 8}
+.em-headbang .av-body{animation:emBob .25s ease-in-out 8}
+@keyframes emBang{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(8deg) translateY(4px) scaleY(.96)}}
+@keyframes emRockR{0%,100%{transform:rotate(0)}10%,90%{transform:rotate(-155deg)}}
+@keyframes emRockFR{0%,100%{transform:rotate(0)}10%,50%{transform:rotate(-15deg)}30%,70%{transform:rotate(-45deg)}}
+@keyframes emStrumL{0%,100%{transform:rotate(0)}8%,92%{transform:rotate(25deg)}}
+@keyframes emStrumFL{0%,100%{transform:rotate(-80deg)}50%{transform:rotate(-102deg)}}
+
+/* Disco: point to the sky, then down across the body, hand on hip, hips swaying */
+.em-disco .av-arm-r{animation:emDiscoR .6s ease-in-out 4}
+.em-disco .av-arm-l{animation:emHipL 2.4s ease-in-out}
+.em-disco .av-fore-l{animation:emHipFL 2.4s ease-in-out}
+.em-disco .av-body{animation:emDiscoBody .6s ease-in-out 4}
+.em-disco .av-torso{animation:emDiscoTorso .6s ease-in-out 4}
+.em-disco .av-head{animation:emDiscoHead .6s ease-in-out 4}
+@keyframes emDiscoR{0%,100%{transform:rotate(-150deg)}50%{transform:rotate(25deg)}}
+@keyframes emDiscoBody{0%,100%{transform:translateX(-4px) rotate(2deg)}50%{transform:translateX(4px) rotate(-2deg)}}
+@keyframes emDiscoTorso{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes emDiscoHead{0%,100%{transform:rotate(6deg)}50%{transform:rotate(-4deg)}}
+
+/* Robot: stiff right-angle poses that snap from one to the next */
+.em-robot .av-arm-l{animation:emRobotL 2.4s steps(1,end)}
+.em-robot .av-arm-r{animation:emRobotR 2.4s steps(1,end)}
+.em-robot .av-fore-l{animation:emRobotFL 2.4s steps(1,end)}
+.em-robot .av-fore-r{animation:emRobotFR 2.4s steps(1,end)}
+.em-robot .av-head{animation:emRobotHead 2.4s steps(1,end)}
+.em-robot .av-body{animation:emRobotBody 2.4s steps(1,end)}
+@keyframes emRobotL{0%,12%,25%{transform:rotate(0)}37%,50%,62%,75%{transform:rotate(90deg)}88%,100%{transform:rotate(0)}}
+@keyframes emRobotFL{0%{transform:rotate(0)}12%,25%{transform:rotate(-90deg)}37%,50%{transform:rotate(90deg)}62%,75%{transform:rotate(-90deg)}88%,100%{transform:rotate(0)}}
+@keyframes emRobotR{0%,12%,25%,37%{transform:rotate(0)}50%,62%,75%{transform:rotate(-90deg)}88%,100%{transform:rotate(0)}}
+@keyframes emRobotFR{0%,12%{transform:rotate(0)}25%,37%{transform:rotate(90deg)}50%,62%{transform:rotate(-90deg)}75%{transform:rotate(90deg)}88%,100%{transform:rotate(0)}}
+@keyframes emRobotHead{0%{transform:rotate(0)}20%{transform:rotate(10deg)}45%{transform:rotate(-10deg)}70%{transform:rotate(10deg)}88%,100%{transform:rotate(0)}}
+@keyframes emRobotBody{0%{transform:translateX(0)}30%{transform:translateX(3px)}60%{transform:translateX(-3px)}88%,100%{transform:translateX(0)}}
+
+/* Garba: twirling steps — one hand flicked high, a clap in front, then the other side */
+.em-garba .av-arm-l{animation:emGarbaL 2.8s ease-in-out}
+.em-garba .av-arm-r{animation:emGarbaR 2.8s ease-in-out}
+.em-garba .av-fore-l{animation:emGarbaFL 2.8s ease-in-out}
+.em-garba .av-fore-r{animation:emGarbaFR 2.8s ease-in-out}
+.em-garba .av-body{animation:emGarbaBody 2.8s ease-in-out}
+.em-garba .av-torso{animation:emGarbaTorso 2.8s ease-in-out}
+.em-garba .av-head{animation:emGarbaHead 2.8s ease-in-out}
+@keyframes emGarbaL{0%,100%{transform:rotate(0)}10%,70%{transform:rotate(165deg)}25%,55%,85%{transform:rotate(35deg)}40%{transform:rotate(40deg)}}
+@keyframes emGarbaFL{0%,100%{transform:rotate(0)}10%,70%{transform:rotate(25deg)}25%,55%,85%{transform:rotate(-140deg)}40%{transform:rotate(-20deg)}}
+@keyframes emGarbaR{0%,100%{transform:rotate(0)}10%,70%{transform:rotate(-40deg)}25%,55%,85%{transform:rotate(-35deg)}40%{transform:rotate(-165deg)}}
+@keyframes emGarbaFR{0%,100%{transform:rotate(0)}10%,70%{transform:rotate(20deg)}25%,55%,85%{transform:rotate(140deg)}40%{transform:rotate(-25deg)}}
+@keyframes emGarbaBody{0%,100%{transform:translate(0,0) rotate(0)}10%,70%{transform:translate(-5px,0) rotate(3deg)}25%,55%,85%{transform:translate(0,-5px) rotate(0)}40%{transform:translate(5px,0) rotate(-3deg)}}
+@keyframes emGarbaTorso{0%,25%,55%,85%,100%{transform:rotate(0)}10%,70%{transform:rotate(-4deg)}40%{transform:rotate(4deg)}}
+@keyframes emGarbaHead{0%,25%,55%,85%,100%{transform:rotate(0)}10%,70%{transform:rotate(6deg)}40%{transform:rotate(-6deg)}}
+
+/* Bow: hand on heart, the other arm sweeping out, head and shoulders bowing */
+.em-bow .av-arm-l{animation:emBowL 2s ease-in-out}
+.em-bow .av-fore-l{animation:emBowFL 2s ease-in-out}
+.em-bow .av-arm-r{animation:emBowR 2s ease-in-out}
+.em-bow .av-fore-r{animation:emBowFR 2s ease-in-out}
+.em-bow .av-torso{animation:emBowTorso 2s ease-in-out}
+.em-bow .av-head{animation:emBowHead 2s ease-in-out}
+.em-bow .av-body{animation:emBowBody 2s ease-in-out}
+@keyframes emBowL{0%,100%{transform:rotate(0)}20%,78%{transform:rotate(12deg)}}
+@keyframes emBowFL{0%,100%{transform:rotate(0)}20%,78%{transform:rotate(-120deg)}}
+@keyframes emBowR{0%,100%{transform:rotate(0)}20%,78%{transform:rotate(-55deg)}}
+@keyframes emBowFR{0%,100%{transform:rotate(0)}20%,78%{transform:rotate(-15deg)}}
+@keyframes emBowTorso{0%,20%,85%,100%{transform:translateY(0) scaleY(1)}40%,70%{transform:translateY(4px) scaleY(.92)}}
+@keyframes emBowHead{0%,20%,85%,100%{transform:translateY(0) rotate(0)}40%,70%{transform:translateY(5px) rotate(4deg) scale(.97)}}
+@keyframes emBowBody{0%,20%,85%,100%{transform:scaleY(1)}40%,70%{transform:scaleY(.98)}}
+
+@media (prefers-reduced-motion: reduce){[class^="em-"] *{animation:none!important}}

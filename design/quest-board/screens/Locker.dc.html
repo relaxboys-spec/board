@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Locker</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="../emotes.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;0,900;1,800;1,900&amp;family=Barlow:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#070E26}
+a{color:#FFE14D}a:hover{color:#FFF0A0}
+button{font:inherit;color:inherit}
+.av-body,.av-arm,.av-head,.av-shadow{transform-box:fill-box}
+.av-body{transform-origin:50% 100%}
+.av-shadow{transform-origin:50% 50%}
+.av-head{transform-origin:50% 90%}
+.av-arm{transform-origin:50% 6%}
+.av-idle .av-body{animation:lkBreath 2.8s ease-in-out infinite}
+.av-idle .av-head{animation:lkLook 5.6s ease-in-out infinite}
+.av-cA .av-body{animation:lkJumpA 1.5s cubic-bezier(.3,.7,.4,1)}
+.av-cB .av-body{animation:lkJumpB 1.5s cubic-bezier(.3,.7,.4,1)}
+.av-cA .av-arm-l{animation:lkArmLA 1.5s ease-in-out}
+.av-cB .av-arm-l{animation:lkArmLB 1.5s ease-in-out}
+.av-cA .av-arm-r{animation:lkArmRA 1.5s ease-in-out}
+.av-cB .av-arm-r{animation:lkArmRB 1.5s ease-in-out}
+@keyframes lkBreath{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-3px) scaleY(1.015)}}
+@keyframes lkLook{0%,40%,100%{transform:rotate(0)}50%,60%{transform:rotate(-6deg)}70%,80%{transform:rotate(5deg)}}
+@keyframes lkJumpA{0%{transform:translateY(0)}14%{transform:translateY(6px) scale(1.06,.92)}34%{transform:translateY(-50px) scale(.96,1.06) rotate(-4deg)}52%{transform:translateY(-54px) rotate(6deg)}72%{transform:translateY(0) scale(1.06,.93)}84%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+@keyframes lkJumpB{0%{transform:translateY(0)}14%{transform:translateY(6px) scale(1.06,.92)}34%{transform:translateY(-50px) scale(.96,1.06) rotate(-4deg)}52%{transform:translateY(-54px) rotate(6deg)}72%{transform:translateY(0) scale(1.06,.93)}84%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+@keyframes lkArmLA{0%,100%{transform:rotate(0)}25%{transform:rotate(160deg)}40%{transform:rotate(135deg)}55%{transform:rotate(165deg)}70%{transform:rotate(140deg)}85%{transform:rotate(20deg)}}
+@keyframes lkArmLB{0%,100%{transform:rotate(0)}25%{transform:rotate(160deg)}40%{transform:rotate(135deg)}55%{transform:rotate(165deg)}70%{transform:rotate(140deg)}85%{transform:rotate(20deg)}}
+@keyframes lkArmRA{0%,100%{transform:rotate(0)}25%{transform:rotate(-160deg)}40%{transform:rotate(-135deg)}55%{transform:rotate(-165deg)}70%{transform:rotate(-140deg)}85%{transform:rotate(-20deg)}}
+@keyframes lkArmRB{0%,100%{transform:rotate(0)}25%{transform:rotate(-160deg)}40%{transform:rotate(-135deg)}55%{transform:rotate(-165deg)}70%{transform:rotate(-140deg)}85%{transform:rotate(-20deg)}}
+@media (prefers-reduced-motion: reduce){.av-idle *,.av-cA *,.av-cB *{animation:none!important}}
+</style>
+</helmet>
+<div style="width: 1194px; height: 834px; position: relative; overflow: hidden; box-sizing: border-box; font-family: 'Barlow', sans-serif; color: #FFFFFF; background: radial-gradient(ellipse 70% 55% at 50% -12%, #2A5CD0 0%, rgba(42,92,208,0) 70%), linear-gradient(180deg, #0F2054 0%, #070E26 100%)">
+  <div style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 2px, rgba(255,255,255,0) 2px, rgba(255,255,255,0) 24px)"></div>
+
+  <!-- header -->
+  <header style="position: relative; height: 84px; box-sizing: border-box; padding: 18px 24px; display: flex; align-items: center; gap: 16px">
+    <a href="Main.dc.html" aria-label="Back to board" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); transform: skewX(-12deg)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: skewX(12deg)"><path d="M15 5l-7 7 7 7"/></svg>
+    </a>
+    <div style="display: flex; flex-direction: column">
+      <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 14px; letter-spacing: 0.14em; color: #FFE14D; text-transform: uppercase">33 Outfits · Styles · Hair · Accessories</span>
+      <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 40px; line-height: 0.9; text-transform: uppercase; text-shadow: 0 3px 0 rgba(0,0,0,0.4)">Locker</h1>
+    </div>
+    <div style="flex: 1"></div>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <div style="width: 44px; height: 44px; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: linear-gradient(160deg, #D06BFF 0%, #5E1FC0 100%); display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 22px">12</div>
+      <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.12em; color: #B9C8EA; text-transform: uppercase">Level 12</span>
+    </div>
+    <button type="button" onClick="{{equip}}" aria-disabled="{{equipDisabled}}" style="height: 52px; padding: 0 26px; border: none; cursor: pointer; background: {{equipBg}}; color: {{equipColor}}; transform: skewX(-12deg); box-shadow: 0 5px 0 {{equipLip}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 22px; letter-spacing: 0.04em; text-transform: uppercase">
+      <span style="display: flex; align-items: center; gap: 8px; transform: skewX(12deg)">{{equipLabel}}</span>
+    </button>
+  </header>
+
+  <main style="position: absolute; top: 84px; left: 24px; right: 24px; bottom: 24px; display: flex; gap: 18px">
+
+    <!-- preview -->
+    <section aria-label="Preview" style="flex: none; width: 320px; box-sizing: border-box; padding: 18px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; background: radial-gradient(ellipse 90% 50% at 50% 62%, rgba(59,224,255,0.28) 0%, rgba(59,224,255,0) 70%), linear-gradient(180deg, rgba(20,44,120,0.85) 0%, rgba(8,18,52,0.9) 100%); border: 1px solid rgba(120,170,255,0.3); clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <span style="align-self: flex-start; padding: 3px 10px; background: {{cur.grad}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; transform: skewX(-12deg)">{{cur.rarityName}} · {{cur.cat}}</span>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 32px; line-height: 0.95; text-transform: uppercase">{{cur.name}}</span>
+        <span style="font-size: 14px; font-weight: 500; color: {{statusColor}}">{{statusLine}}</span>
+      </div>
+      <div style="position: relative; flex: 1; min-height: 0; display: flex; align-items: flex-end; justify-content: center">
+        <div aria-hidden="true" style="position: absolute; left: 50%; top: -20px; width: 260px; height: 100%; margin-left: -130px; background: linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 85%); clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%)"></div>
+        <div aria-hidden="true" style="position: absolute; bottom: 4px; left: 50%; width: 240px; height: 54px; margin-left: -120px; border-radius: 50%; background: radial-gradient(ellipse at 50% 40%, #2C4DAA 0%, #13245E 70%); box-shadow: 0 0 0 3px rgba(59,224,255,0.55), 0 0 30px rgba(59,224,255,0.55)"></div>
+        <div style="position: relative; width: 280px; height: 420px; margin-bottom: 14px">
+          <div class="{{avatarClass}}" style="position: absolute; left: 0; top: 0; width: 200px; height: 300px; transform: scale(1.4); transform-origin: 0 0">
+            <dc-import name="Avatar" outfit="{{cur.id}}" primary="{{cur.p}}" secondary="{{cur.s}}" accent="{{cur.a}}" hair-style="{{hairStyle}}" hair="{{hair}}" skin="{{skin}}" accessories="{{accString}}" hint-size="200px,300px"></dc-import>
+          </div>
+        </div>
+      </div>
+      <button type="button" onClick="{{tryEmote}}" style="height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.22); background: rgba(255,255,255,0.08); transform: skewX(-10deg); font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase">
+        <span style="display: flex; align-items: center; gap: 8px; transform: skewX(10deg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>
+          Play {{victoryLabel}}
+        </span>
+      </button>
+    </section>
+
+    <!-- outfits -->
+    <section aria-label="Outfits" style="flex: none; width: 430px; min-height: 0; box-sizing: border-box; padding: 18px; display: flex; flex-direction: column; gap: 12px; background: rgba(8,18,52,0.74); border: 1px solid rgba(120,170,255,0.22); clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase">
+        <h2 style="margin: 0; font-weight: 900; font-style: italic; font-size: 30px">Outfits</h2>
+        <span style="font-weight: 800; font-size: 16px; color: #B9C8EA">{{ownedCount}} <span style="color: #6F84B6">/ {{totalCount}} unlocked</span></span>
+      </div>
+      <div role="tablist" aria-label="Category" style="display: flex; flex-wrap: wrap; gap: 6px">
+        <sc-for list="{{cats}}" as="c" hint-placeholder-count="7">
+          <button type="button" role="tab" aria-selected="{{c.selected}}" onClick="{{c.pick}}" style="height: 34px; min-width: 44px; padding: 0 12px; cursor: pointer; border: 1px solid {{c.ring}}; background: {{c.bg}}; color: {{c.color}}; transform: skewX(-12deg); font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase"><span style="display: inline-block; transform: skewX(12deg)">{{c.label}}</span></button>
+        </sc-for>
+      </div>
+      <div style="flex: 1; min-height: 0; overflow-y: auto; padding-right: 4px">
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+          <sc-for list="{{outfits}}" as="o" hint-placeholder-count="9">
+            <button type="button" aria-pressed="{{o.pressed}}" aria-label="{{o.name}}, {{o.rarityName}}{{o.lockNote}}" onClick="{{o.pick}}" style="position: relative; height: 206px; padding: 3px; border: none; cursor: pointer; display: flex; background: {{o.frame}}; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)">
+              <div style="position: relative; flex: 1; display: flex; flex-direction: column; overflow: hidden; background: {{o.grad}}; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)">
+                <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 60%)"></div>
+                <div style="position: relative; flex: 1; min-height: 0; display: flex; align-items: flex-end; justify-content: center; overflow: hidden">
+                  <div style="position: relative; width: 110px; height: 165px">
+                    <div style="position: absolute; left: 0; top: 0; width: 200px; height: 300px; transform: scale(0.55); transform-origin: 0 0">
+                      <dc-import name="Avatar" outfit="{{o.id}}" primary="{{o.p}}" secondary="{{o.s}}" accent="{{o.a}}" hair-style="{{hairStyle}}" hair="{{hair}}" skin="{{skin}}" accessories="{{accString}}" lite="{{true}}" hint-size="200px,300px"></dc-import>
+                    </div>
+                  </div>
+                </div>
+                <div style="position: relative; padding: 7px 9px 9px; background: rgba(4,10,30,0.86); display: flex; flex-direction: column; gap: 2px; text-align: left">
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 15px; line-height: 1; text-transform: uppercase; color: #FFFFFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{o.name}}</span>
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: {{o.light}}">{{o.rarityName}}</span>
+                </div>
+                <sc-if value="{{o.equipped}}" hint-placeholder-val="{{false}}">
+                  <span style="position: absolute; top: 7px; left: 7px; padding: 2px 7px; background: #FFE14D; color: #0A1430; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase">Equipped</span>
+                </sc-if>
+                <sc-if value="{{o.locked}}" hint-placeholder-val="{{false}}">
+                  <div style="position: absolute; inset: 0; background: rgba(4,10,30,0.55); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#DCE6FF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+                    <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 16px; color: #DCE6FF; text-transform: uppercase">Lv {{o.lvl}}</span>
+                  </div>
+                </sc-if>
+              </div>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- styles -->
+    <section aria-label="Styles" style="flex: 1; min-width: 0; min-height: 0; box-sizing: border-box; padding: 18px; display: flex; flex-direction: column; gap: 14px; background: rgba(8,18,52,0.74); border: 1px solid rgba(120,170,255,0.22); clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)">
+      <div role="tablist" aria-label="Style" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px">
+        <sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+          <button type="button" role="tab" aria-selected="{{t.selected}}" onClick="{{t.pick}}" style="height: 44px; padding: 0; cursor: pointer; border: 1px solid {{t.ring}}; background: {{t.bg}}; color: {{t.color}}; transform: skewX(-12deg); font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 15px; letter-spacing: 0.04em; text-transform: uppercase"><span style="display: inline-block; transform: skewX(12deg)">{{t.label}}</span></button>
+        </sc-for>
+      </div>
+
+      <div style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding-right: 4px">
+
+        <sc-if value="{{tabColors}}" hint-placeholder-val="{{true}}">
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.12em; color: {{cur.light}}; text-transform: uppercase">{{cur.name}} colors</span>
+          <sc-for list="{{slots}}" as="slot" hint-placeholder-count="3">
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.12em; color: #B9C8EA; text-transform: uppercase">{{slot.label}}</span>
+              <div style="display: grid; grid-template-columns: repeat(6, 44px); gap: 6px">
+                <sc-for list="{{slot.opts}}" as="sw" hint-placeholder-count="12">
+                  <button type="button" aria-label="{{slot.label}} {{sw.name}}" aria-pressed="{{sw.pressed}}" onClick="{{sw.pick}}" style="width: 44px; height: 44px; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; border: 2px solid {{sw.ring}}; background: rgba(255,255,255,0.04)">
+                    <span style="width: 30px; height: 30px; background: {{sw.color}}; box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2)"></span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+          <button type="button" onClick="{{resetColors}}" style="height: 44px; cursor: pointer; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.05); color: #DCE6FF; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase">Reset colors</button>
+        </sc-if>
+
+        <sc-if value="{{tabHair}}" hint-placeholder-val="{{false}}">
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.12em; color: #B9C8EA; text-transform: uppercase">Hairstyle</span>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px">
+            <sc-for list="{{hairStyles}}" as="h" hint-placeholder-count="8">
+              <button type="button" aria-pressed="{{h.pressed}}" onClick="{{h.pick}}" style="height: 48px; cursor: pointer; border: 2px solid {{h.ring}}; background: {{h.bg}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 17px; letter-spacing: 0.04em; text-transform: uppercase">{{h.label}}</button>
+            </sc-for>
+          </div>
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.12em; color: #B9C8EA; text-transform: uppercase">Hair color</span>
+          <div style="display: grid; grid-template-columns: repeat(6, 44px); gap: 6px">
+            <sc-for list="{{hairOpts}}" as="sw" hint-placeholder-count="8">
+              <button type="button" aria-label="Hair color {{sw.color}}" aria-pressed="{{sw.pressed}}" onClick="{{sw.pick}}" style="width: 44px; height: 44px; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; border: 2px solid {{sw.ring}}; background: rgba(255,255,255,0.04); border-radius: 50%">
+                <span style="width: 30px; height: 30px; border-radius: 50%; background: {{sw.color}}"></span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{tabAcc}}" hint-placeholder-val="{{false}}">
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.12em; color: #B9C8EA; text-transform: uppercase">Accessories · tap to toggle</span>
+          <sc-if value="{{isSaree}}" hint-placeholder-val="{{false}}">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; background: rgba(255,200,61,0.1); border: 1px solid rgba(255,200,61,0.4)">
+              <span style="font-size: 14px; font-weight: 600; color: #FFE9A0">Pairs well with jhumkas, bangles, bindi and a bun</span>
+              <button type="button" onClick="{{applySareeLook}}" style="flex: none; height: 44px; padding: 0 14px; cursor: pointer; border: none; background: #FFE14D; color: #0A1430; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 15px; text-transform: uppercase">Apply</button>
+            </div>
+          </sc-if>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px">
+            <sc-for list="{{accOpts}}" as="ac" hint-placeholder-count="13">
+              <button type="button" aria-pressed="{{ac.pressed}}" onClick="{{ac.pick}}" style="height: 48px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border: 2px solid {{ac.ring}}; background: {{ac.bg}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 16px; letter-spacing: 0.03em; text-transform: uppercase">
+                <span>{{ac.label}}</span>
+                <span style="width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border: 2px solid {{ac.ring}}; background: {{ac.box}}">
+                  <sc-if value="{{ac.on}}" hint-placeholder-val="{{false}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A1430" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></sc-if>
+                </span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{tabEmotes}}" hint-placeholder-val="{{false}}">
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.12em; color: #B9C8EA; text-transform: uppercase">20 emotes · tap to preview</span>
+          <span style="font-size: 13px; font-weight: 600; color: #8EA3CF">★ marks your victory emote, played when you complete a quest.</span>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <sc-for list="{{emoteRows}}" as="e" hint-placeholder-count="20">
+              <div style="display: flex; gap: 6px">
+                <button type="button" onClick="{{e.play}}" style="flex: 1; min-width: 0; height: 44px; padding: 0 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; border: 2px solid {{e.ring}}; background: {{e.bg}}; text-align: left; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 16px; letter-spacing: 0.03em; text-transform: uppercase">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4v16l13-8z"></path></svg>
+                  <span>{{e.label}}</span>
+                  <sc-if value="{{e.isNew}}" hint-placeholder-val="{{false}}"><span style="margin-left: auto; padding: 1px 6px; background: #FF6FAE; color: #0A1430; font-size: 11px; font-weight: 900; font-style: italic">NEW</span></sc-if>
+                </button>
+                <button type="button" aria-label="Set {{e.label}} as victory emote" aria-pressed="{{e.starPressed}}" onClick="{{e.setVictory}}" style="flex: none; width: 44px; height: 44px; padding: 0; cursor: pointer; border: 2px solid {{e.starRing}}; background: {{e.starBg}}; display: flex; align-items: center; justify-content: center">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="{{e.starFill}}" stroke="{{e.starStroke}}" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg>
+                </button>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{tabSkin}}" hint-placeholder-val="{{false}}">
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.12em; color: #B9C8EA; text-transform: uppercase">Skin tone</span>
+          <div style="display: grid; grid-template-columns: repeat(4, 64px); gap: 10px">
+            <sc-for list="{{skinOpts}}" as="sw" hint-placeholder-count="8">
+              <button type="button" aria-label="Skin tone {{sw.n}}" aria-pressed="{{sw.pressed}}" onClick="{{sw.pick}}" style="width: 64px; height: 64px; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; border: 2px solid {{sw.ring}}; background: rgba(255,255,255,0.04); border-radius: 50%">
+                <span style="width: 46px; height: 46px; border-radius: 50%; background: {{sw.color}}; box-shadow: inset -6px -6px 10px rgba(0,0,0,0.18)"></span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1194,"height":834}}'>
+var PLAYER_LEVEL = 12;
+var RAR = {
+  uncommon: { name: 'Uncommon', grad: 'linear-gradient(160deg, #5BE07A 0%, #1F8F3C 100%)', light: '#7CF59A' },
+  rare: { name: 'Rare', grad: 'linear-gradient(160deg, #4CB8FF 0%, #1652C4 100%)', light: '#7DCBFF' },
+  epic: { name: 'Epic', grad: 'linear-gradient(160deg, #D06BFF 0%, #5E1FC0 100%)', light: '#DDA0FF' },
+  legendary: { name: 'Legendary', grad: 'linear-gradient(160deg, #FFB547 0%, #D2550E 100%)', light: '#FFC46B' }
+};
+function O(id, name, cat, r, lvl, p, s, a, lp, ls, la) { return { id: id, name: name, cat: cat, r: r, lvl: lvl, def: { p: p, s: s, a: a }, labels: { p: lp, s: ls, a: la } }; }
+var OUTFITS = [
+  O('runner', 'Street Runner', 'Street', 'rare', 1, '#1F7F86', '#2A3142', '#FFC83D', 'Jacket', 'Joggers', 'Trims'),
+  O('saree', 'Nivi Silk Saree', 'Traditional', 'legendary', 1, '#B3122E', '#FFC83D', '#FFC83D', 'Saree', 'Blouse', 'Border & juttis'),
+  O('sareeKanji', 'Kanjivaram Silk', 'Traditional', 'legendary', 1, '#C2185B', '#FFC83D', '#FFC83D', 'Silk', 'Blouse', 'Juttis'),
+  O('sareeParty', 'Party Saree', 'Traditional', 'epic', 1, '#6B3FD0', '#1B1F2A', '#E2C8FF', 'Sheer saree', 'Sleeveless blouse', 'Border, sequins & heels'),
+  O('nauvari', 'Nauvari Saree', 'Traditional', 'legendary', 1, '#2BA36B', '#6B3FD0', '#FFC83D', 'Saree', 'Blouse', 'Zari border & juttis'),
+  O('denim', 'Denim Daze', 'Street', 'rare', 1, '#4A6FA5', '#2A3F6B', '#F2F6FF', 'Jacket', 'Jeans', 'Tee'),
+  O('boardroom', 'Boardroom', 'Work', 'epic', 1, '#2A3142', '#F2F6FF', '#FFC83D', 'Suit', 'Blouse', 'Button'),
+  O('hoodie', 'Cozy Hoodie', 'Casual', 'uncommon', 1, '#C9B79C', '#2A3142', '#F2F6FF', 'Hoodie', 'Joggers', 'Drawstrings'),
+  O('trench', 'Trench Classic', 'Work', 'epic', 1, '#C9B79C', '#1B1F2A', '#FFC83D', 'Trench', 'Turtleneck', 'Buttons'),
+  O('summer', 'Summer Sun', 'Casual', 'uncommon', 1, '#FFC83D', '#4A6FA5', '#C9B79C', 'Tank', 'Shorts', 'Sandals'),
+  O('tennis', 'Tennis Club', 'Active', 'rare', 1, '#F2F6FF', '#F2F6FF', '#2BA36B', 'Polo', 'Skirt', 'Trims'),
+  O('cargo', 'Cargo Ops', 'Street', 'rare', 1, '#5A6B3A', '#C9B79C', '#1B1F2A', 'Vest', 'Cargo pants', 'Tank'),
+  O('knit', 'Knit Weekend', 'Casual', 'uncommon', 1, '#FF8A3C', '#C9B79C', '#FFC83D', 'Sweater', 'Midi skirt', 'Trims'),
+  O('athleisure', 'Athleisure', 'Active', 'rare', 1, '#6B3FD0', '#1B1F2A', '#2BA36B', 'Sports top', 'Leggings', 'Trims'),
+  O('lbd', 'Little Black Dress', 'Evening', 'epic', 1, '#1B1F2A', '#1B1F2A', '#FFC83D', 'Dress', 'Heels', 'Trims'),
+  O('sundress', 'Sundress', 'Casual', 'rare', 1, '#FFC83D', '#C9B79C', '#F2F6FF', 'Dress', 'Sandals', 'Trims'),
+  O('coverall', 'Mechanic', 'Work', 'uncommon', 1, '#2F5BD8', '#1B1F2A', '#FF8A3C', 'Coverall', 'Boots', 'Trims'),
+  O('cardigan', 'Cardigan Café', 'Casual', 'uncommon', 1, '#FFC83D', '#F2F6FF', '#F2F6FF', 'Cardigan', 'Tee', 'Buttons'),
+  O('shirtslacks', 'Shirt & Slacks', 'Work', 'uncommon', 1, '#F2F6FF', '#2A3142', '#FFC83D', 'Shirt', 'Trousers', 'Trims'),
+  O('mono', 'Monochrome', 'Evening', 'rare', 1, '#1B1F2A', '#1B1F2A', '#FFC83D', 'Outfit', 'Boots', 'Trims'),
+  O('skater', 'Skater', 'Street', 'uncommon', 1, '#FF8A3C', '#C9B79C', '#F2F6FF', 'Tee', 'Shorts', 'Trims'),
+  O('officeknit', 'Office Knit', 'Work', 'uncommon', 1, '#C9B79C', '#2A3142', '#FFC83D', 'Sweater', 'Trousers', 'Trims'),
+  O('shirtdress', 'Shirt Dress', 'Casual', 'rare', 1, '#C9B79C', '#F2F6FF', '#7A4B2A', 'Dress', 'Sneakers', 'Trims'),
+  O('track', 'Track Star', 'Active', 'rare', 1, '#2F5BD8', '#F2F6FF', '#F2F6FF', 'Tracksuit', 'Tee', 'Stripes'),
+  O('utility', 'Utility Hoodie', 'Street', 'epic', 1, '#5A6B3A', '#2A3142', '#FF8A3C', 'Vest', 'Hoodie', 'Trims'),
+  O('rock', 'Rock Edit', 'Street', 'epic', 13, '#1B1F2A', '#B3122E', '#F2F6FF', 'Leather', 'Skirt', 'Tee'),
+  O('biker', 'Biker Night', 'Street', 'legendary', 14, '#1B1F2A', '#2A3142', '#B3122E', 'Leather', 'Leggings', 'Tank'),
+  O('festival', 'Festival', 'Casual', 'rare', 15, '#F2F6FF', '#4A6FA5', '#FF6FAE', 'Tank', 'Shorts', 'Trims'),
+  O('puffer', 'Puffer Peak', 'Casual', 'epic', 16, '#FF8A3C', '#1B1F2A', '#FFC83D', 'Puffer', 'Turtleneck', 'Zip'),
+  O('jumpsuit', 'Jumpsuit', 'Evening', 'epic', 18, '#2BA36B', '#C9B79C', '#FFC83D', 'Jumpsuit', 'Heels', 'Belt'),
+  O('varsity', 'Varsity', 'Street', 'legendary', 20, '#B3122E', '#1B1F2A', '#F2F6FF', 'Jacket', 'Skirt', 'Sleeves'),
+  O('bodycon', 'Evening Bodycon', 'Evening', 'legendary', 22, '#B3122E', '#1B1F2A', '#FFC83D', 'Dress', 'Heels', 'Trims'),
+  O('powershorts', 'Power Shorts', 'Work', 'legendary', 25, '#FF6FAE', '#F2F6FF', '#FFC83D', 'Suit', 'Blouse', 'Buttons')
+];
+var CATS = ['All', 'Casual', 'Street', 'Work', 'Active', 'Evening', 'Traditional'];
+var PALETTE = [
+  ['#F2F6FF', 'white'], ['#1B1F2A', 'black'], ['#4A6FA5', 'denim'], ['#C9B79C', 'camel'], ['#B3122E', 'crimson'], ['#FF6FAE', 'pink'],
+  ['#FF8A3C', 'orange'], ['#FFC83D', 'gold'], ['#2BA36B', 'green'], ['#1F7F86', 'teal'], ['#2F5BD8', 'royal blue'], ['#6B3FD0', 'purple']
+];
+var HAIR_COLORS = ['#1A1420', '#2A1A14', '#5A3220', '#8A4B26', '#C98A3E', '#E8D3A0', '#FF6FAE', '#7B5CFF'];
+var SKINS = ['#F8DCC8', '#F1C6A7', '#E2A985', '#C98B66', '#A86D4A', '#8A5638', '#6A3F28', '#4A2C1C'];
+var STYLES = [['braid', 'Braid'], ['ponytail', 'Ponytail'], ['bun', 'Bun'], ['bob', 'Bob'], ['long', 'Long'], ['curly', 'Curly'], ['pixie', 'Pixie'], ['spacebuns', 'Space buns']];
+var ACCS = [['glasses', 'Glasses'], ['sunglasses', 'Sunglasses'], ['hoops', 'Hoops'], ['jhumkas', 'Jhumkas'], ['necklace', 'Necklace'], ['cap', 'Cap'], ['beanie', 'Beanie'], ['headphones', 'Headphones'], ['crossbody', 'Crossbody'], ['backpack', 'Backpack'], ['watch', 'Watch'], ['bangles', 'Bangles'], ['bindi', 'Bindi']];
+var EXCLUSIVE = { glasses: 'sunglasses', sunglasses: 'glasses', hoops: 'jhumkas', jhumkas: 'hoops', cap: 'beanie', beanie: 'cap' };
+var TABS = [['colors', 'Colors'], ['hair', 'Hair'], ['acc', 'Extras'], ['skin', 'Skin'], ['emotes', 'Emotes']];
+// id, label, duration in ms (matches emotes.css)
+var EMOTES = [
+  ['victory', 'Victory', 1500], ['thumkas', 'Thumkas', 3000], ['wave', 'Wave', 2000], ['dab', 'Dab', 1600],
+  ['floss', 'Floss', 2400], ['clap', 'Clap', 2000], ['spin', 'Spin', 1400], ['jacks', 'Jumping Jacks', 2400],
+  ['salute', 'Salute', 2000], ['namaste', 'Namaste', 2200], ['bhangra', 'Bhangra', 2400], ['shrug', 'Shrug', 1600],
+  ['laugh', 'Laugh', 2000], ['flex', 'Flex', 2000], ['heart', 'Heart Hands', 2200], ['headbang', 'Headbang', 2000],
+  ['disco', 'Disco', 2400], ['robot', 'Robot', 2400], ['garba', 'Garba', 2800], ['bow', 'Bow', 2000]
+];
+
+class Component extends DCLogic {
+  s(k, d) { return (this.state && this.state[k] != null) ? this.state[k] : d; }
+  colorsFor(o) { var all = this.s('colors', {}); return Object.assign({}, o.def, all[o.id] || {}); }
+  setColor(oid, key, col) {
+    var all = Object.assign({}, this.s('colors', {}));
+    all[oid] = Object.assign({}, all[oid] || {}); all[oid][key] = col;
+    this.setState({ colors: all });
+  }
+  toggleAcc(k) {
+    var list = this.s('acc', ['crossbody']).slice();
+    var i = list.indexOf(k);
+    if (i >= 0) list.splice(i, 1);
+    else {
+      list.push(k);
+      var other = EXCLUSIVE[k]; var j = list.indexOf(other);
+      if (other && j >= 0) list.splice(j, 1);
+    }
+    this.setState({ acc: list });
+  }
+  playEmote(id) {
+    var self = this;
+    var def = EMOTES.filter(function (e) { return e[0] === id; })[0] || EMOTES[0];
+    this.setState({ emoteName: null });
+    if (this._t0) clearTimeout(this._t0);
+    if (this._t) clearTimeout(this._t);
+    this._t0 = setTimeout(function () { self.setState({ emoteName: def[0] }); }, 30);
+    this._t = setTimeout(function () { self.setState({ emoteName: null }); }, def[2] + 200);
+  }
+  componentWillUnmount() { if (this._t) clearTimeout(this._t); if (this._t0) clearTimeout(this._t0); }
+  renderVals() {
+    var self = this;
+    var sel = this.s('sel', 'runner');
+    var equipped = this.s('equipped', 'runner');
+    var cat = this.s('cat', 'All');
+    var tab = this.s('tab', 'colors');
+    var hair = this.s('hair', '#2A1A14');
+    var skin = this.s('skin', '#C98B66');
+    var hairStyle = this.s('hairStyle', 'braid');
+    var acc = this.s('acc', ['crossbody']);
+    var emoteName = this.s('emoteName', null);
+    var victory = this.s('victory', 'victory');
+    var curO = OUTFITS.filter(function (o) { return o.id === sel; })[0];
+    var curC = this.colorsFor(curO);
+    var rr = RAR[curO.r];
+    var locked = curO.lvl > PLAYER_LEVEL;
+    var isEquipped = equipped === sel;
+
+    var on = { ring: '#FFE14D', bg: 'rgba(255,225,77,0.14)', color: '#FFFFFF' };
+    var off = { ring: 'rgba(255,255,255,0.16)', bg: 'rgba(255,255,255,0.04)', color: '#B9C8EA' };
+
+    return {
+      avatarClass: emoteName ? ('em-' + emoteName) : 'av-idle',
+      tryEmote: function () { self.playEmote(victory); },
+      victoryLabel: EMOTES.filter(function (e) { return e[0] === victory; })[0][1],
+      tabEmotes: tab === 'emotes',
+      emoteRows: EMOTES.map(function (e) {
+        var playing = emoteName === e[0]; var isV = victory === e[0];
+        return {
+          label: e[1], isNew: e[0] === 'thumkas',
+          ring: playing ? '#FFE14D' : 'rgba(255,255,255,0.16)',
+          bg: playing ? 'rgba(255,225,77,0.14)' : 'rgba(255,255,255,0.04)',
+          play: function () { self.playEmote(e[0]); },
+          starPressed: isV ? 'true' : 'false',
+          starRing: isV ? '#FFE14D' : 'rgba(255,255,255,0.16)',
+          starBg: isV ? 'rgba(255,225,77,0.14)' : 'rgba(255,255,255,0.04)',
+          starFill: isV ? '#FFE14D' : 'none',
+          starStroke: isV ? '#FFE14D' : '#8EA3CF',
+          setVictory: function () { self.setState({ victory: e[0] }); }
+        };
+      }),
+      hair: hair, skin: skin, hairStyle: hairStyle, accString: acc.join(','),
+      cur: { id: curO.id, name: curO.name, cat: curO.cat, p: curC.p, s: curC.s, a: curC.a, grad: rr.grad, light: rr.light, rarityName: rr.name },
+      statusLine: locked ? ('Locked · reach Level ' + curO.lvl + ' to wear it') : (isEquipped ? 'Equipped' : 'Previewing · tap Equip to wear'),
+      statusColor: locked ? '#FF9AAE' : (isEquipped ? '#7CF59A' : '#A9BBE0'),
+      equipLabel: locked ? ('Unlocks at Lv ' + curO.lvl) : (isEquipped ? 'Equipped' : 'Equip'),
+      equipDisabled: (locked || isEquipped) ? 'true' : 'false',
+      equipBg: locked ? 'rgba(255,255,255,0.12)' : (isEquipped ? 'rgba(124,245,154,0.18)' : '#FFE14D'),
+      equipColor: locked ? '#8EA3CF' : (isEquipped ? '#7CF59A' : '#0A1430'),
+      equipLip: locked ? 'rgba(0,0,0,0.3)' : (isEquipped ? 'rgba(0,0,0,0.3)' : '#B89A12'),
+      equip: function () { if (!locked) self.setState({ equipped: sel }); },
+      ownedCount: OUTFITS.filter(function (o) { return o.lvl <= PLAYER_LEVEL; }).length,
+
+      cats: CATS.map(function (c) {
+        var isOn = c === cat;
+        return { label: c, selected: isOn ? 'true' : 'false', ring: isOn ? '#FFE14D' : off.ring, bg: isOn ? '#FFE14D' : off.bg, color: isOn ? '#0A1430' : '#DCE6FF', pick: function () { self.setState({ cat: c }); } };
+      }),
+      outfits: OUTFITS.filter(function (o) { return cat === 'All' || o.cat === cat; }).map(function (o) {
+        var c = self.colorsFor(o); var r = RAR[o.r]; var isSel = o.id === sel; var lk = o.lvl > PLAYER_LEVEL;
+        return {
+          id: o.id, name: o.name, p: c.p, s: c.s, a: c.a, lvl: o.lvl,
+          grad: r.grad, light: r.light, rarityName: r.name,
+          frame: isSel ? '#FFE14D' : 'rgba(255,255,255,0.12)', pressed: isSel ? 'true' : 'false',
+          equipped: o.id === equipped, locked: lk, lockNote: lk ? (', unlocks at level ' + o.lvl) : '',
+          pick: function () { self.setState({ sel: o.id }); }
+        };
+      }),
+
+      tabs: TABS.map(function (t) {
+        var isOn = t[0] === tab;
+        return { label: t[1], selected: isOn ? 'true' : 'false', ring: isOn ? '#FFE14D' : off.ring, bg: isOn ? '#FFE14D' : 'rgba(255,255,255,0.06)', color: isOn ? '#0A1430' : '#DCE6FF', pick: function () { self.setState({ tab: t[0] }); } };
+      }),
+      tabColors: tab === 'colors', tabHair: tab === 'hair', tabAcc: tab === 'acc', tabSkin: tab === 'skin',
+
+      slots: ['p', 's', 'a'].map(function (k) {
+        return {
+          label: curO.labels[k],
+          opts: PALETTE.map(function (pc) {
+            var isOn = curC[k].toLowerCase() === pc[0].toLowerCase();
+            return { color: pc[0], name: pc[1], pressed: isOn ? 'true' : 'false', ring: isOn ? '#FFE14D' : 'rgba(255,255,255,0.14)', pick: function () { self.setColor(curO.id, k, pc[0]); } };
+          })
+        };
+      }),
+      resetColors: function () { var all = Object.assign({}, self.s('colors', {})); delete all[curO.id]; self.setState({ colors: all }); },
+
+      hairStyles: STYLES.map(function (h) {
+        var isOn = h[0] === hairStyle;
+        return { label: h[1], pressed: isOn ? 'true' : 'false', ring: isOn ? on.ring : off.ring, bg: isOn ? on.bg : off.bg, pick: function () { self.setState({ hairStyle: h[0] }); } };
+      }),
+      hairOpts: HAIR_COLORS.map(function (c) {
+        return { color: c, pressed: c === hair ? 'true' : 'false', ring: c === hair ? '#FFE14D' : 'rgba(255,255,255,0.14)', pick: function () { self.setState({ hair: c }); } };
+      }),
+
+      isSaree: ['saree', 'sareeKanji', 'sareeParty', 'nauvari'].indexOf(sel) >= 0,
+      totalCount: OUTFITS.length,
+      applySareeLook: function () {
+        var list = self.s('acc', ['crossbody']).filter(function (k) { return k !== 'hoops' && k !== 'crossbody' && k !== 'backpack' && k !== 'cap' && k !== 'beanie' && k !== 'headphones'; });
+        ['jhumkas', 'bangles', 'bindi'].forEach(function (k) { if (list.indexOf(k) < 0) list.push(k); });
+        self.setState({ acc: list, hairStyle: 'bun' });
+      },
+      accOpts: ACCS.map(function (ac) {
+        var isOn = acc.indexOf(ac[0]) >= 0;
+        return { label: ac[1], on: isOn, pressed: isOn ? 'true' : 'false', ring: isOn ? '#FFE14D' : off.ring, bg: isOn ? on.bg : off.bg, box: isOn ? '#FFE14D' : 'transparent', pick: function () { self.toggleAcc(ac[0]); } };
+      }),
+
+      skinOpts: SKINS.map(function (c, i) {
+        return { color: c, n: i + 1, pressed: c === skin ? 'true' : 'false', ring: c === skin ? '#FFE14D' : 'rgba(255,255,255,0.14)', pick: function () { self.setState({ skin: c }); } };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

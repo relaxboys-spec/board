@@ -1,0 +1,6 @@
+node_modules
+dist
+.DS_Store
+
+# Backups contain notes and photos: never commit them
+quest-board-backup-*.json

@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Quest Board</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="../emotes.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;0,900;1,800;1,900&amp;family=Barlow:wght@500;600;700&amp;family=Caveat:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#070E26}
+a{color:#FFE14D}a:hover{color:#FFF0A0}
+button{font:inherit;color:inherit}
+.av-body,.av-arm,.av-head,.av-shadow{transform-box:fill-box}
+.av-body{transform-origin:50% 100%}
+.av-shadow{transform-origin:50% 50%}
+.av-head{transform-origin:50% 90%}
+.av-arm{transform-origin:50% 6%}
+.av-idle .av-body{animation:avBreath 2.8s ease-in-out infinite}
+.av-idle .av-head{animation:avLook 5.6s ease-in-out infinite}
+.av-cA .av-body{animation:avJumpA 1.5s cubic-bezier(.3,.7,.4,1)}
+.av-cB .av-body{animation:avJumpB 1.5s cubic-bezier(.3,.7,.4,1)}
+.av-cA .av-shadow{animation:avShadowA 1.5s ease-out}
+.av-cB .av-shadow{animation:avShadowB 1.5s ease-out}
+.av-cA .av-arm-l{animation:avArmLA 1.5s ease-in-out}
+.av-cB .av-arm-l{animation:avArmLB 1.5s ease-in-out}
+.av-cA .av-arm-r{animation:avArmRA 1.5s ease-in-out}
+.av-cB .av-arm-r{animation:avArmRB 1.5s ease-in-out}
+@keyframes avBreath{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-3px) scaleY(1.015)}}
+@keyframes avLook{0%,40%,100%{transform:rotate(0)}50%,60%{transform:rotate(-6deg)}70%,80%{transform:rotate(5deg)}}
+@keyframes avJumpA{0%{transform:translateY(0) scale(1,1)}14%{transform:translateY(6px) scale(1.06,.92)}34%{transform:translateY(-58px) scale(.96,1.06) rotate(-4deg)}52%{transform:translateY(-62px) rotate(6deg)}72%{transform:translateY(0) scale(1.06,.93)}84%{transform:translateY(-8px) scale(1,1)}100%{transform:translateY(0)}}
+@keyframes avJumpB{0%{transform:translateY(0) scale(1,1)}14%{transform:translateY(6px) scale(1.06,.92)}34%{transform:translateY(-58px) scale(.96,1.06) rotate(-4deg)}52%{transform:translateY(-62px) rotate(6deg)}72%{transform:translateY(0) scale(1.06,.93)}84%{transform:translateY(-8px) scale(1,1)}100%{transform:translateY(0)}}
+@keyframes avShadowA{0%,100%{transform:scale(1);opacity:1}40%,55%{transform:scale(.55);opacity:.4}}
+@keyframes avShadowB{0%,100%{transform:scale(1);opacity:1}40%,55%{transform:scale(.55);opacity:.4}}
+@keyframes avArmLA{0%,100%{transform:rotate(0)}25%{transform:rotate(160deg)}40%{transform:rotate(135deg)}55%{transform:rotate(165deg)}70%{transform:rotate(140deg)}85%{transform:rotate(20deg)}}
+@keyframes avArmLB{0%,100%{transform:rotate(0)}25%{transform:rotate(160deg)}40%{transform:rotate(135deg)}55%{transform:rotate(165deg)}70%{transform:rotate(140deg)}85%{transform:rotate(20deg)}}
+@keyframes avArmRA{0%,100%{transform:rotate(0)}25%{transform:rotate(-160deg)}40%{transform:rotate(-135deg)}55%{transform:rotate(-165deg)}70%{transform:rotate(-140deg)}85%{transform:rotate(-20deg)}}
+@keyframes avArmRB{0%,100%{transform:rotate(0)}25%{transform:rotate(-160deg)}40%{transform:rotate(-135deg)}55%{transform:rotate(-165deg)}70%{transform:rotate(-140deg)}85%{transform:rotate(-20deg)}}
+@keyframes avConf{0%{transform:translateY(0) rotate(0);opacity:1}70%{opacity:1}100%{transform:translateY(-120px) rotate(540deg);opacity:0}}
+@keyframes avPop{0%{transform:translateY(10px) scale(.6);opacity:0}20%{transform:translateY(0) scale(1.1);opacity:1}75%{transform:translateY(-14px) scale(1);opacity:1}100%{transform:translateY(-30px);opacity:0}}
+@keyframes avRing{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.7);opacity:0}}
+.av-conf{animation:avConf 1.3s cubic-bezier(.2,.6,.4,1) forwards}
+.av-pop{animation:avPop 1.6s ease-out forwards}
+.av-ring{animation:avRing 0.9s ease-out forwards}
+@media (prefers-reduced-motion: reduce){.av-idle .av-body,.av-idle .av-head,.av-cA *,.av-cB *,.av-conf,.av-ring{animation:none!important}}
+</style>
+</helmet>
+<div style="width: 1194px; height: 834px; position: relative; overflow: hidden; box-sizing: border-box; font-family: 'Barlow', sans-serif; color: #FFFFFF; background: radial-gradient(ellipse 70% 55% at 50% -12%, #2A5CD0 0%, rgba(42,92,208,0) 70%), linear-gradient(180deg, #0F2054 0%, #070E26 100%)">
+
+  <div style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 2px, rgba(255,255,255,0) 2px, rgba(255,255,255,0) 24px)"></div>
+
+  <!-- TOP HUD -->
+  <header style="position: relative; height: 84px; box-sizing: border-box; padding: 18px 24px; display: flex; align-items: center; gap: 18px">
+    <nav aria-label="Boards" style="display: flex; gap: 8px">
+      <button type="button" onClick="{{pickWork}}" style="height: 48px; padding: 0 28px; border: 1px solid {{workBorder}}; background: {{workBg}}; color: {{workColor}}; transform: skewX(-12deg); cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 24px; letter-spacing: 0.03em; text-transform: uppercase"><span style="display: inline-block; transform: skewX(12deg)">Work</span></button>
+      <button type="button" onClick="{{pickPersonal}}" style="height: 48px; padding: 0 28px; border: 1px solid {{personalBorder}}; background: {{personalBg}}; color: {{personalColor}}; transform: skewX(-12deg); cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 24px; letter-spacing: 0.03em; text-transform: uppercase"><span style="display: inline-block; transform: skewX(12deg)">Personal</span></button>
+    </nav>
+
+    <div style="display: flex; align-items: center; gap: 12px; margin-left: 10px">
+      <div style="width: 54px; height: 54px; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: linear-gradient(160deg, #D06BFF 0%, #5E1FC0 100%); display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 28px; text-shadow: 0 2px 0 rgba(0,0,0,0.35)">{{level}}</div>
+      <div style="display: flex; flex-direction: column; gap: 6px; width: 250px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase">
+          <span style="font-size: 15px; letter-spacing: 0.12em; color: #B9C8EA">Level {{level}}</span>
+          <span style="font-size: 16px; color: #FFFFFF">{{xpInto}} <span style="color: #8EA3CF">/ 1000 XP</span></span>
+        </div>
+        <div style="position: relative; height: 12px; background: rgba(255,255,255,0.12); transform: skewX(-14deg); overflow: hidden">
+          <div style="height: 100%; width: {{xpPct}}; background: linear-gradient(90deg, #3BE0FF 0%, #2F7BFF 100%); box-shadow: 0 0 12px rgba(59,224,255,0.6)"></div>
+          <div style="position: absolute; inset: 0; background: repeating-linear-gradient(90deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 23px, rgba(7,14,38,0.7) 23px, rgba(7,14,38,0.7) 25px)"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px; background: rgba(255,138,31,0.12); border: 1px solid rgba(255,138,31,0.4); transform: skewX(-12deg)">
+      <div style="display: flex; align-items: center; gap: 8px; transform: skewX(12deg)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF9A3C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4 2.5-5 .5 2 1.5 3 2.5 3 0-3-1-5 0-8z"/></svg>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 26px; line-height: 1">7</span>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.1em; line-height: 1.05; color: #FFC48F; text-transform: uppercase">Day<br>Streak</span>
+      </div>
+    </div>
+
+    <div style="flex: 1"></div>
+
+    <button type="button" aria-label="Open vault of completed notes" style="height: 48px; padding: 0 16px; border: 1px solid rgba(255,225,77,0.45); background: rgba(255,225,77,0.1); transform: skewX(-12deg); cursor: pointer">
+      <span style="display: flex; align-items: center; gap: 8px; transform: skewX(12deg)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFE14D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11V9a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v2"/><rect x="3" y="11" width="18" height="9" rx="1"/><path d="M10 11v3h4v-3"/></svg>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.12em; color: #FFE14D; text-transform: uppercase">Vault</span>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 24px; color: #FFFFFF">{{vault}}</span>
+      </span>
+    </button>
+    <button type="button" aria-label="Undo" onClick="{{undo}}" style="width: 48px; height: 48px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); transform: skewX(-12deg); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: skewX(12deg)"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>
+    </button>
+    <button type="button" aria-label="Settings" style="width: 48px; height: 48px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); transform: skewX(-12deg); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: skewX(12deg)"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+    </button>
+  </header>
+
+  <!-- BOARD -->
+  <main style="position: absolute; top: 84px; left: 24px; right: 24px; bottom: 24px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) 260px; gap: 18px">
+
+    <!-- TODAY -->
+    <section style="min-height: 0; box-sizing: border-box; padding: 22px; display: flex; flex-direction: column; gap: 16px; background: rgba(8,18,52,0.74); border: 1px solid rgba(120,170,255,0.22); clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%)">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 15px; letter-spacing: 0.14em; color: #FFE14D; text-transform: uppercase">Daily Quests</span>
+          <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 46px; line-height: 0.9; text-transform: uppercase; text-shadow: 0 3px 0 rgba(0,0,0,0.4)">Today</h2>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase">
+          <span style="font-size: 20px">{{todayDone}}<span style="color: #8EA3CF"> / {{todayTotal}} Complete</span></span>
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 14px; letter-spacing: 0.08em; color: #B9C8EA">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B9C8EA" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            Resets in 9h 12m
+          </span>
+        </div>
+      </div>
+
+      <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 14px">
+        <sc-for list="{{today}}" as="n" hint-placeholder-count="3">
+          <button type="button" aria-label="Toggle note: {{n.text}}" onClick="{{n.toggle}}" style="position: relative; min-height: 0; height: 100%; padding: 4px; border: none; cursor: pointer; text-align: left; display: flex; background: {{n.grad}}; clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%); box-shadow: 0 10px 24px rgba(0,0,0,0.35)">
+            <div style="position: relative; flex: 1; display: flex; flex-direction: column; padding: 14px 16px 16px; background-color: #0C1840; background-image: radial-gradient(rgba(255,255,255,0.08) 1px, rgba(255,255,255,0) 1.6px); background-size: 18px 18px; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%)">
+              <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase">
+                <span style="font-size: 13px; letter-spacing: 0.12em; color: {{n.light}}">{{n.rarity}}</span>
+                <span style="font-style: italic; font-size: 18px; color: #FFE14D">+{{n.xp}} XP</span>
+              </div>
+              <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 6px 4px">
+                <span style="font-family: 'Caveat', cursive; font-weight: 600; font-size: 33px; line-height: 1.02; color: #F2F6FF; text-align: center; transform: rotate(-2deg)">{{n.text}}</span>
+              </div>
+            </div>
+            <sc-if value="{{n.done}}" hint-placeholder-val="{{false}}">
+              <div style="position: absolute; inset: 0; background: rgba(4,10,30,0.62); display: flex; align-items: center; justify-content: center">
+                <span style="display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: #FFE14D; color: #0A1430; transform: rotate(-8deg); font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 24px; letter-spacing: 0.06em; text-transform: uppercase; box-shadow: 0 6px 16px rgba(0,0,0,0.4)">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1430" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+                  Complete
+                </span>
+              </div>
+            </sc-if>
+          </button>
+        </sc-for>
+        <a href="Write.dc.html" style="min-height: 0; height: 100%; box-sizing: border-box; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border: 2px dashed rgba(255,255,255,0.25); background: rgba(255,255,255,0.03); cursor: pointer; color: #DCE6FF">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#DCE6FF" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase">New Note</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- THIS WEEK -->
+    <section style="min-height: 0; box-sizing: border-box; padding: 22px; display: flex; flex-direction: column; gap: 16px; background: rgba(8,18,52,0.74); border: 1px solid rgba(120,170,255,0.22); clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%)">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 15px; letter-spacing: 0.14em; color: #3BE0FF; text-transform: uppercase">Weekly Challenges</span>
+          <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 46px; line-height: 0.9; text-transform: uppercase; text-shadow: 0 3px 0 rgba(0,0,0,0.4)">This Week</h2>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase">
+          <span style="font-size: 20px">{{weekDone}}<span style="color: #8EA3CF"> / {{weekTotal}} Complete</span></span>
+          <span style="font-size: 14px; letter-spacing: 0.08em; color: #B9C8EA">Oct 5 – Oct 11</span>
+        </div>
+      </div>
+
+      <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 10px">
+        <sc-for list="{{week}}" as="c" hint-placeholder-count="5">
+          <button type="button" aria-label="Toggle note: {{c.text}}" onClick="{{c.toggle}}" style="position: relative; min-height: 0; height: 100%; padding: 4px; border: none; cursor: pointer; text-align: left; display: flex; background: {{c.grad}}; clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); box-shadow: 0 10px 24px rgba(0,0,0,0.35)">
+            <div style="position: relative; flex: 1; display: flex; flex-direction: column; padding: 10px 12px 12px; background-color: #0C1840; background-image: radial-gradient(rgba(255,255,255,0.08) 1px, rgba(255,255,255,0) 1.6px); background-size: 16px 16px; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)">
+              <div style="display: flex; justify-content: space-between; align-items: center">
+                <span style="padding: 3px 9px; background: {{c.grad}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 15px; letter-spacing: 0.08em; color: #FFFFFF; text-transform: uppercase; text-shadow: 0 1px 0 rgba(0,0,0,0.35)">{{c.day}}</span>
+              </div>
+              <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 4px 2px">
+                <span style="font-family: 'Caveat', cursive; font-weight: 600; font-size: 26px; line-height: 1.02; color: #F2F6FF; text-align: center; transform: rotate(-2deg)">{{c.text}}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase">
+                <span style="font-size: 12px; letter-spacing: 0.1em; color: {{c.light}}">{{c.rarity}}</span>
+                <span style="font-style: italic; font-size: 16px; color: #FFE14D">+{{c.xp}} XP</span>
+              </div>
+            </div>
+            <sc-if value="{{c.done}}" hint-placeholder-val="{{false}}">
+              <div style="position: absolute; inset: 0; background: rgba(4,10,30,0.62); display: flex; align-items: center; justify-content: center">
+                <span style="display: flex; align-items: center; gap: 6px; padding: 6px 14px; background: #FFE14D; color: #0A1430; transform: rotate(-8deg); font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; box-shadow: 0 6px 16px rgba(0,0,0,0.4)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1430" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+                  Complete
+                </span>
+              </div>
+            </sc-if>
+          </button>
+        </sc-for>
+        <a href="Write.dc.html" style="min-height: 0; height: 100%; box-sizing: border-box; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 2px dashed rgba(255,255,255,0.25); background: rgba(255,255,255,0.03); cursor: pointer; color: #DCE6FF">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#DCE6FF" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase">New Note</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- HERO -->
+    <section aria-label="Your hero" style="position: relative; min-height: 0; box-sizing: border-box; padding: 18px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; background: radial-gradient(ellipse 90% 55% at 50% 58%, rgba(59,224,255,0.28) 0%, rgba(59,224,255,0) 70%), linear-gradient(180deg, rgba(20,44,120,0.85) 0%, rgba(8,18,52,0.9) 100%); border: 1px solid rgba(120,170,255,0.3); clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%)">
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 14px; letter-spacing: 0.14em; color: #FFE14D; text-transform: uppercase">Your Hero</span>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 30px; line-height: 0.95; text-transform: uppercase">Nova</span>
+      </div>
+
+      <div style="position: relative; flex: 1; min-height: 0; display: flex; align-items: flex-end; justify-content: center">
+        <!-- light beams -->
+        <div aria-hidden="true" style="position: absolute; left: 50%; top: -18px; width: 220px; height: 100%; margin-left: -110px; background: linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 85%); clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%)"></div>
+        <!-- pedestal -->
+        <div aria-hidden="true" style="position: absolute; bottom: 6px; left: 50%; width: 200px; height: 46px; margin-left: -100px; border-radius: 50%; background: radial-gradient(ellipse at 50% 40%, #2C4DAA 0%, #13245E 70%); box-shadow: 0 0 0 3px rgba(59,224,255,0.55), 0 0 26px rgba(59,224,255,0.55)"></div>
+
+        <div style="position: relative; width: 250px; height: 375px; margin-bottom: 14px">
+          <div class="{{avatarClass}}" style="position: absolute; left: 0; top: 0; width: 200px; height: 300px; transform: scale(1.25); transform-origin: 0 0">
+            <dc-import name="Avatar" outfit="runner" hint-size="200px,300px"></dc-import>
+          </div>
+        </div>
+
+        <sc-if value="{{showEmotes}}" hint-placeholder-val="{{false}}">
+          <div role="dialog" aria-label="Emotes" style="position: absolute; inset: 0; z-index: 2; box-sizing: border-box; padding: 10px; display: flex; flex-direction: column; gap: 8px; background: rgba(4,10,30,0.94); border: 1px solid rgba(120,170,255,0.3)">
+            <div style="display: flex; justify-content: space-between; align-items: center">
+              <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 20px; text-transform: uppercase">Emotes</span>
+              <button type="button" aria-label="Close emotes" onClick="{{closeEmotes}}" style="width: 44px; height: 44px; padding: 0; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+              </button>
+            </div>
+            <span style="font-size: 12px; font-weight: 600; color: #8EA3CF">Tap to play · ★ plays when you complete a quest</span>
+            <div style="flex: 1; min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 44px; gap: 6px; padding-right: 2px">
+              <sc-for list="{{emotes}}" as="e" hint-placeholder-count="20">
+                <button type="button" onClick="{{e.play}}" style="position: relative; height: 44px; padding: 0 8px; cursor: pointer; border: 1px solid {{e.ring}}; background: {{e.bg}}; color: #FFFFFF; text-align: left; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.03em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{e.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{emoteA}}" hint-placeholder-val="{{false}}">
+          <div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none">
+            <div class="av-ring" style="position: absolute; left: 50%; bottom: 0; width: 220px; height: 60px; margin-left: -110px; border-radius: 50%; border: 3px solid #FFE14D"></div>
+            <sc-for list="{{confetti}}" as="p" hint-placeholder-count="0">
+              <span style="position: absolute; left: 50%; top: 42%; width: 0; height: 0; transform: rotate({{p.angle}})"><span class="av-conf" style="position: absolute; left: -4px; top: -6px; width: {{p.w}}; height: {{p.h}}; background: {{p.c}}; animation-delay: {{p.delay}}"></span></span>
+            </sc-for>
+            <span class="av-pop" style="position: absolute; left: 0; right: 0; top: 8px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 34px; color: #FFE14D; text-shadow: 0 3px 0 rgba(0,0,0,0.45)">{{emoteLabel}}</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{emoteB}}" hint-placeholder-val="{{false}}">
+          <div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none">
+            <div class="av-ring" style="position: absolute; left: 50%; bottom: 0; width: 220px; height: 60px; margin-left: -110px; border-radius: 50%; border: 3px solid #FFE14D"></div>
+            <sc-for list="{{confetti}}" as="p" hint-placeholder-count="0">
+              <span style="position: absolute; left: 50%; top: 42%; width: 0; height: 0; transform: rotate({{p.angle}})"><span class="av-conf" style="position: absolute; left: -4px; top: -6px; width: {{p.w}}; height: {{p.h}}; background: {{p.c}}; animation-delay: {{p.delay}}"></span></span>
+            </sc-for>
+            <span class="av-pop" style="position: absolute; left: 0; right: 0; top: 8px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 34px; color: #FFE14D; text-shadow: 0 3px 0 rgba(0,0,0,0.45)">{{emoteLabel}}</span>
+          </div>
+        </sc-if>
+      </div>
+
+      <div aria-live="polite" style="text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase; color: {{heroLineColor}}">{{heroLine}}</div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+        <a href="Locker.dc.html" style="height: 46px; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: #FFFFFF; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); transform: skewX(-10deg); font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase">
+          <span style="display: flex; align-items: center; gap: 6px; transform: skewX(10deg)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3l4 3 4-3 5 4-3 4h-2v10H8V11H6L3 7z"/></svg>
+            Locker
+          </span>
+        </a>
+        <button type="button" onClick="{{previewEmote}}" style="height: 46px; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); transform: skewX(-10deg); font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase">
+          <span style="display: flex; align-items: center; gap: 6px; transform: skewX(10deg)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg>
+            Emotes
+          </span>
+        </button>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1194,"height":834}}'>
+var RAR = {
+  uncommon: { name: 'Low', grad: 'linear-gradient(160deg, #5BE07A 0%, #1F8F3C 100%)', light: '#7CF59A' },
+  rare: { name: 'Normal', grad: 'linear-gradient(160deg, #4CB8FF 0%, #1652C4 100%)', light: '#7DCBFF' },
+  epic: { name: 'High', grad: 'linear-gradient(160deg, #D06BFF 0%, #5E1FC0 100%)', light: '#DDA0FF' },
+  legendary: { name: 'Urgent', grad: 'linear-gradient(160deg, #FFB547 0%, #D2550E 100%)', light: '#FFC46B' }
+};
+var DATA = {
+  work: {
+    today: [
+      { id: 't1', text: 'Reply to client emails', r: 'rare', xp: 50 },
+      { id: 't2', text: 'Finish Q4 pitch deck!', r: 'legendary', xp: 150 },
+      { id: 't3', text: 'Standup 10:30', r: 'uncommon', xp: 25 }
+    ],
+    week: [
+      { id: 'w1', text: 'Draft hiring brief', day: 'Wed', r: 'epic', xp: 200 },
+      { id: 'w2', text: 'Client check-in call', day: 'Thu', r: 'rare', xp: 100 },
+      { id: 'w3', text: 'Ship v2 onboarding', day: 'Fri', r: 'legendary', xp: 300 },
+      { id: 'w4', text: 'Expense report', day: 'Fri', r: 'uncommon', xp: 50 },
+      { id: 'w5', text: 'Clear the backlog', day: 'Sun', r: 'epic', xp: 150 }
+    ]
+  },
+  personal: {
+    today: [
+      { id: 'p1', text: '30 min workout', r: 'epic', xp: 100 },
+      { id: 'p2', text: 'Buy eggs + coffee', r: 'uncommon', xp: 40 },
+      { id: 'p3', text: 'Call Mom', r: 'rare', xp: 60 }
+    ],
+    week: [
+      { id: 'pw1', text: 'Pay electricity bill', day: 'Wed', r: 'uncommon', xp: 50 },
+      { id: 'pw2', text: 'Book dentist', day: 'Thu', r: 'uncommon', xp: 40 },
+      { id: 'pw3', text: 'Plan weekend trip', day: 'Sat', r: 'legendary', xp: 200 },
+      { id: 'pw4', text: 'Finish the novel', day: 'Sat', r: 'rare', xp: 100 },
+      { id: 'pw5', text: 'Meal prep', day: 'Sun', r: 'rare', xp: 80 }
+    ]
+  }
+};
+var DEFAULT_DONE = { t3: true, w4: true, p3: true };
+var VICTORY_EMOTE = 'victory';
+// id, label, duration in ms (matches the animations in emotes.css)
+var EMOTES = [
+  ['victory', '★ Victory', 1500], ['thumkas', 'Thumkas', 3000], ['wave', 'Wave', 2000], ['dab', 'Dab', 1600],
+  ['floss', 'Floss', 2400], ['clap', 'Clap', 2000], ['spin', 'Spin', 1400], ['jacks', 'Jumping Jacks', 2400],
+  ['salute', 'Salute', 2000], ['namaste', 'Namaste', 2200], ['bhangra', 'Bhangra', 2400], ['shrug', 'Shrug', 1600],
+  ['laugh', 'Laugh', 2000], ['flex', 'Flex', 2000], ['heart', 'Heart Hands', 2200], ['headbang', 'Headbang', 2000],
+  ['disco', 'Disco', 2400], ['robot', 'Robot', 2400], ['garba', 'Garba', 2800], ['bow', 'Bow', 2000]
+];
+
+class Component extends DCLogic {
+  getDone() { return (this.state && this.state.done) || DEFAULT_DONE; }
+  getHistory() { return (this.state && this.state.history) || []; }
+  playEmote(id, withConfetti, xp) {
+    var self = this;
+    var def = EMOTES.filter(function (e) { return e[0] === id; })[0] || EMOTES[0];
+    var patch = { emoteName: null, showEmotes: false };
+    if (withConfetti) {
+      var prev = (this.state && this.state.emote) || 0;
+      patch.emote = prev === 1 ? 2 : 1;
+      patch.emoteXp = xp;
+    }
+    this.setState(patch);
+    if (this._emoteStart) clearTimeout(this._emoteStart);
+    if (this._emoteTimer) clearTimeout(this._emoteTimer);
+    this._emoteStart = setTimeout(function () { self.setState({ emoteName: def[0] }); }, 30);
+    this._emoteTimer = setTimeout(function () { self.setState({ emote: 0, emoteName: null }); }, def[2] + 200);
+  }
+  celebrate(xp) { this.playEmote(VICTORY_EMOTE, true, xp); }
+  componentWillUnmount() {
+    if (this._emoteTimer) clearTimeout(this._emoteTimer);
+    if (this._emoteStart) clearTimeout(this._emoteStart);
+  }
+  toggle(id) {
+    var done = Object.assign({}, this.getDone());
+    done[id] = !done[id];
+    this.setState({ done: done, history: this.getHistory().concat([id]) });
+    if (done[id]) {
+      var item = null;
+      ['work', 'personal'].forEach(function (t) {
+        DATA[t].today.concat(DATA[t].week).forEach(function (it) { if (it.id === id) item = it; });
+      });
+      this.celebrate(item ? item.xp : 0);
+    }
+  }
+  undo() {
+    var h = this.getHistory().slice();
+    if (!h.length) return;
+    var id = h.pop();
+    var done = Object.assign({}, this.getDone());
+    done[id] = !done[id];
+    this.setState({ done: done, history: h });
+  }
+  renderVals() {
+    var self = this;
+    var tab = (this.state && this.state.tab) || 'work';
+    var done = this.getDone();
+    var board = DATA[tab];
+
+    var total = 640;
+    var count = 0;
+    ['work', 'personal'].forEach(function (t) {
+      DATA[t].today.concat(DATA[t].week).forEach(function (it) {
+        if (done[it.id]) { total += it.xp; count += 1; }
+      });
+    });
+
+    function decorate(n) {
+      var rr = RAR[n.r];
+      return Object.assign({}, n, {
+        done: !!done[n.id],
+        grad: rr.grad,
+        light: rr.light,
+        rarity: rr.name,
+        toggle: function () { self.toggle(n.id); }
+      });
+    }
+    var today = board.today.map(decorate);
+    var week = board.week.map(decorate);
+
+    var isWork = tab === 'work';
+    var emote = (this.state && this.state.emote) || 0;
+    var CONF_C = ['#FFE14D', '#3BE0FF', '#FF6FAE', '#7CF59A', '#D06BFF', '#FFFFFF'];
+    var confetti = [];
+    for (var i = 0; i < 16; i++) {
+      confetti.push({
+        angle: (i * 22.5 - 90 + (i % 2 ? 6 : -6)) + 'deg',
+        w: (i % 3 === 0 ? 10 : 7) + 'px',
+        h: (i % 3 === 0 ? 5 : 12) + 'px',
+        c: CONF_C[i % CONF_C.length],
+        delay: ((i % 4) * 0.04) + 's'
+      });
+    }
+    return {
+      avatarClass: (this.state && this.state.emoteName) ? ('em-' + this.state.emoteName) : ((this.state && this.state.emote) ? '' : 'av-idle'),
+      showEmotes: !!(this.state && this.state.showEmotes),
+      closeEmotes: function () { self.setState({ showEmotes: false }); },
+      emotes: EMOTES.map(function (e) {
+        var playing = self.state && self.state.emoteName === e[0];
+        return {
+          label: e[1],
+          ring: playing ? '#FFE14D' : (e[0] === 'thumkas' ? 'rgba(255,111,174,0.6)' : 'rgba(255,255,255,0.16)'),
+          bg: playing ? 'rgba(255,225,77,0.16)' : (e[0] === 'thumkas' ? 'rgba(255,111,174,0.12)' : 'rgba(255,255,255,0.05)'),
+          play: function () { self.playEmote(e[0], false, 0); }
+        };
+      }),
+      emoteA: emote === 1,
+      emoteB: emote === 2,
+      emoteLabel: (this.state && this.state.emoteXp) ? ('+' + this.state.emoteXp + ' XP') : 'GG!',
+      confetti: confetti,
+      heroLine: emote ? 'Quest complete!' : ((this.state && this.state.emoteName) ? EMOTES.filter(function (e) { return e[0] === self.state.emoteName; })[0][1].replace('★ ', '') : 'Ready for action'),
+      heroLineColor: (emote || (this.state && this.state.emoteName)) ? '#FFE14D' : '#B9C8EA',
+      previewEmote: function () { self.setState({ showEmotes: !(self.state && self.state.showEmotes) }); },
+      today: today,
+      week: week,
+      todayDone: today.filter(function (q) { return q.done; }).length,
+      todayTotal: today.length,
+      weekDone: week.filter(function (c) { return c.done; }).length,
+      weekTotal: week.length,
+      level: 12 + Math.floor(total / 1000),
+      xpInto: total % 1000,
+      xpPct: ((total % 1000) / 10) + '%',
+      vault: 20 + count,
+      workBg: isWork ? '#FFE14D' : 'rgba(255,255,255,0.08)',
+      workColor: isWork ? '#0A1430' : '#DCE6FF',
+      workBorder: isWork ? '#FFE14D' : 'rgba(255,255,255,0.2)',
+      personalBg: !isWork ? '#FFE14D' : 'rgba(255,255,255,0.08)',
+      personalColor: !isWork ? '#0A1430' : '#DCE6FF',
+      personalBorder: !isWork ? '#FFE14D' : 'rgba(255,255,255,0.2)',
+      pickWork: function () { self.setState({ tab: 'work' }); },
+      pickPersonal: function () { self.setState({ tab: 'personal' }); },
+      undo: function () { self.undo(); }
+    };
+  }
+}
+</script>
+</body>
+</html>
