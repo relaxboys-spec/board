@@ -225,6 +225,22 @@ export function rollover(now = Date.now()): number {
   return moved;
 }
 
+/** Start a task (in progress, moved to the front of its column) or pause it again. */
+export function setInProgress(id: string, on: boolean) {
+  store.update(on ? 'start' : 'pause', (tx) => {
+    const n = tx.get(id);
+    if (!n || n.status !== 'active' || !!n.startedAt === on) return;
+    const now = Date.now();
+    if (on) {
+      tx.put({ ...n, startedAt: now, z: firstZ(n.board, n.zone), updatedAt: now });
+    } else {
+      const next: Note = { ...n, updatedAt: now };
+      delete next.startedAt;
+      tx.put(next);
+    }
+  });
+}
+
 export function completeNote(id: string): number {
   let gained = 0;
   store.update('complete', (tx) => {
@@ -232,7 +248,9 @@ export function completeNote(id: string): number {
     if (!n || n.status === 'done') return;
     gained = PRIORITY[n.priority].xp;
     const now = Date.now();
-    tx.put({ ...n, status: 'done', completedAt: now, xp: gained, updatedAt: now });
+    const done: Note = { ...n, status: 'done', completedAt: now, xp: gained, updatedAt: now };
+    delete done.startedAt;
+    tx.put(done);
   });
   return gained;
 }

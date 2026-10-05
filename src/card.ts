@@ -62,16 +62,17 @@ export class Card {
     const kindChanged = kind !== this.kind;
     this.kind = kind;
     const pr = PRIORITY[note.priority];
-    this.el.className = `qb-card k-${kind}` + (note.status === 'done' ? ' is-done' : '');
+    const inProgress = note.status === 'active' && !!note.startedAt;
+    this.el.className = `qb-card k-${kind}` + (note.status === 'done' ? ' is-done' : '') + (inProgress ? ' is-progress' : '');
     this.el.style.setProperty('--grad', pr.grad);
     this.el.style.setProperty('--light', pr.light);
     const what = hasText(note) ? note.text!.trim().slice(0, 80) : note.imageIds?.length ? 'photo note' : 'handwritten note';
     this.el.setAttribute(
       'aria-label',
-      `${what}. ${pr.label} priority, ${pr.xp} XP${note.status === 'done' ? ', complete' : ''}. Tap to open, hold to complete.`,
+      `${what}. ${pr.label} priority, ${pr.xp} XP${note.status === 'done' ? ', complete' : inProgress ? ', in progress' : ''}. Tap to open, hold to complete.`,
     );
 
-    const headKey = [kind, note.priority, note.due, note.dueDate, note.reminder?.due, note.status, this.ageDays(note), weekEndKey()].join('|');
+    const headKey = [kind, note.priority, note.due, note.dueDate, note.reminder?.due, note.status, note.startedAt, this.ageDays(note), weekEndKey()].join('|');
     if (force || headKey !== this.headKey) {
       this.headKey = headKey;
       this.buildChrome(note, kind);
@@ -86,11 +87,13 @@ export class Card {
     const pri = el('span', 'qb-card-pri', pr.label);
     const xp = el('span', 'qb-card-xp', `+${pr.xp} XP`);
     const pin = note.reminder ? this.pin(note) : null;
+    const prog = note.status === 'active' && note.startedAt ? el('span', 'qb-progchip', 'In progress') : null;
     if (kind === 'today') {
       const age = this.ageDays(note);
-      const ageChip = age >= 1 ? el('span', 'qb-agechip' + (age >= 2 ? ' old' : ''), `Day ${age + 1}`) : null;
+      // While she's on it, the badge takes the place of the priority label and the age chip.
+      const ageChip = age >= 1 && !prog ? el('span', 'qb-agechip' + (age >= 2 ? ' old' : ''), `Day ${age + 1}`) : null;
       ageChip?.setAttribute('title', `In Today for ${age + 1} days`);
-      this.top.replaceChildren(pri, ...(ageChip ? [ageChip] : []), ...(pin ? [pin] : []), el('span', 'qb-flex'), xp);
+      this.top.replaceChildren(...(prog ? [prog] : [pri]), ...(ageChip ? [ageChip] : []), ...(pin ? [pin] : []), el('span', 'qb-flex'), xp);
       this.foot?.remove();
       this.foot = null;
     } else {
@@ -102,7 +105,7 @@ export class Card {
         this.foot = el('div', 'qb-card-foot');
         this.body.after(this.foot);
       }
-      this.foot.replaceChildren(pri, xp);
+      this.foot.replaceChildren(prog ?? pri, xp);
     }
     if (note.status === 'done') {
       if (!this.stamp) {

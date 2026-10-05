@@ -216,6 +216,7 @@ function cleanNote(raw: any): Note {
     if (typeof n.dueDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(n.dueDate)) note.dueDate = n.dueDate;
   }
   if (n.zone === 'today' && num(n.todaySince)) note.todaySince = n.todaySince;
+  if (n.status !== 'done' && num(n.startedAt)) note.startedAt = n.startedAt;
   if (num(n.completedAt)) note.completedAt = n.completedAt;
   if (num(n.xp)) note.xp = n.xp;
   if (typeof n.text === 'string' && n.text.length <= 20000 && n.text.trim()) note.text = n.text;

@@ -162,6 +162,8 @@ const UNDO_LABEL: Record<string, string> = {
   create: 'new task',
   move: 'move',
   complete: 'complete',
+  start: 'start',
+  pause: 'pause',
   restore: 'un-complete',
   delete: 'delete',
   priority: 'priority',

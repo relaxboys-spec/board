@@ -18,7 +18,7 @@ notes, and **Nova**, a hero who celebrates every finished note.
 | Tap **+ New Task**, or empty space in a column | Pencil / finger | New note in that column, opened big for writing |
 | Tap the 🎤 or 📷 on a + New Task tile | Finger | New note straight into **Speak** (keyboard up) or **Photo** (picker open) |
 | Touch a note | Pencil | Opens it for writing |
-| Tap a note | Finger | Opens it: note info, actions, **Complete** |
+| Tap a note | Finger | Opens it: note info, actions, **Start · In progress** / **Pause**, **Complete** |
 | Hold a note still | Finger | It lifts, a yellow bar fills, and it's **complete** |
 | Hold a note, then move (or swipe it sideways) | Finger | Drag it: to the other column, the other board's tab, the Backlog, or the Vault / hero (= complete) |
 | Swipe up and down in a column | Finger | Scroll |
@@ -26,8 +26,12 @@ notes, and **Nova**, a hero who celebrates every finished note.
 | Hover over a note (supported iPads) | Pencil | The note lights up cyan |
 
 **In a note:** **Write**, **Speak** and **Photo** tabs; the side rail sets **priority**, **due**
-(Today / This Week + day / Someday) and **board**. Changes save as you make them; **Add to Board** just
+(Today / This Week + day / Someday), **status** (To do / In progress) and **board**. Changes save as you make them; **Add to Board** just
 closes it. An untouched empty note disappears on its own.
+
+**In progress:** starting a task moves it to the front of its column with a glowing cyan **In progress**
+badge (it replaces the priority label; the frame still shows the priority). **Pause** puts it back to To do;
+completing it clears the status. Both are undoable.
 
 **Writing tools:** pen, highlighter, eraser, lasso (circle strokes, then drag them, or tap the red
 trash), four inks, undo / redo. **Scribble out** a word (a quick zig-zag over it) to erase it.

@@ -71,6 +71,8 @@ export interface Note {
   dueDate?: string;
   /** When the note last entered Today (for the "Day 2" age chip). Missing = createdAt. */
   todaySince?: number;
+  /** In progress since (active tasks only; cleared when completed or paused). */
+  startedAt?: number;
   /** Order within its column (ascending). */
   z: number;
   priority: Priority;

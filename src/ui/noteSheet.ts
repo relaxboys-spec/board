@@ -1,4 +1,4 @@
-import { addStroke, daysInToday, eraseStrokes, hasText, isEmpty, moveNote, moveStrokes, setPriority, setText } from '../actions';
+import { addStroke, daysInToday, eraseStrokes, hasText, isEmpty, moveNote, moveStrokes, setInProgress, setPriority, setText } from '../actions';
 import { dayStart, weekEndKey } from '../days';
 import { pathFor, strokeAlpha } from '../ink';
 import { drawPage, hitPhoto, pageTransform, textBox } from '../page';
@@ -65,7 +65,18 @@ const ICONS = {
   bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
   trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
   expand: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
+  play: '<path d="M7 4v16l13-8z"/>',
+  pause: '<path d="M8 5v14M16 5v14"/>',
 };
+
+/** "9:40 am" today, "Mon" this week, "12 Oct" before that. */
+function sinceLabel(t: number) {
+  const d = new Date(t);
+  const now = new Date();
+  if (d.toDateString() === now.toDateString()) return d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  if (now.getTime() - t < 6 * 86400000) return d.toLocaleDateString(undefined, { weekday: 'short' });
+  return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+}
 
 function icon(name: keyof typeof ICONS, size = 22, stroke = 'currentColor', width = 2.2) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
@@ -571,7 +582,15 @@ export class NoteSheet {
         this.host.deleteNote(id);
       }),
     );
-    return [this.group('Priority', pri), dueGroup, this.group('Board', board), reward, ctas];
+    const status = el('div', 'qb-grid2');
+    for (const [on, label] of [[false, 'To do'], [true, 'In progress']] as const) {
+      const sel = !!n.startedAt === on;
+      const x = btn('qb-opt' + (sel ? ' on' + (on ? ' progress' : '') : ''), label, () => setInProgress(n.id, on));
+      x.setAttribute('aria-pressed', String(sel));
+      status.append(x);
+    }
+
+    return [this.group('Priority', pri), this.group('Status', status), dueGroup, this.group('Board', board), reward, ctas];
   }
 
   private viewRail(n: Note): HTMLElement[] {
@@ -587,7 +606,9 @@ export class NoteSheet {
       r.append(el('dt', '', k), el('dd', cls, v));
       rows.append(r);
     };
-    row('Status', n.status === 'done' ? 'Complete' : 'Active', n.status === 'done' ? 'yellow' : 'green');
+    if (n.status === 'done') row('Status', 'Complete', 'yellow');
+    else if (n.startedAt) row('Status', `In progress · since ${sinceLabel(n.startedAt)}`, 'cyan');
+    else row('Status', 'To do', 'green');
     row('Due', dueLong(n));
     const age = n.status === 'active' ? daysInToday(n) : 0;
     if (age >= 1) row('In Today', `Day ${age + 1}`, age >= 2 ? 'orange' : '');
@@ -618,6 +639,9 @@ export class NoteSheet {
       ctas.append(sent, btn('qb-ghostbtn', 'Undo complete', () => this.host.uncomplete(n.id)));
     } else {
       ctas.append(
+        n.startedAt
+          ? btn('qb-skew8 qb-progbtn on', `<span>${icon('pause', 20, 'currentColor', 3)}Pause · back to To do</span>`, () => setInProgress(n.id, false))
+          : btn('qb-skew8 qb-progbtn', `<span>${icon('play', 20, 'currentColor', 2.4)}Start · In progress</span>`, () => setInProgress(n.id, true)),
         btn('qb-cta qb-skew8', `<span>${icon('check', 22, '#0A1430', 3)}Complete · +${xp} XP</span>`, (e) => {
           const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
           this.host.complete(n.id, r);
