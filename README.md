@@ -34,7 +34,7 @@ badge (it replaces the priority label; the frame still shows the priority). **Pa
 completing it clears the status. Both are undoable.
 
 **Writing tools:** pen, highlighter, eraser, lasso (circle strokes, then drag them, or tap the red
-trash), four inks, undo / redo. **Scribble out** a word (a quick zig-zag over it) to erase it.
+trash), four inks, undo / redo. Pen strokes are always kept as ink: use the eraser, lasso or undo to remove them.
 
 **Priority = colour = XP:** Low (green, 25), Normal (blue, 50), High (purple, 100), Urgent (orange, 150).
 Level 1 needs 300 XP, each level after that 100 more, up to 1000 XP per level from Level 8 on (so the first

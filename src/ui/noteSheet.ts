@@ -25,7 +25,7 @@ import { el, formatDue } from '../util';
 
 /**
  * The note sheet (design: Write.dc.html + View.dc.html). One component, four modes:
- *   write  Pencil ink with pen / highlighter / eraser / lasso, scribble-out to erase
+ *   write  Pencil ink with pen / highlighter / eraser / lasso
  *   speak  keyboard dictation into a big text field (the app never touches audio)
  *   photo  the note's photos as a taped polaroid; Library / camera / Retake
  *   view   read-only note + info, actions and the Complete button
@@ -360,7 +360,7 @@ export class NoteSheet {
   private renderHint(n: Note) {
     const t =
       this.mode === 'write'
-        ? 'One task per note · Scribble out to erase'
+        ? 'One task per note · Eraser or lasso to fix ink'
         : this.mode === 'speak'
           ? 'Tap the mic key on the keyboard · Write over any word with the Pencil to fix it'
           : this.mode === 'photo'
@@ -947,13 +947,6 @@ export class NoteSheet {
     const id = this.noteId;
     if (!res || !id) return;
     const stroke: Stroke = this.capTool === 'highlighter' ? { ...res.stroke, tool: 'highlighter', tilt: 0 } : res.stroke;
-    if (this.capTool === 'pen') {
-      const crossed = scribbleTargets(store.get(id)!, stroke);
-      if (crossed.length) {
-        eraseStrokes(id, crossed); // scribbled out: erase what it covered, keep no scribble
-        return;
-      }
-    }
     addStroke(id, stroke);
   }
 
@@ -1102,48 +1095,4 @@ function pointInPolygon(x: number, y: number, poly: [number, number][]): boolean
     if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi + 1e-9) + xi) inside = !inside;
   }
   return inside;
-}
-
-/**
- * Scribble-to-erase: a quick, dense zig-zag that crosses existing strokes erases them.
- * Returns the indices it covers (empty = it's just ink).
- */
-export function scribbleTargets(n: Note, s: Stroke): number[] {
-  const pts = s.points;
-  if (pts.length < 12 || !n.strokes.length) return [];
-  let len = 0;
-  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-  for (let i = 0; i < pts.length; i++) {
-    const [x, y] = pts[i];
-    x0 = Math.min(x0, x);
-    y0 = Math.min(y0, y);
-    x1 = Math.max(x1, x);
-    y1 = Math.max(y1, y);
-    if (i) len += Math.hypot(x - pts[i - 1][0], y - pts[i - 1][1]);
-  }
-  const w = x1 - x0;
-  const h = y1 - y0;
-  const diag = Math.hypot(w, h);
-  if (diag < 30 || len / diag < 3.2) return [];
-  // Count direction reversals along the scribble's long axis.
-  const axis = w >= h ? 0 : 1;
-  let reversals = 0;
-  let dir = 0;
-  let anchor = pts[0][axis];
-  for (const p of pts) {
-    const d = p[axis] - anchor;
-    if (Math.abs(d) < 8) continue;
-    const nd = Math.sign(d);
-    if (dir && nd !== dir) reversals++;
-    dir = nd;
-    anchor = p[axis];
-  }
-  if (reversals < 4) return [];
-  const pad = 12;
-  const hits: number[] = [];
-  n.strokes.forEach((t, i) => {
-    const inside = t.points.filter(([x, y]) => x >= x0 - pad && x <= x1 + pad && y >= y0 - pad && y <= y1 + pad).length;
-    if (inside >= t.points.length * 0.5) hits.push(i);
-  });
-  return hits;
 }
