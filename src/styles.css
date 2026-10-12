@@ -1140,6 +1140,14 @@ html[data-appearance='glass'] .qb-col {
   border-color: var(--accent-line);
   color: var(--accent-fg);
 }
+.qb-emotelist-item.locked {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-style: dashed;
+  background: transparent;
+  color: var(--text-3);
+}
 /* the avatar popping up to celebrate (optional) */
 .qb-floathero {
   position: fixed;

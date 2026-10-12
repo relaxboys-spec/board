@@ -1,9 +1,10 @@
 import { avatarSvg, OUTFITS } from '../avatar';
 import { EMOTES, emoteById, playEmote } from '../emotes';
-import { ALL_KEYS, headline, isUnlocked, key, nextOnTrack, unlockedCount } from '../rewards';
+import { ALL_KEYS, headline, isUnlocked, key, levelOf, nextOnTrack, unlockedCount } from '../rewards';
 import type { EmoteId, Look, Player } from '../types';
 import { el, prefersReducedMotion } from '../util';
 import { xpToReach, type Stats } from '../xp';
+import { toast } from './overlay';
 import { rewardName } from './rewards';
 
 /**
@@ -24,6 +25,8 @@ const ICON = {
 };
 
 const CELEBRATE_MS = 3500;
+const LOCK =
+  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
 
 export interface ProfileHandlers {
   onLocker(): void;
@@ -46,6 +49,8 @@ export class Profile {
   private list: HTMLElement | null = null;
   private look: Look | null = null;
   private victory: EmoteId = 'victory';
+  private player: Player | null = null;
+  private xp = 0;
   private floatTimer: number | undefined;
 
   constructor(parent: HTMLElement, h: ProfileHandlers) {
@@ -119,6 +124,9 @@ export class Profile {
 
   /** Level, XP and the counts in the side panels. */
   setStats(s: Stats, p: Player, done: { total: number; week: number }) {
+    this.player = p;
+    this.xp = s.xp;
+    if (this.list) this.openList();
     this.levelLine.textContent = `Level ${s.level} · ${s.into} / ${s.need} XP`;
     this.fill.style.width = `${(s.into / s.need) * 100}%`;
     this.stats.replaceChildren(
@@ -184,9 +192,26 @@ export class Profile {
     close.innerHTML = ICON.x;
     close.setAttribute('aria-label', 'Close emotes');
     close.addEventListener('click', () => this.closeList());
-    head.append(el('span', 'qb-emotelist-title', 'Emotes'), el('span', 'qb-emotelist-hint', 'Tap to play · choose your ★ victory emote in the Locker'), close);
+    head.append(el('span', 'qb-emotelist-title', 'Emotes'), el('span', 'qb-emotelist-hint', 'Tap to play · ★ victory emote is set in the Locker'), close);
     const grid = el('div', 'qb-emotelist-grid');
-    for (const e of EMOTES) {
+    // Unlocked first, then the locked ones in the order they unlock (same as the Locker).
+    const p = this.player;
+    const has = (id: EmoteId) => !p || isUnlocked(p, key.emote(id)) || id === this.victory;
+    const ordered = [...EMOTES.filter((e) => has(e.id)), ...EMOTES.filter((e) => !has(e.id)).sort((x, y) => levelOf(key.emote(x.id)) - levelOf(key.emote(y.id)))];
+    for (const e of ordered) {
+      const k = key.emote(e.id);
+      if (!has(e.id)) {
+        const b = el('button', 'qb-emotelist-item locked');
+        b.type = 'button';
+        b.innerHTML = `<span>${e.name}</span><span class="qb-lk-lv inline">${LOCK}<span>${levelOf(k)}</span></span>`;
+        b.setAttribute('aria-label', `${e.name}, unlocks at level ${levelOf(k)}. Tap to preview.`);
+        b.addEventListener('click', () => {
+          this.play(e.id);
+          toast(`${e.name} unlocks at Level ${levelOf(k)} · ${Math.max(0, xpToReach(levelOf(k)) - this.xp)} XP to go`, undefined, 2400);
+        });
+        grid.append(b);
+        continue;
+      }
       const b = el('button', 'qb-emotelist-item' + (e.id === this.victory ? ' victory' : ''));
       b.type = 'button';
       b.textContent = (e.id === this.victory ? '★ ' : '') + e.name;
