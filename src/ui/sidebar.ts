@@ -4,10 +4,9 @@ import { el } from '../util';
 import type { Stats } from '../xp';
 
 /**
- * The sidebar (Linear-style): her name and avatar, the two boards, Backlog and Done,
- * then a small level + streak card (opens Profile) and Settings. In portrait it folds
- * into a bar across the top. Boards, Backlog and Done are also drop targets for a
- * dragged task.
+ * The bar across the top: her name and avatar, the two boards, Backlog and Done, then
+ * a small level + streak card (opens Profile) and Settings. Boards, Backlog and Done
+ * are also drop targets for a dragged task.
  */
 
 const svg = (d: string, size = 18) =>

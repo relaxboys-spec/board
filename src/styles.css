@@ -11,7 +11,6 @@
   --sal: env(safe-area-inset-left, 0px);
   --sar: env(safe-area-inset-right, 0px);
   --pad: 20px;
-  --side-w: 236px;
 
   --acc-deep: #5b5bd6;
   --acc-bright: #8d8ef7;
@@ -258,7 +257,8 @@ html.pen-near * {
   inset: 0;
   z-index: 1;
   display: grid;
-  grid-template-columns: calc(var(--side-w) + var(--sal)) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
 }
 html[data-appearance='glass'] body,
 html[data-appearance='glass'] #app {
@@ -431,14 +431,16 @@ body:has(.qb-login) #app {
 
 .qb-side {
   position: relative;
-  min-height: 0;
+  z-index: 10;
   display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: calc(var(--sat) + 12px) 10px calc(var(--sab) + 12px) calc(var(--sal) + 10px);
+  align-items: center;
+  gap: 14px;
+  padding: calc(var(--sat) + 8px) calc(var(--sar) + var(--pad)) 8px calc(var(--sal) + var(--pad));
   background: var(--sidebar);
-  border-right: 1px solid var(--border);
-  overflow-y: auto;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
   -webkit-backdrop-filter: var(--blur);
   backdrop-filter: var(--blur);
 }
@@ -480,27 +482,30 @@ body:has(.qb-login) #app {
 }
 .qb-nav {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  align-items: center;
+  gap: 14px;
 }
 .qb-nav-group {
   display: flex;
-  flex-direction: column;
-  gap: 1px;
+  align-items: center;
+  gap: 2px;
+}
+/* a thin divider between the boards and the lists */
+.qb-nav-group + .qb-nav-group {
+  padding-left: 14px;
+  border-left: 1px solid var(--border);
 }
 .qb-nav-label {
-  padding: 0 10px 4px;
-  font-size: 12px;
-  font-weight: 550;
-  color: var(--text-3);
+  display: none;
 }
 .qb-nav-item {
   position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: none;
   min-height: 36px;
-  padding: 0 10px;
+  padding: 0 11px;
   border: 0;
   border-radius: 8px;
   background: none;
@@ -508,6 +513,7 @@ body:has(.qb-login) #app {
   font-size: 14px;
   font-weight: 550;
   text-align: left;
+  white-space: nowrap;
   transition: background-color 0.12s;
 }
 .qb-nav-item svg {
@@ -534,23 +540,28 @@ html[data-appearance='glass'] .qb-nav-item.on {
   margin: 0 3px;
 }
 .qb-nav-n {
-  margin-left: auto;
+  margin-left: 2px;
   font-size: 12px;
   color: var(--text-3);
   font-variant-numeric: tabular-nums;
 }
 .qb-side-foot {
-  margin-top: auto;
+  margin-left: auto;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 4px;
 }
+.qb-side-foot .qb-nav-item .qb-nav-name {
+  display: none;
+}
+/* Level card, compact: "Level 2 · 3 days" with a short XP bar */
 .qb-me {
   position: relative;
+  flex: none;
   display: flex;
-  flex-direction: column;
-  gap: 7px;
-  padding: 10px;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
   border: 1px solid var(--border);
   border-radius: var(--r);
   background: var(--surface-2);
@@ -563,9 +574,12 @@ html[data-appearance='glass'] .qb-nav-item.on {
 .qb-me-top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
   font-size: 13px;
+  white-space: nowrap;
+}
+.qb-me .qb-bar {
+  width: 64px;
 }
 .qb-me-top b {
   font-weight: 650;
@@ -579,6 +593,7 @@ html[data-appearance='glass'] .qb-nav-item.on {
   font-weight: 600;
 }
 .qb-me-xp {
+  display: none;
   font-size: 12px;
   color: var(--text-3);
   font-variant-numeric: tabular-nums;
@@ -606,8 +621,8 @@ html[data-appearance='glass'] .qb-nav-item.on {
   display: flex;
   align-items: center;
   gap: 10px;
-  min-height: calc(var(--sat) + 62px);
-  padding: calc(var(--sat) + 12px) calc(var(--sar) + var(--pad)) 10px var(--pad);
+  min-height: 58px;
+  padding: 12px calc(var(--sar) + var(--pad)) 8px calc(var(--sal) + var(--pad));
 }
 .qb-title {
   margin: 0;
@@ -630,7 +645,7 @@ html[data-appearance='glass'] .qb-col-head {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   gap: 16px;
-  padding: 0 calc(var(--sar) + var(--pad)) calc(var(--sab) + 16px) var(--pad);
+  padding: 0 calc(var(--sar) + var(--pad)) calc(var(--sab) + 16px) calc(var(--sal) + var(--pad));
 }
 .qb-col {
   position: relative;
@@ -734,8 +749,8 @@ html[data-appearance='glass'] .qb-col {
 /* ---- backlog panel ---- */
 .qb-drawer {
   position: absolute;
-  left: var(--pad);
-  top: calc(var(--sat) + 62px);
+  left: calc(var(--sal) + var(--pad));
+  top: 58px;
   bottom: calc(var(--sab) + 16px);
   width: min(400px, 46%);
   z-index: 8;
@@ -1129,12 +1144,19 @@ html[data-appearance='glass'] .qb-col {
 .qb-floathero {
   position: fixed;
   right: calc(var(--sar) + 22px);
-  bottom: calc(var(--sab) + 70px);
+  bottom: calc(var(--sab) + 76px);
   z-index: 45;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  padding: 10px 16px 12px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface-solid);
+  box-shadow: var(--shadow-lg), var(--edge);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  backdrop-filter: blur(24px) saturate(170%);
   pointer-events: none;
   animation: qbFloatIn 0.35s cubic-bezier(0.3, 0.8, 0.4, 1.3);
 }
@@ -3673,60 +3695,20 @@ html[data-appearance='glass'] .qb-login {
   :root {
     --pad: 16px;
   }
-  #app {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
-  }
   .qb-side {
-    flex-direction: row;
-    align-items: center;
     gap: 8px;
-    padding: calc(var(--sat) + 8px) calc(var(--sar) + 12px) 8px calc(var(--sal) + 12px);
-    border-right: 0;
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-    overflow-y: hidden;
   }
   .qb-ws-text,
-  .qb-nav-label {
+  .qb-me .qb-bar {
     display: none;
   }
   .qb-nav,
-  .qb-nav-group {
-    flex-direction: row;
-    gap: 2px;
-  }
-  .qb-nav {
-    gap: 10px;
+  .qb-nav-group + .qb-nav-group {
+    gap: 6px;
+    padding-left: 6px;
   }
   .qb-nav-item {
-    flex: none;
-    min-height: 34px;
-  }
-  .qb-side-foot {
-    margin: 0 0 0 auto;
-    flex-direction: row;
-    align-items: center;
-  }
-  .qb-me {
-    flex-direction: row;
-    align-items: center;
-    padding: 6px 10px;
-  }
-  .qb-me .qb-bar,
-  .qb-me-xp {
-    display: none;
-  }
-  .qb-side-foot .qb-nav-item .qb-nav-name {
-    display: none;
-  }
-  .qb-header {
-    min-height: 54px;
-    padding-top: 10px;
-  }
-  .qb-drawer {
-    top: 54px;
-    width: min(400px, calc(100% - 2 * var(--pad)));
+    padding: 0 9px;
   }
   .qb-profile-grid {
     grid-template-columns: minmax(0, 1fr);

@@ -120,7 +120,7 @@ export interface Settings {
   appearance: Appearance;
   accent: AccentId;
   wallpaper: WallpaperId;
-  /** Her avatar pops up and plays the victory emote when a task is completed. */
+  /** Her avatar pops up for a few seconds and plays the victory emote when a task is completed. */
   celebrate: boolean;
 }
 
@@ -190,7 +190,7 @@ export const DEFAULT_SETTINGS: Settings = {
   appearance: 'light',
   accent: 'indigo',
   wallpaper: 'dusk',
-  celebrate: false,
+  celebrate: true,
 };
 
 export const DEFAULT_PLAYER: Player = {

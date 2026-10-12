@@ -8,8 +8,8 @@ import { rewardName } from './rewards';
 
 /**
  * Profile: the quiet home of the game parts — her avatar, level and streak, and the way
- * into the Locker, Emotes and Rewards. When "Celebrate with avatar" is on, completing a
- * task pops her up in a corner to play her ★ victory emote.
+ * into the Locker, Emotes and Rewards. Completing a task pops her up in a corner for about
+ * 3.5 seconds to play her ★ victory emote (Settings → Celebrate with my avatar turns it off).
  */
 
 const svg = (d: string, size = 18) =>
@@ -22,6 +22,8 @@ const ICON = {
   play: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>',
   x: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
 };
+
+const CELEBRATE_MS = 3500;
 
 export interface ProfileHandlers {
   onLocker(): void;
@@ -164,10 +166,11 @@ export class Profile {
     box.append(fig, el('span', 'qb-floathero-xp', `+${xp} XP`));
     document.body.append(box);
     playEmote(fig, this.victory);
+    // On screen for about 3.5 s, whichever emote it is, then it fades away.
     this.floatTimer = window.setTimeout(() => {
       box.classList.add('leaving');
       window.setTimeout(() => box.remove(), 300);
-    }, Math.max(emoteById(this.victory).ms, 1500) + 250);
+    }, CELEBRATE_MS);
   }
 
   private openList() {

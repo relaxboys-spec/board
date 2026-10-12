@@ -7,8 +7,8 @@ save button.
 Everything stays on the iPad, in IndexedDB. There’s no server, no analytics and no network requests
 for data. The whole app works offline once it’s installed.
 
-The look is calm and Linear/Notion-like: a sidebar (Work and Personal boards, Backlog, Done, Profile,
-Settings) and two columns, **Today** and **This week**. Three appearances in **Settings → Appearance**:
+The look is calm and Linear/Notion-like: a bar across the top (Work and Personal boards, Backlog, Done,
+her level card for Profile, Settings) and two columns, **Today** and **This week**. Three appearances in **Settings → Appearance**:
 **Light**, **Dark**, and **Glass** (frosted panes over a wallpaper: four built-in gradients or her own
 photo), plus eight **accent colours**. The game parts (avatar, levels, Locker, rewards) live quietly in
 **Profile**.
@@ -23,7 +23,7 @@ photo), plus eight **accent colours**. The game parts (avatar, levels, Locker, r
 | Tap a task | Finger | Opens it: details, actions, **Start** / **Pause**, **Complete** |
 | Tap the circle on a task | Finger / Pencil | To do → **In progress** → **Done** (tap a done one to un-complete) |
 | Hold a task still | Finger | It lifts and a bar fills: a to-do task **starts** (amber bar); hold an in-progress one again to **complete** it |
-| Hold a task, then move (or swipe it sideways) | Finger | Drag it: to the other column, or onto Work / Personal, Backlog or Done in the sidebar |
+| Hold a task, then move (or swipe it sideways) | Finger | Drag it: to the other column, or onto Work / Personal, Backlog or Done in the top bar |
 | Swipe up and down in a column | Finger | Scroll |
 | Tap with two fingers | Fingers | Undo (also the ↶ button) |
 
@@ -47,7 +47,7 @@ Level 8 on. The streak counts days with at least one finished task. Completing s
 closed):
 
 - **Completed tasks** stay on the board, dimmed with a filled circle, until midnight, then move to **Done**
-  (sidebar), grouped by day, where you can **Put back** any of them.
+  (top bar), grouped by day, where you can **Put back** any of them.
 - **Unfinished Today tasks stay put.** From their second day they show a small **Day 2**, **Day 3**…
   chip, orange from day 3, so she can see what's carrying over. Nothing moves or disappears on its own.
 - **This week tasks with a day move into Today on that day**, at the front. A day picked always means
@@ -55,9 +55,11 @@ closed):
   **Next Wed**). If the app wasn't opened that day, they arrive next time, aged from their day.
 - **This week tasks without a day** stay in This week until she moves them.
 
-**Profile** (her level card at the bottom of the sidebar, or her name at the top): her avatar, level, XP,
-streak and counts, and the way into the **Locker**, **Emotes** and **Rewards**. **Settings → Celebrate with
-my avatar** makes her pop up and dance when a task is completed (off by default).
+**Profile** (her level card at the right of the top bar, or her name at the left): her avatar, level, XP,
+streak and counts, and the way into the **Locker**, **Emotes** and **Rewards**.
+
+**Completing a task** pops her avatar up in the corner for about 3.5 seconds, playing her ★ victory emote,
+with the XP earned. **Settings → Celebrate with my avatar** turns it off.
 
 **Locker:** 33 outfits in six categories (Casual, Street, Work, Active, Evening, Traditional — including four
 sarees). Tap a card to preview, **Equip** to wear it. Under it: **Colors** (three slots per outfit,
@@ -251,7 +253,7 @@ src/
   safari.ts             Suppresses Safari zoom / selection / callout / bounce
   avatar.css            Avatar idle motion and dictation animations
   styles.css            Theme tokens (three appearances) and every screen
-  ui/                   sidebar, profile, icons, noteSheet (Write/Speak/Photo/View), locker, vault (Done), viewer,
+  ui/                   sidebar (the top bar), profile, icons, noteSheet (Write/Speak/Photo/View), locker, vault (Done), viewer,
                         reminder, settings, overlay (sheets + toasts), rewards (Reward Track + level-up)
 ```
 

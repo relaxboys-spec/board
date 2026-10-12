@@ -319,7 +319,7 @@ function renderAppearance(box: HTMLElement) {
   celebrate.checked = st.celebrate;
   celebrate.addEventListener('change', () => store.setSettings({ celebrate: celebrate.checked }));
   const txt = el('span', 'setting-text');
-  txt.append(el('span', '', 'Celebrate with my avatar'), el('small', '', 'She pops up and dances when you complete a task'));
+  txt.append(el('span', '', 'Celebrate with my avatar'), el('small', '', 'She pops up for a few seconds and plays your victory emote when you complete a task'));
   celebrateRow.append(txt, celebrate);
   out.push(celebrateRow);
 
