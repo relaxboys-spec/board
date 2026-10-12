@@ -37,15 +37,15 @@ import { rewardName } from './rewards';
  */
 
 const ICON = {
-  back: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>',
-  play: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>',
-  playFill: '<svg width="14" height="14" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>',
-  lock: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#DCE6FF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  back: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>',
+  play: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>',
+  playFill: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>',
+  lock: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
   lockSm: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
-  trophy: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4M9 20h6"/></svg>',
-  check: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A1430" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>',
+  trophy: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4M9 20h6"/></svg>',
+  check: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>',
   star: (on: boolean) =>
-    `<svg width="18" height="18" viewBox="0 0 24 24" fill="${on ? '#FFE14D' : 'none'}" stroke="${on ? '#FFE14D' : '#8EA3CF'}" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>`,
+    `<svg class="qb-star${on ? ' on' : ''}" width="16" height="16" viewBox="0 0 24 24" fill="${on ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>`,
 };
 
 type Tab = 'colors' | 'hair' | 'acc' | 'skin' | 'emotes';
@@ -119,9 +119,9 @@ export function openLocker(stats: Stats, onTrack: () => void, focus: LockerFocus
     el('span', 'qb-eyebrow', `Collection ${unlockedCount(store.player)} / ${ALL_KEYS.length} · Outfits · Styles · Extras`),
     el('h1', 'qb-display qb-locker-h1', 'Locker'),
   );
-  const lvl = btn('qb-locker-level', '', () => onTrack(), 'Open the Reward Track');
+  const lvl = btn('qb-locker-level', '', () => onTrack(), 'Open Rewards');
   lvl.append(el('div', 'qb-hex qb-levelhex sm', String(level)), el('span', 'qb-level-label', `Level ${level}`));
-  const trackBtn = btn('qb-skew qb-herobtn qb-lk-trackbtn', `<span>${ICON.trophy}Reward Track</span>`, () => onTrack());
+  const trackBtn = btn('qb-skew qb-herobtn qb-lk-trackbtn', `<span>${ICON.trophy}Rewards</span>`, () => onTrack());
   const equip = el('button', 'qb-skew qb-equip');
   equip.type = 'button';
   equip.addEventListener('click', () => {
@@ -269,7 +269,6 @@ export function openLocker(stats: Stats, onTrack: () => void, focus: LockerFocus
     const out: HTMLElement[] = [];
     if (tab === 'colors') {
       const t = label(`${o.name} colors`);
-      t.style.color = RARITY[o.rarity].light;
       out.push(t);
       for (const k of ['p', 's', 'a'] as const) {
         const group = el('div', 'qb-lk-group');
@@ -357,7 +356,7 @@ export function openLocker(stats: Stats, onTrack: () => void, focus: LockerFocus
       });
       out.push(row);
     } else {
-      // Victory emote: pick from the emotes she has (it plays when she completes a quest).
+      // Victory emote: pick from the emotes she has (it plays when she completes a task).
       const owned = EMOTES.filter((e) => has(key.emote(e.id)) || p.victoryEmote === e.id);
       const vic = el('div', 'qb-lk-victory');
       const vHead = el('div', 'qb-lk-victory-head');
@@ -367,7 +366,7 @@ export function openLocker(stats: Stats, onTrack: () => void, focus: LockerFocus
         btn('qb-lk-apply', `${ICON.playFill} Play`, () => play(p.victoryEmote), `Play ${emoteById(p.victoryEmote).name}`),
       );
       (vHead.children[1] as HTMLElement).append(
-        el('span', 'qb-lk-sublabel', 'Victory emote · plays when you complete a quest'),
+        el('span', 'qb-lk-sublabel', 'Victory emote · plays when you complete a task'),
         el('span', 'qb-lk-victory-name', emoteById(p.victoryEmote).name),
       );
       const chips = el('div', 'qb-lk-vchips');

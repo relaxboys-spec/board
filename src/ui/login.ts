@@ -55,9 +55,6 @@ export function loginOpen() {
   return open;
 }
 
-const PLAY =
-  '<svg width="22" height="22" viewBox="0 0 24 24" fill="#0A1430" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>';
-
 /** Show the sign-in screen over the app. `setLook` swaps in her saved Nova once data loads. */
 export function showLogin(onSignedIn: () => void): { setLook(look: Look): void } {
   open = true;
@@ -68,7 +65,7 @@ export function showLogin(onSignedIn: () => void): { setLook(look: Look): void }
   // Left: Nova on her stand under the title
   const stage = el('div', 'qb-login-stage');
   const title = el('div', 'qb-login-title');
-  title.append(el('span', 'qb-display qb-login-logo', 'Quest Board'));
+  title.append(el('span', 'qb-display qb-login-logo', 'Board'));
   const fig = el('div', 'qb-login-fig av-idle');
   fig.innerHTML = avatarSvg(lookFor({ ...DEFAULT_PLAYER }), { width: 230 });
   const podium = el('div', 'qb-login-podium');
@@ -80,7 +77,7 @@ export function showLogin(onSignedIn: () => void): { setLook(look: Look): void }
   form.noValidate = true;
   form.setAttribute('autocomplete', 'on');
   const head = el('div', 'qb-login-head');
-  head.append(el('span', 'qb-eyebrow', 'Ready up'), el('h1', 'qb-display qb-login-h', 'Welcome back'));
+  head.append(el('h1', 'qb-display qb-login-h', 'Welcome back'), el('span', 'qb-login-sub', 'Sign in to your board'));
 
   const userLabel = el('label', 'qb-login-field');
   const user = el('input', 'qb-login-input');
@@ -111,7 +108,7 @@ export function showLogin(onSignedIn: () => void): { setLook(look: Look): void }
   err.setAttribute('aria-live', 'polite');
   const go = el('button', 'qb-skew8 qb-cta qb-login-go');
   go.type = 'submit';
-  go.innerHTML = `<span>${PLAY}Play</span>`;
+  go.innerHTML = '<span>Sign in</span>';
   form.append(head, userLabel, pinLabel, err, go, el('p', 'qb-login-hint', 'You’ll stay signed in on this iPad.'));
 
   root.append(el('div', 'qb-login-stripes'), stage, form);
@@ -176,7 +173,7 @@ export function showLogin(onSignedIn: () => void): { setLook(look: Look): void }
     user.blur();
     pin.blur();
     root.classList.add('success');
-    head.replaceChildren(el('span', 'qb-eyebrow', 'Signed in'), el('h1', 'qb-display qb-login-h', 'Let’s go!'));
+    head.replaceChildren(el('h1', 'qb-display qb-login-h', 'Welcome back, Moduuu'), el('span', 'qb-login-sub', 'Opening your board…'));
     const finish = () => {
       root.classList.add('leaving');
       window.setTimeout(() => {

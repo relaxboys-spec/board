@@ -70,13 +70,13 @@ function lookWith(p: Player, k: string) {
 }
 
 const EMOTE_ICON =
-  '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg>';
+  '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg>';
 const LOCK =
   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
 const CHECK =
   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
 const CLOSE =
-  '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 
 /** The art for a reward: Nova (outfit), her head (hair, accessories), a swatch or an emote badge. */
 export function rewardArt(k: string, p: Player, big = false): HTMLElement {
@@ -165,7 +165,7 @@ export function showLevelUp(from: number, to: number, keys: string[], h: RewardH
     const tag = el('span', 'qb-skew qb-lk-tag');
     tag.innerHTML = `<span>${r.name} · ${o.cat}</span>`;
     tag.style.background = r.grad;
-    info.append(tag, el('span', 'qb-lk-name', o.name), el('span', 'qb-lvup-sub', 'New outfit for Nova'));
+    info.append(tag, el('span', 'qb-lk-name', o.name), el('span', 'qb-lvup-sub', 'New outfit unlocked'));
     stage.append(el('div', 'qb-pedestal'), fig, info);
     card.append(stage);
     // Nova shows off the new emote if this level brought one.
@@ -181,7 +181,7 @@ export function showLevelUp(from: number, to: number, keys: string[], h: RewardH
       t.style.animationDelay = `${0.35 + i * 0.12}s`;
       grid.append(t);
     });
-    if (!keys.length) grid.append(el('span', 'qb-lvup-sub', 'You’ve collected the whole Reward Track. Nova salutes you!'));
+    if (!keys.length) grid.append(el('span', 'qb-lvup-sub', 'You’ve collected every reward.'));
     card.append(grid);
   }
 
@@ -261,17 +261,17 @@ export function openTrack(s: Stats, h: RewardHandlers) {
 
   const root = el('div', 'qb-track');
   root.setAttribute('role', 'dialog');
-  root.setAttribute('aria-label', 'Reward Track');
+  root.setAttribute('aria-label', 'Rewards');
   const top = el('header', 'qb-locker-top');
   const back = el('button', 'qb-skew qb-iconbtn');
   back.type = 'button';
   back.innerHTML = `<span>${CLOSE}</span>`;
-  back.setAttribute('aria-label', 'Close the Reward Track');
+  back.setAttribute('aria-label', 'Close Rewards');
   back.addEventListener('click', () => close());
   const titles = el('div', 'qb-col-title');
   titles.append(
-    el('span', 'qb-eyebrow', `Collection ${unlockedCount(p)} / ${ALL_KEYS.length} · Complete quests to level up`),
-    el('h1', 'qb-display qb-locker-h1', 'Reward Track'),
+    el('span', 'qb-eyebrow', `Collection ${unlockedCount(p)} / ${ALL_KEYS.length} · Complete tasks to level up`),
+    el('h1', 'qb-display qb-locker-h1', 'Rewards'),
   );
   const lvl = el('div', 'qb-track-lvl');
   const bar = el('div', 'qb-xpbar');

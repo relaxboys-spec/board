@@ -1,6 +1,6 @@
 // Generates the app icons (original artwork) as PNGs with no dependencies:
-// a slanted note card with an orange priority frame and a white handwritten check,
-// on the board's navy glow. Run: npm run icons
+// a white task card with a checked status circle and a line of handwriting, on a soft
+// indigo ground (the default accent). Run: npm run icons
 import { deflateSync } from 'node:zlib';
 import { writeFileSync, mkdirSync } from 'node:fs';
 
@@ -8,16 +8,11 @@ const OUT = new URL('../public/icons/', import.meta.url);
 mkdirSync(OUT, { recursive: true });
 
 const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
-const NAVY_TOP = hex('#0F2054');
-const NAVY_BOTTOM = hex('#070E26');
-const GLOW = hex('#2A5CD0');
-const FRAME_A = hex('#FFB547');
-const FRAME_B = hex('#D2550E');
-const SURFACE = hex('#0C1840');
-const DOT = hex('#22305C');
-const INK = hex('#F2F6FF');
-const YELLOW = hex('#FFE14D');
-const CYAN = hex('#3BE0FF');
+const TOP = hex('#7476F2');
+const BOTTOM = hex('#4B4CC9');
+const CARD = hex('#FFFFFF');
+const ACCENT = hex('#5B5BD6');
+const INK = hex('#2A2F45');
 const WHITE = [255, 255, 255];
 
 const mix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
@@ -35,68 +30,44 @@ function sdSegment(px, py, ax, ay, bx, by) {
   return Math.hypot(pax - bax * h, pay - bay * h);
 }
 
-// Checkmark + underline squiggle, in card-local units (card spans -1..1).
-const CHECK = [[-0.5, 0.0], [-0.18, 0.32], [0.52, -0.42]];
-const SQUIGGLE = Array.from({ length: 24 }, (_, i) => {
-  const t = i / 23;
-  return [-0.55 + t * 1.1, 0.62 + Math.sin(t * Math.PI * 3) * 0.05];
-});
-
 function polyDist(px, py, pts) {
   let d = Infinity;
   for (let i = 0; i < pts.length - 1; i++) d = Math.min(d, sdSegment(px, py, ...pts[i], ...pts[i + 1]));
   return d;
 }
 
-/** Inside a square of half-size `h` with its top-right corner cut by `cut` (the design's shape). */
-function sdCutRect(px, py, h, cut) {
-  const dx = Math.abs(px) - h;
-  const dy = Math.abs(py) - h;
-  let d = Math.max(dx, dy);
-  // top-right corner cut: the line x - y = 2h - cut (y grows downward, so top is -y)
-  const corner = (px + -py - (2 * h - cut)) / Math.SQRT2;
-  return Math.max(d, corner);
-}
+// In card-local units (the card spans about -0.3..0.3).
+const CHECK = [[-0.165, -0.09], [-0.135, -0.06], [-0.085, -0.125]];
+const line = (y, x0, x1, amp, waves) =>
+  Array.from({ length: 40 }, (_, i) => {
+    const t = i / 39;
+    return [x0 + t * (x1 - x0), y + Math.sin(t * Math.PI * waves) * amp];
+  });
+const HAND1 = line(0.06, -0.19, 0.19, 0.014, 11);
+const HAND2 = line(0.15, -0.19, 0.04, 0.014, 7);
 
 /** Colour at normalised icon coords (u, v in 0..1). `k` scales the artwork (maskable safe zone). */
 function shade(u, v, k) {
-  let c = mix(NAVY_TOP, NAVY_BOTTOM, v);
-  const glow = clamp01(1 - Math.hypot((u - 0.5) * 1.2, v + 0.05) / 0.75);
-  c = mix(c, GLOW, glow * 0.7);
-  // faint 135° stripes
-  if (((u + v) * 40) % 1 < 0.08) c = mix(c, WHITE, 0.03);
+  let c = mix(TOP, BOTTOM, v);
+  c = mix(c, WHITE, clamp01(1 - Math.hypot(u - 0.2, v - 0.1) / 0.7) * 0.12);
 
-  const ang = (-8 * Math.PI) / 180;
-  const cx = (u - 0.5) / k, cy = (v - 0.52) / k;
+  const ang = (-6 * Math.PI) / 180;
+  const cx = (u - 0.5) / k, cy = (v - 0.51) / k;
   const rx = cx * Math.cos(ang) - cy * Math.sin(ang);
   const ry = cx * Math.sin(ang) + cy * Math.cos(ang);
-  const H = 0.31;
 
-  // soft shadow under the card
-  const dShadow = sdCutRect(rx - 0.012, ry - 0.03, H, 0.09);
-  if (dShadow < 0.04) c = mix(c, [0, 0, 0], clamp01(1 - (dShadow + 0.04) / 0.08) * 0.45);
-
-  const d = sdCutRect(rx, ry, H, 0.09);
+  // soft shadow, then the card
+  const dShadow = sdRoundRect(rx, ry - 0.025, 0.3, 0.3, 0.075);
+  if (dShadow < 0.05) c = mix(c, [20, 20, 60], clamp01(1 - (dShadow + 0.05) / 0.1) * 0.35);
+  const d = sdRoundRect(rx, ry, 0.3, 0.3, 0.075);
   if (d < 0) {
-    const inset = -d;
-    if (inset < 0.035) {
-      c = mix(FRAME_A, FRAME_B, clamp01((rx - ry + 0.6) / 1.2));
-    } else {
-      c = SURFACE;
-      // dotted surface
-      const gx = ((rx + 1) * 22) % 1, gy = ((ry + 1) * 22) % 1;
-      if (Math.hypot(gx - 0.5, gy - 0.5) < 0.12) c = DOT;
-      const lx = rx / 0.22, ly = ry / 0.22;
-      if (polyDist(lx, ly, CHECK) < 0.12) c = INK;
-      else if (polyDist(lx, ly, SQUIGGLE) < 0.06) c = mix(INK, CYAN, 0.35);
-    }
+    c = CARD;
+    // the checked status circle
+    const dc = Math.hypot(rx + 0.125, ry + 0.095) - 0.075;
+    if (dc < 0) c = polyDist(rx, ry, CHECK) < 0.016 ? WHITE : ACCENT;
+    // a line and a half of handwriting
+    else if (polyDist(rx, ry, HAND1) < 0.013 || polyDist(rx, ry, HAND2) < 0.013) c = INK;
   }
-
-  // XP sparkle top-right, small one bottom-left
-  const sx = (u - 0.83) / k, sy = (v - 0.17) / k;
-  if (Math.sqrt(Math.abs(sx)) + Math.sqrt(Math.abs(sy)) < Math.sqrt(0.075)) c = YELLOW;
-  const sx2 = (u - 0.17) / k, sy2 = (v - 0.85) / k;
-  if (Math.sqrt(Math.abs(sx2)) + Math.sqrt(Math.abs(sy2)) < Math.sqrt(0.035)) c = CYAN;
   return c;
 }
 

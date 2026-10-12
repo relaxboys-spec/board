@@ -55,6 +55,8 @@ const SAVE_DELAY = 250;
 class Store {
   notes = new Map<string, Note>();
   settings: Settings = { ...DEFAULT_SETTINGS };
+  /** Saved settings predate the appearance options: main fills them from what's showing. */
+  needsThemeDefaults = false;
   view: ViewState = { board: 'work' };
   player: Player = { ...DEFAULT_PLAYER };
   backup: BackupMeta = {};
@@ -75,6 +77,7 @@ class Store {
     const { notes, meta } = await loadAll();
     for (const n of notes) this.notes.set(n.id, n);
     this.settings = { ...DEFAULT_SETTINGS, ...(meta.settings ?? {}) };
+    this.needsThemeDefaults = !(meta.settings && 'appearance' in meta.settings);
     if (meta.view) this.view = { board: meta.view.board === 'personal' ? 'personal' : 'work' };
     // Upgrades the earlier six-outfit Nova to the current wardrobe (see normalizePlayer).
     this.player = normalizePlayer(meta.player);

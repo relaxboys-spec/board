@@ -1,79 +1,81 @@
-# Quest Board
+# Board
 
-A handwritten sticky-note board for iPad and Apple Pencil, installed to the Home Screen as a web app.
-Tap the Pencil anywhere and a note appears. Write on it, and it’s saved. No typing, titles, folders or
+A handwritten task board for iPad and Apple Pencil, installed to the Home Screen as a web app.
+Tap the Pencil anywhere and a task appears. Write on it, and it’s saved. No typing, titles, folders or
 save button.
 
 Everything stays on the iPad, in IndexedDB. There’s no server, no analytics and no network requests
 for data. The whole app works offline once it’s installed.
 
-The look follows the design handoff in [`design/quest-board/`](design/quest-board/README.md): a game-lobby
-board with **Today** (daily quests), **This Week** (weekly challenges), a **Backlog** drawer for someday
-notes, and **Nova**, a hero who celebrates every finished note.
+The look is calm and Linear/Notion-like: a sidebar (Work and Personal boards, Backlog, Done, Profile,
+Settings) and two columns, **Today** and **This week**. Three appearances in **Settings → Appearance**:
+**Light**, **Dark**, and **Glass** (frosted panes over a wallpaper: four built-in gradients or her own
+photo), plus eight **accent colours**. The game parts (avatar, levels, Locker, rewards) live quietly in
+**Profile**.
 
 ## How it works (cheat sheet)
 
 | You do… | With | What happens |
 |---|---|---|
-| Tap **+ New Task**, or empty space in a column | Pencil / finger | New note in that column, opened big for writing |
-| Tap the 🎤 or 📷 on a + New Task tile | Finger | New note straight into **Speak** (keyboard up) or **Photo** (picker open) |
-| Touch a note | Pencil | Opens it for writing |
-| Tap a note | Finger | Opens it: note info, actions, **Start · In progress** / **Pause**, **Complete** |
-| Hold a note still | Finger | It lifts and a bar fills: a to-do task **starts** (cyan bar, In progress); hold an in-progress one again to **complete** it (yellow bar) |
-| Hold a note, then move (or swipe it sideways) | Finger | Drag it: to the other column, the other board's tab, the Backlog, or the Vault / hero (= complete) |
+| Tap **+ New task**, or empty space in a column | Pencil / finger | New task in that column, opened big for writing |
+| Tap the mic or camera on a **New task** row | Finger | New task straight into **Speak** (keyboard up) or **Photo** (picker open) |
+| Touch a task | Pencil | Opens it for writing |
+| Tap a task | Finger | Opens it: details, actions, **Start** / **Pause**, **Complete** |
+| Tap the circle on a task | Finger / Pencil | To do → **In progress** → **Done** (tap a done one to un-complete) |
+| Hold a task still | Finger | It lifts and a bar fills: a to-do task **starts** (amber bar); hold an in-progress one again to **complete** it |
+| Hold a task, then move (or swipe it sideways) | Finger | Drag it: to the other column, or onto Work / Personal, Backlog or Done in the sidebar |
 | Swipe up and down in a column | Finger | Scroll |
 | Tap with two fingers | Fingers | Undo (also the ↶ button) |
-| Hover over a note (supported iPads) | Pencil | The note lights up cyan |
 
-**In a note:** **Write**, **Speak** and **Photo** tabs; the side rail sets **priority**, **due**
-(Today / This Week + day / Someday), **status** (To do / In progress) and **board**. Changes save as you make them; **Add to Board** just
-closes it. An untouched empty note disappears on its own.
+**In a task:** **Write**, **Speak** and **Photo** tabs; the side panel sets **priority**, **status**
+(To do / In progress), **due** (Today / This week + day / Someday) and **board**. Changes save as you make
+them; **Add task** / **Done** just closes it. An untouched empty task disappears on its own.
 
-**In progress:** starting a task moves it to the front of its column with a glowing cyan **In progress**
-badge (it replaces the priority label; the frame still shows the priority). **Pause** puts it back to To do;
-completing it clears the status. Both are undoable.
+**Status:** an empty circle is To do, a half-filled amber circle is **In progress** (the task moves to the
+front of its column), a filled circle is Done. Starting, pausing and completing are all undoable.
 
 **Writing tools:** pen, highlighter, eraser, lasso (circle strokes, then drag them, or tap the red
-trash), four inks, undo / redo. Pen strokes are always kept as ink: use the eraser, lasso or undo to remove them.
+bin), four inks, undo / redo. Pen strokes are always kept as ink: use the eraser, lasso or undo to remove
+them. Her inks are drawn in a readable shade for each appearance (white ink shows as near-black in Light).
 
-**Priority = colour = XP:** Low (green, 25), Normal (blue, 50), High (purple, 100), Urgent (orange, 150).
-Level 1 needs 300 XP, each level after that 100 more, up to 1000 XP per level from Level 8 on (so the first
-rewards come in a day or two). The streak counts days with at least one finished note.
+**Priority** is a small signal-bars icon (Low, Normal, High; Urgent is a red square) and sets the XP a task
+earns: 25, 50, 100, 150. Level 1 needs 300 XP, each level after that 100 more, up to 1000 XP per level from
+Level 8 on. The streak counts days with at least one finished task. Completing shows a quiet
+"Completed · +XP" message with Undo.
 
-**Each day** (checked when the app opens, at midnight, when she comes back to it, and when a note is
+**Each day** (checked when the app opens, at midnight, when she comes back to it, and when a task is
 closed):
 
-- **Completed notes** stay on the board with a yellow **COMPLETE** stamp until midnight ("Resets in…"),
-  then move to the **Vault** (top bar), grouped by day, where you can **Put back** any of them.
-- **Unfinished Today notes stay put.** From their second day they show a small **Day 2**, **Day 3**…
+- **Completed tasks** stay on the board, dimmed with a filled circle, until midnight, then move to **Done**
+  (sidebar), grouped by day, where you can **Put back** any of them.
+- **Unfinished Today tasks stay put.** From their second day they show a small **Day 2**, **Day 3**…
   chip, orange from day 3, so she can see what's carrying over. Nothing moves or disappears on its own.
-- **This Week notes with a day move into Today on that day**, at the front. A day picked always means
+- **This week tasks with a day move into Today on that day**, at the front. A day picked always means
   the next time it comes round (a Wed picked on a Thursday is next week's, and its chip says
   **Next Wed**). If the app wasn't opened that day, they arrive next time, aged from their day.
-- **This Week notes without a day** stay in This Week until she moves them.
+- **This week tasks without a day** stay in This week until she moves them.
 
-**Nova and the Locker:** tap **Locker** under Nova (or the hero chip in portrait). There are 33 outfits
-in six categories (Casual, Street, Work, Active, Evening, Traditional — including four sarees). Tap a card to
-preview, **Equip** to wear it. Under it: **Colors** (three slots per outfit,
+**Profile** (her level card at the bottom of the sidebar, or her name at the top): her avatar, level, XP,
+streak and counts, and the way into the **Locker**, **Emotes** and **Rewards**. **Settings → Celebrate with
+my avatar** makes her pop up and dance when a task is completed (off by default).
+
+**Locker:** 33 outfits in six categories (Casual, Street, Work, Active, Evening, Traditional — including four
+sarees). Tap a card to preview, **Equip** to wear it. Under it: **Colors** (three slots per outfit,
 remembered per outfit), **Hair** (8 styles, 8 colours), **Extras** (13 accessories — a saree offers to
 apply jhumkas, bangles, bindi and a bun), **Skin** and **Emotes** (20). At the top of Emotes she picks her
-**victory emote** (the one that plays when a quest is completed) from the emotes she has; **Change** under
-the preview jumps there. **Emotes** under Nova plays any of them on the board.
+**victory emote** from the emotes she has; **Change** under the preview jumps there.
 
-**Reward Track (levelling up unlocks things):** she starts with 5 outfits, 2 hairstyles, 3 hair colours,
+**Rewards (levelling up unlocks things):** she starts with 5 outfits, 2 hairstyles, 3 hair colours,
 4 outfit colours, 2 extras, 3 emotes and every skin tone (skin is never locked). Every level up to 30 unlocks
-something — usually a new outfit plus a colour, hairstyle, accessory or emote — and every fifth level is a
-named milestone (5 Festive Pack: Nivi saree, jhumkas, bindi, Thumkas · 10 Party Night · 15 Nine Yards ·
-20 Temple Silk · 25 Varsity Legend · 30 Boss Mode). The full list is in `src/rewards.ts`.
-- Completing the quest that reaches a new level opens a **Level up!** reveal: Nova in the new outfit (showing
-  off a new emote if there is one), the other rewards, **Wear** it now, or open the Locker.
-- New things carry a **NEW** badge (and a count on the Locker button) until she has looked at them.
+something, and every fifth level is a named milestone (5 Festive Pack: Nivi saree, jhumkas, bindi, Thumkas ·
+10 Party Night · 15 Nine Yards · 20 Temple Silk · 25 Varsity Legend · 30 Boss Mode). The full list is in
+`src/rewards.ts`.
+- Completing the task that reaches a new level opens a **Level up!** card with the new outfit, the other
+  rewards, **Wear** it now, or open the Locker.
+- New things carry a **NEW** badge (and a count on her level card) until she has looked at them.
 - Locked things show the level they unlock at. Tapping one **tries it on** in the Locker preview without
   saving; locked emotes can be previewed too.
-- Tapping the level in the top bar (or **Reward Track** in the Locker) opens the **Reward Track**: every
-  level, what she has, and what's coming.
-- Unlocks are never taken back — un-completing a note lowers the XP but not what she has unlocked. When this
-  update first runs, anything she is already wearing stays unlocked.
+- Unlocks are never taken back — un-completing a task lowers the XP but not what she has unlocked.
 
 The Pencil only ever writes; fingers only ever move things, so a resting palm can't draw.
 
@@ -128,7 +130,7 @@ npm run icons      # regenerate the PNG icons (original artwork, no dependencies
 node scripts/port-avatar.mjs   # regenerate src/avatarSvg.gen.ts from the design's Avatar.dc.html (+ rig)
 ```
 
-**Avatar test page:** with `npm run dev` running, open http://localhost:5173/avatar-test.html to see Nova
+**Avatar test page:** with `npm run dev` running, open http://localhost:5173/avatar-test.html to see the avatar
 in all 33 outfits and play each of the 20 emotes on all of them; the Scrub slider freezes a pose, and
 `?w=320&only=runner,saree` shows bigger figures for fewer outfits. It is dev-only (not in the build).
 
@@ -155,7 +157,7 @@ Things to know:
 The build uses **relative paths** (`base: './'`), so it works at `https://<user>.github.io/<repo>/`
 without any path configuration. A workflow is included.
 
-1. Create a GitHub repository (e.g. `quest-board`) and push this folder to its `main` branch.
+1. Create a GitHub repository (e.g. `board`) and push this folder to its `main` branch.
 2. In the repo, go to **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**.
 3. Every push to `main` builds and deploys automatically (`.github/workflows/deploy.yml`). The site
    appears at `https://<user>.github.io/<repo>/`.
@@ -180,7 +182,7 @@ Home Screen (and use the app from there — that's where the notes live).
 
 1. Open the GitHub Pages URL in **Safari**. It must be Safari for Add to Home Screen.
 2. Tap **Share** (the square with an arrow) → **Add to Home Screen** → **Add**.
-3. Open **Quest Board from the Home Screen icon** once while online, so it can cache itself for offline use.
+3. Open **Board from the Home Screen icon** once while online, so it can cache itself for offline use.
 4. To put it in the Dock: on the Home Screen, touch and hold the icon until the icons jiggle, then drag it
    into the Dock and tap **Done**.
 
@@ -198,7 +200,7 @@ you left.
 - **Persistent storage:** the app asks for `navigator.storage.persist()` on first launch. Settings shows
   whether it was granted.
 - **Export:** Settings → **Export backup** writes one versioned JSON file containing both boards, all
-  notes (ink, text, photos and photo markup), the Vault, XP, Nova's outfit and settings. It shows the size first;
+  tasks (ink, text, photos and photo markup), Done, XP, her avatar and settings (not the uploaded wallpaper). It shows the size first;
   then tap **Save backup** and choose **Save to Files**.
 - **Import:** Settings → **Import backup…** checks the file, shows a summary, and asks before replacing
   anything. Older backups (without text or photos) import fine.
@@ -217,13 +219,13 @@ creates the reminder in Apple Reminders. Set the Shortcut up once using
 ## Project structure
 
 ```
-design/quest-board/     The design handoff (reference only, not built): SPEC, tokens, mock screens
+design/quest-board/     The original game-style design handoff (reference for the avatar only)
 index.html              App shell (CSP meta injected at build, iPadOS meta tags, manifest link)
 vite.config.ts          Relative base, CSP injection, generates sw.js precache list + version hash
 sw/sw.js                Hand-written service worker template (cache-first app shell, old-cache cleanup)
 public/                 manifest.webmanifest, icons/, licenses/ (copied verbatim)
 scripts/make-icons.mjs  Rasterises the icon artwork to PNG with no dependencies
-scripts/port-avatar.mjs Ports Nova's SVG template from design/…/Avatar.dc.html into src/avatarSvg.gen.ts
+scripts/port-avatar.mjs Ports the avatar's SVG template from design/…/Avatar.dc.html into src/avatarSvg.gen.ts
 scripts/rig.mjs         Adds the animation joints the design lacks: elbows, a waist, arms that can come in front
 avatar-test.html        Dev-only page: all 33 outfits × 20 emotes (src/avatarTest.ts)
 src/
@@ -238,21 +240,22 @@ src/
   card.ts, board.ts     Cards and the Today / This Week / Backlog columns
   gestures.ts           Board input: pen vs finger, tap / hold-to-complete / drag targets / two-finger undo
   stroke.ts, ink.ts     Pencil capture (coalesced + predicted events) and perfect-freehand rendering
-  avatar.ts             Nova: 33 outfits, palettes, hair/skin/accessories, Look → SVG (renderVals port)
+  avatar.ts             The avatar: 33 outfits, palettes, hair/skin/accessories, Look → SVG (renderVals port)
+  theme.ts              Appearance (light / dark / glass), accent, wallpaper; theme-aware ink and page colours
   avatarSvg.gen.ts      GENERATED SVG template (do not edit; re-run scripts/port-avatar.mjs)
   emotes.ts, emotes.css The 20 emotes (choreography on the rig) and how to play one on a figure
   images.ts, photos.ts  On-device photo processing, bitmaps/URLs, picker, drop and paste
-  xp.ts                 Levels (300 XP rising to 1000) and streak, derived from completed notes
+  xp.ts                 Levels (300 XP rising to 1000) and streak, derived from completed tasks
   rewards.ts            The Reward Track: starter kit, what each level unlocks, unlock checks
   backup.ts             Export (sized, Web Share / download) and validated import of v1–v3 backups
   safari.ts             Suppresses Safari zoom / selection / callout / bounce
-  tokens.css            Design tokens + avatar motion, copied from the handoff
-  styles.css            Everything else
-  ui/                   topbar, hero, noteSheet (Write/Speak/Photo/View), locker, vault, viewer,
+  avatar.css            Avatar idle motion and dictation animations
+  styles.css            Theme tokens (three appearances) and every screen
+  ui/                   sidebar, profile, icons, noteSheet (Write/Speak/Photo/View), locker, vault (Done), viewer,
                         reminder, settings, overlay (sheets + toasts), rewards (Reward Track + level-up)
 ```
 
-### Data model (IndexedDB `quest-board`, schema v3)
+### Data model (IndexedDB `quest-board` — the name predates the rename and must stay — schema v3)
 
 - **`notes`** (key `id`, indexes `board`, `status`):
   `{ id, board: 'work'|'personal', zone: 'today'|'week'|'someday', due?: 'mon'…'sun',
@@ -265,7 +268,7 @@ src/
   - `markup` strokes are normalised to the photo's longest edge (0–1), keyed by photo id.
 - **`images`** (key `id`): `{ id, type, w, h, full, tw, th, thumb, bytes, createdAt }`, full ≤ 2048 px and
   thumb ≤ 400 px JPEGs as ArrayBuffers. Photos no note refers to are deleted at the next launch.
-- **`meta`** (key `key`): `settings` (ink, tool, sound), `view` (last board), `player` (Nova's outfit,
+- **`meta`** (key `key`): `settings` (ink, tool, sound, appearance, accent, wallpaper, celebrate), `view` (last board), `player` (her avatar's outfit,
   per-outfit colours `{p,s,a}`, hair style + colour, skin, accessories, ★ victory emote, `best` = highest level
   reached, `unseen` = NEW reward keys, `kept` = rewards kept regardless of level), `backup` (last export), `install` (first launch, persist requested).
 - XP, level and streak are **derived** from completed notes (`xp` is stamped at completion).
@@ -282,10 +285,9 @@ default-src 'self'; connect-src 'self'; img-src 'self' data: blob:; font-src 'se
 style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'
 ```
 
-The only change is dev-only (`ws:`/`wss:` for Vite hot reload). The design's Google Fonts are bundled
-instead (Barlow, Barlow Condensed via `@fontsource`), so no font or style comes from another origin.
-Photos are drawn from decoded bitmaps or shown through `blob:` URLs (already allowed by `img-src`). Vite’s asset inlining is disabled so the
-font is always a same-origin file, never a `data:` URI.
+The only change is dev-only (`ws:`/`wss:` for Vite hot reload). The app uses the iPad's own system font,
+so no font is downloaded at all. Photos and the uploaded wallpaper are drawn from decoded bitmaps or shown
+through `blob:` URLs (already allowed by `img-src`); built-in wallpapers are CSS gradients.
 
 ### Ready for later (not built yet)
 
@@ -293,7 +295,7 @@ The architecture leaves room for these:
 
 - **Brain-dump mode:** strokes end in `NoteSheet.commitStroke`; a pause timer there can open the next note.
 - **Morning top three / Sunday review:** notes from both boards are already in memory (`store.notes`).
-  These would be new sheets, like the Vault.
+  These would be new sheets, like Done.
 - **Due glow and badge count:** `reminder.due` is stored as ISO. Add a class in `Card.buildChrome` and
   call `navigator.setAppBadge` from the store listener.
 - **Aging notes:** `createdAt`/`updatedAt` are on every note; aging is a CSS variable set in `Card.update`.
@@ -303,9 +305,7 @@ The architecture leaves room for these:
 
 ## Licences
 
-- Barlow and Barlow Condensed fonts © The Barlow Project Authors, SIL Open Font License 1.1
-  (`public/licenses/`), bundled via `@fontsource`.
 - `perfect-freehand` © Steve Ruiz, MIT.
-- Visual design from the project's own design handoff (`design/quest-board/`). Nova, her outfits, the
-  icons and sounds are original (icons generated by `scripts/make-icons.mjs`, sounds synthesised at
+- The avatar comes from the project's own design handoff (`design/quest-board/`). The avatar, her outfits,
+  the wallpapers, icons and sounds are original (icons generated by `scripts/make-icons.mjs`, sounds synthesised at
   runtime).

@@ -7,20 +7,21 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover"
     />
-    <title>Quest Board</title>
-    <meta name="theme-color" content="#0F2054" />
-    <meta name="color-scheme" content="dark" />
+    <title>Board</title>
+    <meta name="theme-color" content="#F7F7F8" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Quest Board" />
+    <meta name="apple-mobile-web-app-title" content="Board" />
     <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png" />
-    <!-- Painted before any JS runs, so launch lands straight on the board colours. -->
+    <!-- Painted before any JS runs (theme.ts then applies the saved appearance at once). -->
     <style>
-      html, body { margin: 0; height: 100%; background: #070E26; overflow: hidden; }
+      html, body { margin: 0; height: 100%; background: #F7F7F8; overflow: hidden; }
+      @media (prefers-color-scheme: dark) { html, body { background: #111113; } }
     </style>
   </head>
   <body>

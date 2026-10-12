@@ -2,16 +2,12 @@ import { daysInToday, hasText } from './actions';
 import { weekEndKey } from './days';
 import { drawPage } from './page';
 import { PRIORITY, WEEKDAY_LABEL, type Note } from './types';
+import { PRIORITY_ICON, SMALL, STATUS_ICON, STATUS_LABEL, statusOf } from './ui/icons';
 import { el, formatDue, isOverdue } from './util';
 
 /** A note on the board: priority frame, dotted dark surface, header/footer chips, the page drawn to fit. */
 
 export type CardKind = 'today' | 'week' | 'someday';
-
-const CHECK =
-  '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1430" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
-const CLOCK =
-  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 
 const observer =
   typeof ResizeObserver !== 'undefined'
@@ -29,7 +25,6 @@ export class Card {
   private canvas: HTMLCanvasElement;
   private top: HTMLDivElement;
   private foot: HTMLDivElement | null = null;
-  private stamp: HTMLDivElement | null = null;
   private w = 0;
   private h = 0;
   private frame = 0;
@@ -62,17 +57,15 @@ export class Card {
     const kindChanged = kind !== this.kind;
     this.kind = kind;
     const pr = PRIORITY[note.priority];
-    const inProgress = note.status === 'active' && !!note.startedAt;
-    this.el.className = `qb-card k-${kind}` + (note.status === 'done' ? ' is-done' : '') + (inProgress ? ' is-progress' : '');
-    this.el.style.setProperty('--grad', pr.grad);
-    this.el.style.setProperty('--light', pr.light);
-    const what = hasText(note) ? note.text!.trim().slice(0, 80) : note.imageIds?.length ? 'photo note' : 'handwritten note';
+    const st = statusOf(note);
+    this.el.className = `qb-card k-${kind}` + (st === 'done' ? ' is-done' : '') + (st === 'progress' ? ' is-progress' : '');
+    const what = hasText(note) ? note.text!.trim().slice(0, 80) : note.imageIds?.length ? 'photo task' : 'handwritten task';
     this.el.setAttribute(
       'aria-label',
-      `${what}. ${pr.label} priority, ${pr.xp} XP${note.status === 'done' ? ', complete' : inProgress ? ', in progress' : ''}. Tap to open${note.status === 'done' ? '' : inProgress ? ', hold to complete' : ', hold to start'}.`,
+      `${what}. ${STATUS_LABEL[st]}, ${pr.label} priority. Tap to open${st === 'done' ? '' : st === 'progress' ? ', hold to complete' : ', hold to start'}.`,
     );
 
-    const headKey = [kind, note.priority, note.due, note.dueDate, note.reminder?.due, note.status, note.startedAt, this.ageDays(note), weekEndKey()].join('|');
+    const headKey = [kind, note.priority, note.due, note.dueDate, note.reminder?.due, note.status, note.startedAt, note.imageIds?.length, this.ageDays(note), weekEndKey()].join('|');
     if (force || headKey !== this.headKey) {
       this.headKey = headKey;
       this.buildChrome(note, kind);
@@ -84,41 +77,43 @@ export class Card {
 
   private buildChrome(note: Note, kind: CardKind) {
     const pr = PRIORITY[note.priority];
-    const pri = el('span', 'qb-card-pri', pr.label);
-    const xp = el('span', 'qb-card-xp', `+${pr.xp} XP`);
-    const pin = note.reminder ? this.pin(note) : null;
-    const prog = note.status === 'active' && note.startedAt ? el('span', 'qb-progchip', 'In progress') : null;
+    const st = statusOf(note);
+    // The status circle: tap it to start a task, tap again to complete it.
+    const status = el('button', 'qb-status');
+    status.type = 'button';
+    status.innerHTML = STATUS_ICON[st];
+    status.setAttribute('aria-label', st === 'done' ? 'Done' : st === 'progress' ? 'In progress — tap to complete' : 'To do — tap to start');
+    const chips: HTMLElement[] = [];
+    if (st === 'progress') chips.push(el('span', 'qb-chip prog', 'In progress'));
+    const age = this.ageDays(note);
+    if (age >= 1) {
+      const c = el('span', 'qb-chip' + (age >= 2 ? ' late' : ''), `Day ${age + 1}`);
+      c.title = `In Today for ${age + 1} days`;
+      chips.push(c);
+    }
+    if (note.reminder) chips.push(this.pin(note));
+    if (note.imageIds?.length) {
+      const c = el('span', 'qb-chip icon');
+      c.innerHTML = SMALL.photo;
+      c.setAttribute('aria-hidden', 'true');
+      chips.push(c);
+    }
+    const prio = el('span', 'qb-card-prio');
+    prio.innerHTML = PRIORITY_ICON[note.priority];
+    prio.title = `${pr.label} priority`;
+    this.top.replaceChildren(status, ...chips, el('span', 'qb-flex'), prio);
+
     if (kind === 'today') {
-      const age = this.ageDays(note);
-      // While she's on it, the badge takes the place of the priority label and the age chip.
-      const ageChip = age >= 1 && !prog ? el('span', 'qb-agechip' + (age >= 2 ? ' old' : ''), `Day ${age + 1}`) : null;
-      ageChip?.setAttribute('title', `In Today for ${age + 1} days`);
-      this.top.replaceChildren(...(prog ? [prog] : [pri]), ...(ageChip ? [ageChip] : []), ...(pin ? [pin] : []), el('span', 'qb-flex'), xp);
       this.foot?.remove();
       this.foot = null;
     } else {
       const later = !!note.dueDate && note.dueDate > weekEndKey();
       const label = kind === 'someday' ? 'Someday' : note.due ? (later ? 'Next ' : '') + WEEKDAY_LABEL[note.due] : 'Any day';
-      const chip = el('span', 'qb-daychip', label);
-      this.top.replaceChildren(chip, el('span', 'qb-flex'), ...(pin ? [pin] : []));
       if (!this.foot) {
         this.foot = el('div', 'qb-card-foot');
         this.body.after(this.foot);
       }
-      this.foot.replaceChildren(prog ?? pri, xp);
-    }
-    if (note.status === 'done') {
-      if (!this.stamp) {
-        this.stamp = el('div', 'qb-stamp-wrap');
-        const s = el('span', 'qb-stamp');
-        s.innerHTML = CHECK;
-        s.append('Complete');
-        this.stamp.append(s);
-        this.el.append(this.stamp);
-      }
-    } else {
-      this.stamp?.remove();
-      this.stamp = null;
+      this.foot.replaceChildren(el('span', 'qb-chip', label));
     }
   }
 
@@ -133,8 +128,8 @@ export class Card {
   }
 
   private pin(note: Note) {
-    const p = el('span', 'qb-pin' + (isOverdue(note.reminder!.due) ? ' overdue' : ''));
-    p.innerHTML = CLOCK;
+    const p = el('span', 'qb-chip pin' + (isOverdue(note.reminder!.due) ? ' overdue' : ''));
+    p.innerHTML = SMALL.bell;
     p.append(formatDue(note.reminder!.due));
     return p;
   }

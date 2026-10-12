@@ -320,7 +320,7 @@ function vals(look: Look, w: number, h: number): AvatarVals {
     w,
     h,
     uid,
-    label: 'Nova wearing ' + o.name,
+    label: 'Moduuu wearing ' + o.name,
     full,
     rimFilter: full ? `url(#${uid}Rim)` : 'none',
     accent: a,

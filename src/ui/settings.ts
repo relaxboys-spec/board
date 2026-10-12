@@ -1,6 +1,8 @@
 import { formatBytes, parseBackup, prepareBackup, saveBackupFile, type ImportSummary } from '../backup';
 import { signOut } from './login';
-import { imageUsage } from '../db';
+import { deleteImages, getImage, imageUsage } from '../db';
+import { acquireUrl, processImage, releaseUrl, saveImage } from '../images';
+import { ACCENTS, APPEARANCES, reloadCustomWallpaper, WALLPAPER_IMAGE_ID, WALLPAPERS, type Appearance } from '../theme';
 import { store } from '../store';
 import { button, el } from '../util';
 import { openSheet, toast } from './overlay';
@@ -45,6 +47,15 @@ export async function runExport(onDone: () => void = () => {}) {
 export function openSettings(onImported: () => void) {
   const sheet = openSheet('Settings');
   const b = sheet.body;
+  const look = el('section', 'qb-settings-look');
+  renderAppearance(look);
+  const unsub = store.on((e) => e.type === 'settings' && renderAppearance(look));
+  new MutationObserver((_, obs) => {
+    if (!sheet.el.isConnected) {
+      unsub();
+      obs.disconnect();
+    }
+  }).observe(document.body, { childList: true, subtree: true });
 
   // Sound
   const soundRow = el('label', 'setting-row');
@@ -89,12 +100,12 @@ export function openSettings(onImported: () => void) {
   actions.append(exportBtn, importBtn, file);
 
   // Storage
-  const storeTitle = el('h3', 'setting-title', 'Where your notes live');
+  const storeTitle = el('h3', 'setting-title', 'Where your tasks live');
   const warn = el(
     'p',
     'warning',
     'Everything is stored only on this iPad, inside this app. Nothing is ever sent anywhere. ' +
-      'Removing Quest Board from the Home Screen deletes all of its notes — export a backup first.',
+      'Removing Board from the Home Screen deletes all of its tasks — export a backup first.',
   );
   const usageEl = el('ul', 'summary');
   usageEl.append(el('li', '', 'Checking storage…'));
@@ -121,7 +132,7 @@ export function openSettings(onImported: () => void) {
   const about = el(
     'p',
     'hint small',
-    `Quest Board ${__APP_VERSION__} · Fonts: Barlow, Barlow Condensed © The Barlow Project Authors — SIL Open Font License 1.1`,
+    `Board ${__APP_VERSION__} · Uses the iPad’s system font`,
   );
 
   // Account
@@ -130,7 +141,7 @@ export function openSettings(onImported: () => void) {
   accountRow.append(button('btn', 'Sign out', () => signOut()));
   const accountHint = el('p', 'hint', 'Signed in on this iPad. Signing out keeps all notes; you’ll need your username and PIN to get back in.');
 
-  b.append(soundRow, backupTitle, lastEl, actions, storeTitle, warn, usageEl, persistEl, accountTitle, accountHint, accountRow, about);
+  b.append(look, soundRow, backupTitle, lastEl, actions, storeTitle, warn, usageEl, persistEl, accountTitle, accountHint, accountRow, about);
 }
 
 function confirmImport(s: ImportSummary, onImported: () => void) {
@@ -190,4 +201,127 @@ export function backupBanner(parent: HTMLElement): { refresh(): void } {
   }
   refresh();
   return { refresh };
+}
+
+// ---- appearance ------------------------------------------------------------------------
+
+const MODE_ICON: Record<Appearance, string> = {
+  light: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>',
+  dark: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>',
+  glass: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="M7 10l4-3M7 15l9-7" opacity=".7"/></svg>',
+};
+
+/** Appearance, wallpaper (Glass), accent colour and the avatar celebration. Re-rendered on change. */
+function renderAppearance(box: HTMLElement) {
+  const st = store.settings;
+  const out: HTMLElement[] = [el('h3', 'setting-title first', 'Appearance')];
+
+  const seg = el('div', 'qb-seg');
+  seg.setAttribute('role', 'radiogroup');
+  seg.setAttribute('aria-label', 'Appearance');
+  for (const [id, label] of APPEARANCES) {
+    const on = st.appearance === id;
+    const btn = button('qb-seg-btn' + (on ? ' on' : ''), '', () => store.setSettings({ appearance: id }));
+    btn.innerHTML = `${MODE_ICON[id]}<span>${label}</span>`;
+    btn.setAttribute('role', 'radio');
+    btn.setAttribute('aria-checked', String(on));
+    seg.append(btn);
+  }
+  out.push(seg);
+
+  if (st.appearance === 'glass') {
+    out.push(el('span', 'setting-sub', 'Wallpaper'));
+    const walls = el('div', 'qb-walls');
+    for (const [id, name, css] of WALLPAPERS) {
+      const on = st.wallpaper === id;
+      const w = button('qb-wall' + (on ? ' on' : ''), '', () => store.setSettings({ wallpaper: id }));
+      w.style.backgroundImage = css;
+      w.setAttribute('aria-label', name);
+      w.setAttribute('aria-pressed', String(on));
+      walls.append(w);
+    }
+    // Her own photo, once uploaded
+    const custom = button('qb-wall custom' + (st.wallpaper === 'custom' ? ' on' : ''), '', () => store.setSettings({ wallpaper: 'custom' }));
+    custom.setAttribute('aria-label', 'Your photo');
+    custom.hidden = true;
+    void getImage(WALLPAPER_IMAGE_ID).then(async (rec) => {
+      if (!rec) return;
+      custom.hidden = false;
+      const u = await acquireUrl(WALLPAPER_IMAGE_ID, 'thumb');
+      if (u) custom.style.backgroundImage = `url("${u.url}")`;
+      // Released when the settings sheet goes away.
+      const obs = new MutationObserver(() => {
+        if (!custom.isConnected) {
+          releaseUrl(WALLPAPER_IMAGE_ID, 'thumb');
+          obs.disconnect();
+        }
+      });
+      obs.observe(document.body, { childList: true, subtree: true });
+    });
+    walls.append(custom);
+
+    const file = el('input');
+    file.type = 'file';
+    file.accept = 'image/*';
+    file.hidden = true;
+    file.addEventListener('change', async () => {
+      const f = file.files?.[0];
+      file.value = '';
+      if (!f) return;
+      toast('Setting wallpaper…', undefined, 1500);
+      try {
+        const rec = await processImage(f);
+        rec.id = WALLPAPER_IMAGE_ID;
+        await saveImage(rec);
+        reloadCustomWallpaper();
+        store.setSettings({ appearance: 'glass', wallpaper: 'custom' });
+        renderAppearance(box);
+        toast('Wallpaper set');
+      } catch (err) {
+        toast('Couldn’t use that photo: ' + (err as Error).message, undefined, 4000);
+      }
+    });
+    const upload = button('btn small', 'Upload photo…', () => file.click());
+    const actions = el('div', 'qb-wall-actions');
+    actions.append(upload, file);
+    if (st.wallpaper === 'custom') {
+      actions.append(
+        button('btn small ghost', 'Remove photo', async () => {
+          await deleteImages([WALLPAPER_IMAGE_ID]);
+          store.setSettings({ wallpaper: 'dusk' });
+          renderAppearance(box);
+        }),
+      );
+    }
+    out.push(walls, actions, el('p', 'hint', 'Your photo stays on this iPad. It isn’t included in backups.'));
+  }
+
+  out.push(el('span', 'setting-sub', 'Accent colour'));
+  const accents = el('div', 'qb-accents');
+  accents.setAttribute('role', 'radiogroup');
+  accents.setAttribute('aria-label', 'Accent colour');
+  for (const [id, name, deep, bright] of ACCENTS) {
+    const on = st.accent === id;
+    const a = button('qb-accent' + (on ? ' on' : ''), '', () => store.setSettings({ accent: id }));
+    a.style.setProperty('--sw', st.appearance === 'light' ? deep : bright);
+    a.setAttribute('role', 'radio');
+    a.setAttribute('aria-checked', String(on));
+    a.setAttribute('aria-label', name);
+    a.title = name;
+    accents.append(a);
+  }
+  out.push(accents);
+
+  const celebrateRow = el('label', 'setting-row');
+  const celebrate = el('input');
+  celebrate.type = 'checkbox';
+  celebrate.className = 'toggle';
+  celebrate.checked = st.celebrate;
+  celebrate.addEventListener('change', () => store.setSettings({ celebrate: celebrate.checked }));
+  const txt = el('span', 'setting-text');
+  txt.append(el('span', '', 'Celebrate with my avatar'), el('small', '', 'She pops up and dances when you complete a task'));
+  celebrateRow.append(txt, celebrate);
+  out.push(celebrateRow);
+
+  box.replaceChildren(...out);
 }

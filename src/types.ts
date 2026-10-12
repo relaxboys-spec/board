@@ -1,3 +1,4 @@
+import type { AccentId, Appearance, WallpaperId } from './theme';
 export type BoardId = 'work' | 'personal';
 /** today / week are the board's columns; someday lives in the Backlog drawer. */
 export type ZoneId = 'today' | 'week' | 'someday';
@@ -12,7 +13,7 @@ export const PRIORITIES: Priority[] = ['low', 'normal', 'high', 'urgent'];
 export const WEEKDAYS: Weekday[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
 export const BOARD_LABEL: Record<BoardId, string> = { work: 'Work', personal: 'Personal' };
-export const ZONE_LABEL: Record<ZoneId, string> = { today: 'Today', week: 'This Week', someday: 'Someday' };
+export const ZONE_LABEL: Record<ZoneId, string> = { today: 'Today', week: 'This week', someday: 'Someday' };
 export const WEEKDAY_LABEL: Record<Weekday, string> = {
   mon: 'Mon',
   tue: 'Tue',
@@ -115,6 +116,12 @@ export interface Settings {
   inkColor: string;
   tool: Tool;
   sound: boolean;
+  /** Light, dark, or liquid glass over a wallpaper (theme.ts). */
+  appearance: Appearance;
+  accent: AccentId;
+  wallpaper: WallpaperId;
+  /** Her avatar pops up and plays the victory emote when a task is completed. */
+  celebrate: boolean;
 }
 
 export interface ViewState {
@@ -180,6 +187,10 @@ export const DEFAULT_SETTINGS: Settings = {
   inkColor: INK_COLORS[0].value,
   tool: 'pen',
   sound: false,
+  appearance: 'light',
+  accent: 'indigo',
+  wallpaper: 'dusk',
+  celebrate: false,
 };
 
 export const DEFAULT_PLAYER: Player = {

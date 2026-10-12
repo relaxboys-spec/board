@@ -1,12 +1,4 @@
-import '@fontsource/barlow/latin-500.css';
-import '@fontsource/barlow/latin-600.css';
-import '@fontsource/barlow/latin-700.css';
-import '@fontsource/barlow-condensed/latin-700.css';
-import '@fontsource/barlow-condensed/latin-800.css';
-import '@fontsource/barlow-condensed/latin-900.css';
-import '@fontsource/barlow-condensed/latin-800-italic.css';
-import '@fontsource/barlow-condensed/latin-900-italic.css';
-import './tokens.css';
+import './avatar.css';
 import './emotes.css';
 import './styles.css';
 
@@ -14,49 +6,73 @@ import { completeNote, createNote, deleteNote, moveNote, restoreNote, rollover, 
 import { play, type SoundName } from './audio';
 import { lookFor } from './avatar';
 import { BoardView, type NewMode } from './board';
-import { burst, xpPop } from './fx';
 import { Gestures } from './gestures';
 import { collectGarbage } from './images';
 import { resetPageLayouts } from './page';
 import { attachFiles, imageFilesFrom, pickPhotos } from './photos';
-import { preventSafariGestures } from './safari';
+import { preventSafariGestures, watchPenHover } from './safari';
 import { store } from './store';
+import { appearance, applyTheme, bootTheme, onThemeChange, WALLPAPER_IMAGE_ID } from './theme';
 import { BOARD_LABEL, type BoardId, type ZoneId } from './types';
-import { dayKey, prefersReducedMotion, uid } from './util';
+import { dayKey, el, prefersReducedMotion, uid } from './util';
 import { levelOf, rewardsBetween, wornKeys } from './rewards';
 import { computeStats } from './xp';
-import { Hero } from './ui/hero';
+import { SMALL } from './ui/icons';
 import { lockerOpen, openLocker, type LockerFocus } from './ui/locker';
 import { loginOpen, showLogin, signedIn } from './ui/login';
 import { openTrack, showLevelUp, trackOpen, type RewardHandlers } from './ui/rewards';
 import { NoteSheet } from './ui/noteSheet';
 import { initOverlay, sheetOpen, toast } from './ui/overlay';
+import { Profile } from './ui/profile';
 import { openReminderSheet } from './ui/reminder';
 import { backupBanner, openSettings } from './ui/settings';
-import { Topbar } from './ui/topbar';
+import { Sidebar } from './ui/sidebar';
 import { openVault } from './ui/vault';
 import { flushViewer, openViewer } from './ui/viewer';
 
 // ---- shell: painted synchronously, before any data loads ---------------------------
 
+bootTheme(); // last-used appearance + accent, before the first paint
 const app = document.getElementById('app')!;
-app.append(Object.assign(document.createElement('div'), { className: 'qb-stripes' }));
 preventSafariGestures();
+watchPenHover();
 
-const topbar = new Topbar(app, {
-  onTab: (b) => switchBoard(b),
-  onBacklog: () => board.setDrawer(!board.drawerOpen),
-  onVault: () => openVault(),
-  onUndo: () => undo(),
+const sidebar = new Sidebar(app, {
+  onBoard: (b) => showBoard(b),
+  onBacklog: () => {
+    if (view !== 'board') showBoard(board.board);
+    board.setDrawer(!board.drawerOpen);
+  },
+  onDone: () => openVault(),
+  onProfile: () => showProfile(),
   onSettings: () => openSettings(() => afterImport()),
-  onHero: () => openLockerAt(),
-  onLevel: () => openTrackNow(),
 });
-const board = new BoardView(app, {
+
+const content = el('div', 'qb-content');
+const header = el('header', 'qb-header');
+const title = el('h1', 'qb-title', 'Work');
+const date = el('span', 'qb-date');
+const undoBtn = el('button', 'qb-iconbtn');
+undoBtn.type = 'button';
+undoBtn.innerHTML = SMALL.undo;
+undoBtn.setAttribute('aria-label', 'Undo (or tap with two fingers)');
+undoBtn.addEventListener('click', () => undo());
+const newBtn = el('button', 'btn primary qb-newbtn');
+newBtn.type = 'button';
+newBtn.innerHTML = `${SMALL.plus}<span>New task</span>`;
+newBtn.addEventListener('click', () => newNote('today', 'write'));
+header.append(title, date, el('span', 'qb-flex'), undoBtn, newBtn);
+content.append(header);
+app.append(content);
+
+const board = new BoardView(content, {
   newNote: (zone, mode) => newNote(zone, mode),
-  drawerChanged: (open) => document.body.classList.toggle('drawer-open', open),
+  drawerChanged: (open) => {
+    document.body.classList.toggle('drawer-open', open);
+    sidebar.setBacklogOpen(open);
+  },
 });
-const hero = new Hero(board.main, { onLocker: () => openLockerAt() });
+const profile = new Profile(content, { onLocker: () => openLockerAt(), onRewards: () => openTrackNow() });
 const ui = document.createElement('div');
 ui.className = 'ui';
 app.append(ui);
@@ -68,8 +84,41 @@ let login = signedIn()
   ? null
   : showLogin(() => {
       login = null;
-      hero.play('wave');
     });
+
+// ---- views: a board, or Profile -----------------------------------------------------------
+
+let view: 'board' | 'profile' = 'board';
+
+function showBoard(b: BoardId) {
+  view = 'board';
+  profile.el.hidden = true;
+  board.main.hidden = false;
+  if (b !== board.board) {
+    store.setBoard(b);
+    board.board = b;
+    board.render();
+  }
+  sidebar.setView(b);
+  setHeader();
+  refreshStats();
+}
+
+function showProfile() {
+  view = 'profile';
+  board.setDrawer(false);
+  board.main.hidden = true;
+  profile.el.hidden = false;
+  sidebar.setView('profile');
+  setHeader();
+  refreshStats();
+}
+
+function setHeader() {
+  title.textContent = view === 'profile' ? 'Profile' : BOARD_LABEL[board.board];
+  date.textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
+  newBtn.hidden = view === 'profile';
+}
 
 function sound(name: SoundName) {
   if (store.settings.sound) play(name);
@@ -81,8 +130,14 @@ function stats() {
 
 function refreshStats() {
   const s = stats();
-  topbar.setStats(s, store.done().length);
-  topbar.setBacklogCount(board.someCount());
+  sidebar.setStats(s);
+  const active = (b: BoardId) => [...store.notes.values()].filter((n) => n.board === b && n.status === 'active' && n.zone !== 'someday').length;
+  const done = store.done();
+  sidebar.setCounts({ work: active('work'), personal: active('personal') }, board.someCount(), done.length);
+  const monday = new Date();
+  monday.setHours(0, 0, 0, 0);
+  monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+  profile.setStats(s, store.player, { total: done.length, week: done.filter((n) => (n.completedAt ?? 0) >= monday.getTime()).length });
   syncUnlocks(s.level);
 }
 
@@ -107,7 +162,7 @@ let revealLevelUp = false;
 /**
  * Unlocks follow the highest level reached. The first time the track runs it keeps
  * whatever she's wearing; after that, each new level adds its rewards (with NEW badges)
- * and, when a quest did it, shows the level-up reveal.
+ * and, when a completed task did it, shows the level-up card.
  */
 function syncUnlocks(level: number) {
   const p = store.player;
@@ -125,8 +180,7 @@ function syncUnlocks(level: number) {
   const keys = rewardsBetween(from, level);
   store.setPlayer({ best: level, unseen: [...new Set([...p.unseen, ...keys])] });
   if (revealLevelUp) {
-    // After Nova's victory emote and the confetti.
-    window.setTimeout(() => showLevelUp(from, level, keys, rewardHandlers), prefersReducedMotion() ? 300 : 1900);
+    window.setTimeout(() => showLevelUp(from, level, keys, rewardHandlers), prefersReducedMotion() ? 200 : 900);
   } else if (keys.length) {
     toast(`Level ${level}! New rewards in the Locker`, { label: 'Open', run: () => openLockerAt() }, 4500);
   }
@@ -134,17 +188,8 @@ function syncUnlocks(level: number) {
 
 function refreshBadges() {
   const n = store.player.unseen.length;
-  hero.setBadge(n);
-  topbar.setBadge(n);
-}
-
-function switchBoard(b: BoardId) {
-  if (b === board.board) return;
-  store.setBoard(b);
-  board.board = b;
-  topbar.setBoard(b);
-  board.render();
-  topbar.setBacklogCount(board.someCount());
+  profile.setBadge(n);
+  sidebar.setBadge(n);
 }
 
 function undo() {
@@ -174,9 +219,15 @@ const UNDO_LABEL: Record<string, string> = {
   markup: 'photo ink',
 };
 
-// ---- completing ------------------------------------------------------------------------
+// ---- starting + completing -----------------------------------------------------------------
 
-function complete(id: string, from: DOMRect | null) {
+function start(id: string) {
+  setInProgress(id, true);
+  sound('pop');
+  toast('In progress', { label: 'Undo', run: undo }, 2400);
+}
+
+function complete(id: string, _from: DOMRect | null) {
   const before = stats().level;
   revealLevelUp = true;
   let gained = 0;
@@ -187,19 +238,29 @@ function complete(id: string, from: DOMRect | null) {
   }
   if (!gained) return;
   sound('done');
-  if (from && !prefersReducedMotion()) burst(from.left + from.width / 2, from.top + from.height / 2, gained >= 100 ? 1.3 : 0.9);
-  hero.celebrate(gained);
-  topbar.pulse('vault');
+  board.card(id)?.el.classList.add('just-done');
+  profile.celebrate(gained, store.settings.celebrate);
+  sidebar.pulse('vault');
+  toast(`Completed · +${gained} XP`, { label: 'Undo', run: undo }, 2800);
   refreshStats();
-  if (stats().level > before) {
-    window.setTimeout(() => {
-      const c = topbar.levelCenter();
-      xpPop(c.x + 60, c.y + 50, 'LEVEL UP!', 'level');
-      if (!prefersReducedMotion()) burst(c.x, c.y, 0.8);
-      sound('level');
-    }, 650);
-  }
+  if (stats().level > before) window.setTimeout(() => sound('level'), 500);
 }
+
+/** The status circle on a card: To do → In progress → Done (and back from Done). */
+function statusTap(id: string) {
+  const n = store.get(id);
+  if (!n) return;
+  if (n.status === 'done') {
+    restoreNote(id);
+    toast('Marked as not done', { label: 'Undo', run: undo }, 2200);
+  } else if (n.startedAt) complete(id, null);
+  else start(id);
+}
+app.addEventListener('click', (e) => {
+  const btn = (e.target as HTMLElement).closest<HTMLElement>('.qb-card .qb-status');
+  const id = btn?.closest<HTMLElement>('.qb-card')?.dataset.id;
+  if (id) statusTap(id);
+});
 
 // ---- notes ---------------------------------------------------------------------------------
 
@@ -222,17 +283,18 @@ const sheet = new NoteSheet({
   remind: (id) => openReminderSheet(id),
   deleteNote: (id) => {
     deleteNote(id);
-    toast('Note deleted', { label: 'Undo', run: undo });
+    toast('Task deleted', { label: 'Undo', run: undo });
   },
   // A day picked for today (e.g. "Mon" on a Monday) belongs in Today straight away.
   closed: () => dailyCheck(),
 });
 
 /**
- * New note in a column. Opening the sheet happens synchronously inside the tap so Speak
+ * New task in a column. Opening the sheet happens synchronously inside the tap so Speak
  * can open the keyboard and Photo can open the picker (iPadOS requires a user gesture).
  */
 function newNote(zone: ZoneId, mode: NewMode) {
+  if (view !== 'board') showBoard(board.board);
   const key = 'new:' + uid();
   const note = createNote(board.board, zone, { mergeKey: key });
   sound('pop');
@@ -245,31 +307,27 @@ function move(id: string, dest: { board?: BoardId; zone?: ZoneId; index?: number
   moveNote(id, dest);
   sound('drop');
   if (dest.board && dest.board !== before.board) {
-    topbar.pulse(dest.board);
+    sidebar.pulse(dest.board);
     toast(`Moved to ${BOARD_LABEL[dest.board]}`, { label: 'Undo', run: undo });
   } else if (dest.zone === 'someday' && before.zone !== 'someday') {
     toast('Moved to the Backlog', { label: 'Undo', run: undo });
   }
 }
 
-const gestures = new Gestures(app, board, topbar, {
+const gestures = new Gestures(app, board, sidebar, {
   openView: (id) => sheet.open(id, 'view'),
   openWrite: (id) => sheet.open(id, 'write'),
   newNoteAt: (zone) => newNote(zone, 'write'),
   complete,
-  start: (id) => {
-    setInProgress(id, true);
-    sound('pop');
-    toast('In progress — hold it again to complete', { label: 'Undo', run: undo }, 2800);
-  },
+  start,
   move,
   undo,
   sheetOpen: () => sheet.isOpen || lockerOpen() || trackOpen() || loginOpen() || sheetOpen(),
-  heroRect: () => (hero.el.offsetParent ? hero.el.getBoundingClientRect() : null),
+  heroRect: () => null,
 });
 void gestures;
 
-if (import.meta.env.DEV) (window as unknown as Record<string, unknown>).__qb = { store, board, sheet, hero };
+if (import.meta.env.DEV) (window as unknown as Record<string, unknown>).__qb = { store, board, sheet, profile, sidebar };
 
 store.on((e) => {
   if (e.type === 'notes') {
@@ -278,22 +336,29 @@ store.on((e) => {
     banner.refresh();
   } else if (e.type === 'player') {
     applyPlayer();
+    refreshStats();
+  } else if (e.type === 'settings') {
+    applyTheme(store.settings);
   } else if (e.type === 'reset') {
     afterImport();
   }
 });
 
+// Cards are canvases: redraw them in the new colours when the theme changes.
+onThemeChange(() => board.redrawAll());
+
 function applyPlayer() {
   const look = lookFor(store.player);
-  hero.setLook(look, store.player.victoryEmote);
-  topbar.setHero(look);
+  profile.setLook(look, store.player.victoryEmote);
+  sidebar.setHero(look);
   login?.setLook(look);
   refreshBadges();
 }
 
 function afterImport() {
   board.board = store.view.board;
-  topbar.setBoard(board.board);
+  applyTheme(store.settings);
+  showBoard(board.board);
   board.render();
   applyPlayer();
   refreshStats();
@@ -378,7 +443,7 @@ let lastDay = dayKey(Date.now());
 function dailyCheck(announce = true) {
   const moved = rollover();
   if (moved && announce) {
-    toast(moved === 1 ? '1 note moved into Today — its day is here' : `${moved} notes moved into Today — their day is here`, undefined, 3500);
+    toast(moved === 1 ? '1 task moved into Today — its day is here' : `${moved} tasks moved into Today — their day is here`, undefined, 3500);
   }
 }
 
@@ -414,23 +479,26 @@ async function boot() {
   } catch (err) {
     toast('Couldn’t open storage: ' + (err as Error).message, undefined, 8000);
   }
+  // First launch of the redesign: keep the appearance she's already seeing (iPad light/dark).
+  if (store.needsThemeDefaults) store.setSettings({ appearance: appearance() });
+  applyTheme(store.settings);
   const arrived = rollover(); // before the first paint, so notes are already in the right column
   board.board = store.view.board;
-  topbar.setBoard(board.board);
   board.render();
   applyPlayer();
-  refreshStats();
+  showBoard(board.board);
   banner = backupBanner(ui);
-  if (arrived) toast(arrived === 1 ? '1 note moved into Today — its day is here' : `${arrived} notes moved into Today — their day is here`, undefined, 3500);
+  if (arrived) toast(arrived === 1 ? '1 task moved into Today — its day is here' : `${arrived} tasks moved into Today — their day is here`, undefined, 3500);
 
-  // Note text is laid out with a fallback font until Barlow arrives; redraw then.
-  void document.fonts?.load('600 40px "Barlow"').then(() => {
+  // Text tasks use the system font; re-measure once fonts settle, just in case.
+  void document.fonts?.ready.then(() => {
     resetPageLayouts();
     board.redrawAll();
   });
 
-  // Photos no note refers to any more (removed / deleted last session) are freed now.
-  const referenced = new Set<string>();
+  // Photos no task refers to any more (removed / deleted last session) are freed now.
+  // The uploaded wallpaper is kept.
+  const referenced = new Set<string>([WALLPAPER_IMAGE_ID]);
   for (const n of store.notes.values()) for (const id of n.imageIds ?? []) referenced.add(id);
   void collectGarbage(referenced).catch(() => {});
 

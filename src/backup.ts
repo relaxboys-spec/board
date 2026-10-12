@@ -1,4 +1,5 @@
 import { DB_VERSION, getImage, type ImageRecord } from './db';
+import { isAccent, isAppearance, isWallpaper } from './theme';
 import { normalizePlayer } from './avatar';
 import { isLegacyNote, upgradeNote, upgradeSettings } from './migrate';
 import { store } from './store';
@@ -22,6 +23,7 @@ import { computeStats } from './xp';
  *   v2  + note text, photo ids and photo markup, and the photos themselves (base64)
  *   v3  grid redesign: priority, due day, the hero's outfit; v1/v2 are upgraded on import
  */
+// The format id predates the rename; it stays so older backups keep importing.
 export const BACKUP_FORMAT = 'quest-board-backup';
 export const BACKUP_VERSION = 3;
 
@@ -110,7 +112,7 @@ export async function prepareBackup(): Promise<PreparedBackup> {
   };
   const d = new Date();
   const stamp = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  const file = new File([JSON.stringify(data)], `quest-board-backup-${stamp}.json`, { type: 'application/json' });
+  const file = new File([JSON.stringify(data)], `board-backup-${stamp}.json`, { type: 'application/json' });
   return { file, bytes: file.size, notes: notes.length, photos: images.length };
 }
 
@@ -123,7 +125,7 @@ export async function saveBackupFile(file: File): Promise<'shared' | 'downloaded
   const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean };
   if (nav.canShare?.({ files: [file] })) {
     try {
-      await navigator.share({ files: [file], title: 'Quest Board backup' });
+      await navigator.share({ files: [file], title: 'Board backup' });
       store.markExported();
       return 'shared';
     } catch (err) {
@@ -274,7 +276,7 @@ export function parseBackup(text: string): ImportSummary {
   } catch {
     throw new Error('That file isn’t valid JSON.');
   }
-  if (data?.format !== BACKUP_FORMAT) throw new Error('That file isn’t a Quest Board backup.');
+  if (data?.format !== BACKUP_FORMAT) throw new Error('That file isn’t a Board backup.');
   if (!num(data.version) || data.version > BACKUP_VERSION) {
     throw new Error('This backup was made by a newer version of the app. Update the app first.');
   }
@@ -306,7 +308,17 @@ export function parseBackup(text: string): ImportSummary {
   if (data.settings && str(data.settings.inkColor, 7) && HEX.test(data.settings.inkColor)) {
     const up = data.version < 3 ? upgradeSettings(data.settings) : data.settings;
     const tool = ['pen', 'highlighter', 'eraser', 'lasso'].includes(up.tool) ? up.tool : 'pen';
-    settings = { inkColor: up.inkColor, tool, sound: !!up.sound };
+    const d = data.settings;
+    settings = {
+      inkColor: up.inkColor,
+      tool,
+      sound: !!up.sound,
+      appearance: isAppearance(d.appearance) ? d.appearance : store.settings.appearance,
+      accent: isAccent(d.accent) ? d.accent : store.settings.accent,
+      // The uploaded wallpaper isn't in backups; a backup that used one falls back to a preset.
+      wallpaper: isWallpaper(d.wallpaper) && d.wallpaper !== 'custom' ? d.wallpaper : store.settings.wallpaper === 'custom' ? 'custom' : 'dusk',
+      celebrate: !!d.celebrate,
+    };
   }
   const view: ViewState | undefined = data.view && BOARDS.includes(data.view.board) ? { board: data.view.board } : undefined;
   const player = cleanPlayer(data.player);

@@ -1,4 +1,5 @@
 import { getStroke } from 'perfect-freehand';
+import { inkColor } from './theme';
 import type { InkPoint, Stroke } from './types';
 
 /**
@@ -74,7 +75,7 @@ export function drawStroke(ctx: CanvasRenderingContext2D, s: Stroke) {
     pathCache.set(s, path);
   }
   ctx.globalAlpha = strokeAlpha(s.tilt, s.tool);
-  ctx.fillStyle = s.color;
+  ctx.fillStyle = inkColor(s.color);
   ctx.fill(path);
   ctx.globalAlpha = 1;
 }

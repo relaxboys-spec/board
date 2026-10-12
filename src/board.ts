@@ -4,22 +4,13 @@ import type { BoardId, ZoneId } from './types';
 import { el } from './util';
 
 /**
- * The board: Today (Daily Quests) and This Week (Weekly Challenges) as panels of card
- * grids, plus the Backlog (Someday) drawer. Cards are keyed by note id and reused.
+ * The board: Today and This week as columns of card grids, plus the Backlog (Someday)
+ * panel that slides in from the left. Cards are keyed by task id and reused.
  */
 
 export type NewMode = 'write' | 'speak' | 'photo';
 
-const PLUS =
-  '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#DCE6FF" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
-const MIC =
-  '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
-const CAM =
-  '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
-const CLOCK =
-  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B9C8EA" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
-const CLOSE =
-  '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+import { SMALL } from './ui/icons';
 
 interface Column {
   zone: ZoneId;
@@ -45,19 +36,16 @@ export class BoardView {
 
   constructor(parent: HTMLElement, private h: BoardHandlers) {
     this.main = el('main', 'qb-main');
-    this.main.append(
-      this.column('today', 'Daily Quests', 'Today').section,
-      this.column('week', 'Weekly Challenges', 'This Week').section,
-    );
+    this.main.append(this.column('today', 'Today').section, this.column('week', 'This week').section);
     parent.append(this.main);
 
     // Backlog drawer (Someday notes)
     this.drawer = el('aside', 'qb-drawer');
     this.drawer.setAttribute('aria-label', 'Backlog');
-    const col = this.column('someday', 'Someday', 'Backlog', true);
-    const close = el('button', 'qb-skew qb-iconbtn qb-drawer-close');
+    const col = this.column('someday', 'Backlog', true);
+    const close = el('button', 'qb-iconbtn qb-drawer-close');
     close.type = 'button';
-    close.innerHTML = `<span>${CLOSE}</span>`;
+    close.innerHTML = SMALL.x;
     close.setAttribute('aria-label', 'Close backlog');
     close.addEventListener('click', () => this.setDrawer(false));
     col.section.querySelector('.qb-col-head')!.append(close);
@@ -65,38 +53,39 @@ export class BoardView {
     parent.append(this.drawer);
   }
 
-  private column(zone: ZoneId, eyebrow: string, title: string, inDrawer = false): Column {
-    const section = el('section', `qb-panel qb-cut qb-col col-${zone}`);
+  private column(zone: ZoneId, title: string, inDrawer = false): Column {
+    const section = el('section', `qb-col col-${zone}`);
     section.dataset.zone = zone;
+    section.setAttribute('aria-label', title);
     const head = el('div', 'qb-col-head');
-    const left = el('div', 'qb-col-title');
-    const eb = el('span', 'qb-eyebrow', eyebrow);
-    if (zone === 'week') eb.classList.add('cyan');
-    left.append(eb, el('h2', 'qb-display qb-h2', title));
-    const right = el('div', 'qb-col-meta');
     const count = el('span', 'qb-col-count');
     const sub = el('span', 'qb-col-sub');
-    right.append(count, sub);
-    head.append(left);
-    if (!inDrawer) head.append(right);
+    const add = el('button', 'qb-iconbtn');
+    add.type = 'button';
+    add.innerHTML = SMALL.plus;
+    add.setAttribute('aria-label', `New task in ${title}`);
+    add.addEventListener('click', () => this.h.newNote(zone, 'write'));
+    head.append(el('h2', 'qb-col-title', title), count, sub, el('span', 'qb-flex'));
+    if (!inDrawer) head.append(add);
     const scroller = el('div', 'qb-col-scroll');
     const grid = el('div', `qb-grid grid-${zone}`);
     scroller.append(grid);
 
+    // "New task" row: write (tap anywhere), or straight into Speak / Photo.
     const tile = el('div', 'qb-newtile');
     const main = el('button', 'qb-newtile-main');
     main.type = 'button';
-    main.innerHTML = `${PLUS}<span>New Task</span>`;
+    main.innerHTML = `${SMALL.plus}<span>New task</span>`;
     main.addEventListener('click', () => this.h.newNote(zone, 'write'));
     const quick = el('div', 'qb-newtile-quick');
-    const mic = el('button', 'qb-quick');
+    const mic = el('button', 'qb-iconbtn');
     mic.type = 'button';
-    mic.innerHTML = MIC;
-    mic.setAttribute('aria-label', 'New voice task — then tap the mic key on the keyboard');
+    mic.innerHTML = SMALL.mic;
+    mic.setAttribute('aria-label', 'New spoken task — then tap the mic key on the keyboard');
     mic.addEventListener('click', () => this.h.newNote(zone, 'speak'));
-    const cam = el('button', 'qb-quick');
+    const cam = el('button', 'qb-iconbtn');
     cam.type = 'button';
-    cam.innerHTML = CAM;
+    cam.innerHTML = SMALL.cam;
     cam.setAttribute('aria-label', 'New photo task');
     cam.addEventListener('click', () => this.h.newNote(zone, 'photo'));
     quick.append(mic, cam);
@@ -141,10 +130,8 @@ export class BoardView {
         const at = col.grid.children[i + 1];
         if (at !== card.el) col.grid.insertBefore(card.el, at ?? null);
       });
-      if (zone !== 'someday') {
-        const done = notes.filter((n) => n.status === 'done').length;
-        col.count.replaceChildren(String(done), el('span', 'dim', ` / ${notes.length} Complete`));
-      }
+      const open = notes.filter((n) => n.status === 'active').length;
+      col.count.textContent = open ? String(open) : '';
     }
     for (const [id, card] of this.cards) {
       if (!seen.has(id)) {
@@ -156,13 +143,10 @@ export class BoardView {
     this.updateClock();
   }
 
-  /** "Resets in 9h 12m" and the week's date range. */
+  /** The column subtitles: when Today's done tasks clear, and this week's dates. */
   updateClock() {
     const now = new Date();
-    const midnight = new Date(now);
-    midnight.setHours(24, 0, 0, 0);
-    const mins = Math.max(0, Math.ceil((midnight.getTime() - now.getTime()) / 60000));
-    this.cols.get('today')!.sub.innerHTML = `${CLOCK}<span>Resets in ${Math.floor(mins / 60)}h ${mins % 60}m</span>`;
+    this.cols.get('today')!.sub.textContent = 'Done tasks clear at midnight';
     const monday = new Date(now);
     monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
     const sunday = new Date(monday);

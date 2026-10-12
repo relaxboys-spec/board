@@ -1,12 +1,12 @@
 # Setting up the “Board Reminder” Shortcut
 
-Quest Board can’t schedule notifications itself (web apps on iPad can’t), so when you choose
+Board can’t schedule notifications itself (web apps on iPad can’t), so when you choose
 **Remind me** on a note it hands the reminder to Apple’s **Reminders** app through a Shortcut.
 You set this Shortcut up **once**. It takes about five minutes.
 
 ## What the app sends
 
-When you save a reminder, Quest Board opens this link:
+When you save a reminder, Board opens this link:
 
 ```
 shortcuts://run-shortcut?name=Board%20Reminder&input=text&text=<JSON>
@@ -80,7 +80,7 @@ The Shortcut reads those two values and creates a reminder with an alert at that
 ### 7. Allow access
 
 15. Tap **Done**. The first time it runs, iPadOS asks for permission:
-    - “Allow *Quest Board* to open *Shortcuts*?” → **Open** (iPadOS may ask this every time; that’s normal).
+    - “Allow *Board* to open *Shortcuts*?” → **Open** (iPadOS may ask this every time; that’s normal).
     - “Allow *Board Reminder* to access Reminders?” → **Allow** (or **Always Allow**).
 
 The finished shortcut should read, top to bottom:
@@ -100,10 +100,10 @@ Add  Label  to  Reminders   (Alert: At Time → Due)
 
 ## Test it
 
-1. In Quest Board, long-press a note with your finger, choose **Remind me**, pick a time two
+1. In Board, long-press a note with your finger, choose **Remind me**, pick a time two
    minutes from now, write a label, and tap **Save reminder**.
 2. Shortcuts opens and runs. Check the **Reminders** app: the reminder should be there with an alert.
-3. To get back to the board, tap the **◀** back link in the top-left corner, or tap Quest Board in the Dock.
+3. To get back to the board, tap the **◀** back link in the top-left corner, or tap Board in the Dock.
 
 You can also test from inside the Shortcuts app: temporarily add a **Text** action at the very top
 containing `{"label":"Test","due":"2026-10-06T17:30:00+05:30"}` (with your own date and offset), point
@@ -120,5 +120,5 @@ containing `{"label":"Test","due":"2026-10-06T17:30:00+05:30"}` (with your own d
 - **Nothing happens when saving.** iPadOS may be blocking the hand-off. Try again, and tap **Open** when
   it asks to open Shortcuts.
 
-Removing a reminder pin from a note in Quest Board doesn’t delete the reminder in the Reminders app.
+Removing a reminder pin from a note in Board doesn’t delete the reminder in the Reminders app.
 Delete it there too.

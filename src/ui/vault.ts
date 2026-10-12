@@ -3,9 +3,10 @@ import { drawPage } from '../page';
 import { store } from '../store';
 import { BOARD_LABEL, PRIORITY, type Note } from '../types';
 import { button, dayKey, el } from '../util';
+import { PRIORITY_ICON, STATUS_ICON } from './icons';
 import { openSheet, toast } from './overlay';
 
-/** The Vault: every completed note, grouped by the day it was finished. */
+/** Done: every completed task, grouped by the day it was finished. */
 
 function dayTitle(key: string): string {
   const today = dayKey(Date.now());
@@ -22,11 +23,11 @@ const THUMB_W = 150;
 const THUMB_H = 120;
 
 export function openVault() {
-  const sheet = openSheet('Vault', { wide: true, eyebrow: 'Completed notes' });
+  const sheet = openSheet('Done', { wide: true });
   const done = store.done().sort((a, b) => (b.completedAt ?? 0) - (a.completedAt ?? 0));
   if (!done.length) {
     sheet.body.append(
-      el('p', 'empty-msg', 'Nothing in the Vault yet. Complete a note (hold it, or open it and tap Complete) and it lands here at the end of the day.'),
+      el('p', 'empty-msg', 'Nothing done yet. Complete a task (tap its circle, or hold it) and it shows up here.'),
     );
     return;
   }
@@ -41,7 +42,7 @@ export function openVault() {
   let shown = 0;
   const list = el('div', 'qb-vault-list');
   sheet.body.append(list);
-  const more = button('qb-ghostbtn', 'Show earlier days', () => renderPage());
+  const more = button('btn ghost qb-ghostbtn', 'Show earlier days', () => renderPage());
 
   const renderPage = () => {
     for (const k of keys.slice(shown, shown + DAYS_PER_PAGE)) {
@@ -49,7 +50,7 @@ export function openVault() {
       const xp = notes.reduce((s, n) => s + (n.xp ?? 0), 0);
       const sec = el('section', 'qb-vault-day');
       const h = el('h3', 'qb-vault-title', dayTitle(k));
-      h.append(el('span', 'qb-vault-xp', `${notes.length} done · +${xp} XP`));
+      h.append(el('span', 'qb-vault-xp', `${notes.length} done · ${xp} XP`));
       const grid = el('div', 'qb-vault-grid');
       for (const n of notes) grid.append(vaultCard(n, sheet.close));
       sec.append(h, grid);
@@ -65,7 +66,6 @@ export function openVault() {
 function vaultCard(n: Note, closeSheet: () => void): HTMLElement {
   const pr = PRIORITY[n.priority];
   const card = el('div', 'qb-vault-card');
-  card.style.setProperty('--grad', pr.grad);
   const inner = el('div', 'qb-vault-card-in');
   const c = el('canvas');
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -77,9 +77,12 @@ function vaultCard(n: Note, closeSheet: () => void): HTMLElement {
     drawPage(c.getContext('2d')!, n, { w: THUMB_W, h: THUMB_H, dpr, fit: 'content', photo: 'thumb', tiltDeg: -2, onAsset: () => requestAnimationFrame(draw) });
   draw();
   const meta = el('div', 'qb-vault-meta');
-  const pri = el('span', 'qb-card-pri', pr.label);
-  pri.style.color = pr.light;
-  meta.append(pri, el('span', 'qb-card-xp', `+${n.xp ?? pr.xp} XP`));
+  const pri = el('span', 'qb-card-prio');
+  pri.innerHTML = PRIORITY_ICON[n.priority];
+  pri.title = `${pr.label} priority`;
+  const check = el('span', 'qb-vault-check');
+  check.innerHTML = STATUS_ICON.done;
+  meta.append(check, el('span', 'qb-flex'), el('span', 'qb-vault-xpchip', `${n.xp ?? pr.xp} XP`), pri);
   const foot = el('div', 'qb-vault-foot');
   foot.append(
     el('span', 'qb-vault-board', BOARD_LABEL[n.board]),

@@ -4,3 +4,4 @@ dist
 
 # Backups contain notes and photos: never commit them
 quest-board-backup-*.json
+board-backup-*.json

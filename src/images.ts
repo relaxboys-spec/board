@@ -171,6 +171,19 @@ export function releaseUrl(id: string, kind: 'thumb' | 'full') {
   }, 1500);
 }
 
+/** Drop cached URLs for an image whose bytes were replaced (e.g. a new wallpaper). */
+export function forgetUrls(id: string) {
+  for (const kind of ['thumb', 'full'] as const) {
+    const k = key(id, kind);
+    const e = urls.get(k);
+    if (!e) continue;
+    urls.delete(k);
+    clearTimeout(e.timer);
+    void e.url.then((u) => u && URL.revokeObjectURL(u));
+  }
+  meta.delete(id);
+}
+
 /**
  * Startup clean-up: delete photos no note refers to. Removing a photo or deleting a
  * note only drops the reference (so undo works); the bytes go here, next launch,

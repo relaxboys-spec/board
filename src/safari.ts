@@ -54,3 +54,24 @@ export function preventSafariGestures() {
     if (!(e.target as HTMLElement)?.closest?.('input, textarea, .viewer.select-mode')) e.preventDefault();
   });
 }
+
+/**
+ * While the Pencil hovers near the screen (iPads with Pencil hover), hide the pointer
+ * iPadOS would otherwise draw: the whole app gets `pen-near`, which sets cursor: none.
+ */
+export function watchPenHover() {
+  const root = document.documentElement;
+  let timer: number | undefined;
+  const near = (e: PointerEvent) => {
+    if (e.pointerType !== 'pen') {
+      if (e.pointerType === 'mouse') root.classList.remove('pen-near');
+      return;
+    }
+    root.classList.add('pen-near');
+    clearTimeout(timer);
+    timer = window.setTimeout(() => root.classList.remove('pen-near'), 1500);
+  };
+  document.addEventListener('pointerover', near, { passive: true });
+  document.addEventListener('pointermove', near, { passive: true });
+  document.addEventListener('pointerdown', near, { passive: true });
+}

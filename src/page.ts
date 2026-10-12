@@ -1,6 +1,7 @@
 import { hasText } from './actions';
 import { cachedBitmap, knownSize, loadBitmap } from './images';
 import { drawMarkupStroke, drawStroke } from './ink';
+import { pageColors, TEXT_FONT } from './theme';
 import { PAGE_H, PAGE_W, type Note, type Stroke } from './types';
 
 /**
@@ -17,10 +18,8 @@ export interface Rect {
   h: number;
 }
 
-const TEXT_FONT = '"Barlow", system-ui, sans-serif';
 const TEXT_SIZES = [124, 108, 96, 86, 76, 66, 58, 50, 44, 38, 32, 28];
 const LINE = 1.12;
-const TEXT_COLOR = '#F2F6FF';
 
 export interface TextBlock {
   size: number;
@@ -251,7 +250,7 @@ export function drawPage(ctx: CanvasRenderingContext2D, n: Note, o: DrawOptions)
   const lay = pageLayout(n);
   if (lay.photo && n.imageIds?.length) drawPhotos(ctx, n, lay.photo, o, k * o.dpr);
   if (lay.text && !o.hideText) {
-    ctx.fillStyle = TEXT_COLOR;
+    ctx.fillStyle = pageColors().text;
     ctx.font = `600 ${lay.text.size}px ${TEXT_FONT}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
@@ -293,10 +292,11 @@ function drawPhotos(ctx: CanvasRenderingContext2D, n: Note, box: Rect, o: DrawOp
     ctx.translate(-(box.x + box.w / 2), -(box.y + box.h / 2));
     ctx.beginPath();
     ctx.arc(cx, cy, 34, 0, Math.PI * 2);
-    ctx.fillStyle = '#FFE14D';
+    const pc = pageColors();
+    ctx.fillStyle = pc.badge;
     ctx.fill();
-    ctx.fillStyle = '#0A1430';
-    ctx.font = `900 italic 40px "Barlow Condensed", system-ui, sans-serif`;
+    ctx.fillStyle = pc.badgeText;
+    ctx.font = `600 38px ${TEXT_FONT}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(String(ids.length), cx, cy + 2);
@@ -319,10 +319,11 @@ function drawPolaroid(
   ctx.translate(box.x + box.w / 2, box.y + box.h / 2);
   ctx.rotate(rot);
   ctx.translate(-(box.x + box.w / 2), -(box.y + box.h / 2));
-  ctx.shadowColor = 'rgba(0,0,0,0.5)';
+  const pc = pageColors();
+  ctx.shadowColor = pc.frameShadow;
   ctx.shadowBlur = 30 * devicePxPerUnit;
   ctx.shadowOffsetY = 14 * devicePxPerUnit;
-  ctx.fillStyle = '#F2F6FF';
+  ctx.fillStyle = pc.frame;
   ctx.fillRect(r.x - FRAME, r.y - FRAME, r.w + FRAME * 2, r.h + FRAME + FRAME_BOTTOM);
   ctx.shadowColor = 'transparent';
   // Prefer the sharper bitmap if it's ready; fall back to the thumbnail, then a placeholder.
@@ -330,7 +331,7 @@ function drawPolaroid(
   if (bmp) {
     ctx.drawImage(bmp, r.x, r.y, r.w, r.h);
   } else {
-    ctx.fillStyle = '#22305C';
+    ctx.fillStyle = pc.placeholder;
     ctx.fillRect(r.x, r.y, r.w, r.h);
     void loadBitmap(id, o.photo).then((b) => b && o.onAsset?.());
     if (o.photo === 'full') void loadBitmap(id, 'thumb').then((b) => b && o.onAsset?.());
@@ -348,10 +349,10 @@ function drawPolaroid(
     ctx.restore();
   }
   if (main) {
-    // Yellow tape across the top.
+    // A strip of tape across the top.
     ctx.translate(r.x + r.w / 2, r.y - FRAME);
     ctx.rotate((2 * Math.PI) / 180);
-    ctx.fillStyle = 'rgba(255,225,77,0.75)';
+    ctx.fillStyle = pc.tape;
     ctx.fillRect(-80, -20, 160, 40);
   }
   ctx.restore();

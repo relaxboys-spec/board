@@ -2,7 +2,7 @@ import type { BoardView } from './board';
 import { setScrollLock } from './safari';
 import { store } from './store';
 import type { BoardId, ZoneId } from './types';
-import type { Topbar } from './ui/topbar';
+import type { Sidebar } from './ui/sidebar';
 import { prefersReducedMotion } from './util';
 
 /**
@@ -80,7 +80,7 @@ export class Gestures {
   constructor(
     root: HTMLElement,
     private board: BoardView,
-    private top: Topbar,
+    private top: Sidebar,
     private host: GestureHost,
   ) {
     root.addEventListener('pointerdown', this.onDown);

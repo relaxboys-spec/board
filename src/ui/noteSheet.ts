@@ -1,4 +1,6 @@
 import { addStroke, daysInToday, eraseStrokes, hasText, isEmpty, moveNote, moveStrokes, setInProgress, setPriority, setText } from '../actions';
+import { accentColor, inkColor } from '../theme';
+import { PRIORITY_ICON, STATUS_ICON, STATUS_LABEL, statusOf } from './icons';
 import { dayStart, weekEndKey } from '../days';
 import { pathFor, strokeAlpha } from '../ink';
 import { drawPage, hitPhoto, pageTransform, textBox } from '../page';
@@ -117,7 +119,6 @@ export class NoteSheet {
   private canvasWrap!: HTMLDivElement;
   private page!: HTMLCanvasElement;
   private live!: HTMLCanvasElement;
-  private ring!: HTMLDivElement;
   private hint!: HTMLDivElement;
   private toolbar!: HTMLDivElement;
   private rail!: HTMLDivElement;
@@ -199,7 +200,7 @@ export class NoteSheet {
       ['speak', 'Speak', 'mic'],
       ['photo', 'Photo', 'photo'],
     ] as const) {
-      const b = btn(`qb-skew qb-mode`, `<span>${icon(ic, 20)}${label}</span>`, () => this.setMode(m, true));
+      const b = btn(`qb-mode`, `${icon(ic, 18)}<span>${label}</span>`, () => this.setMode(m, true));
       b.setAttribute('role', 'tab');
       b.dataset.mode = m;
       this.tabs.append(b);
@@ -207,14 +208,13 @@ export class NoteSheet {
     this.canvasWrap = el('div', 'qb-canvas-wrap');
     this.page = el('canvas', 'qb-page');
     this.live = el('canvas', 'qb-live');
-    this.ring = el('div', 'qb-penring');
     this.hint = el('div', 'qb-hint');
-    this.canvasWrap.append(this.page, this.live, this.ring);
+    this.canvasWrap.append(this.page, this.live);
     this.toolbar = el('div', 'qb-toolbar');
     inner.append(this.head, this.tabs, this.canvasWrap, this.hint, this.toolbar);
     this.frame.append(inner);
 
-    this.rail = el('div', 'qb-rail qb-cut');
+    this.rail = el('div', 'qb-rail');
     sheet.append(this.frame, this.rail);
     wrap.append(scrim, sheet);
     document.body.append(wrap);
@@ -224,9 +224,6 @@ export class NoteSheet {
     this.canvasWrap.addEventListener('pointermove', this.onMove);
     this.canvasWrap.addEventListener('pointerup', this.onUp);
     this.canvasWrap.addEventListener('pointercancel', this.onCancel);
-    this.canvasWrap.addEventListener('pointerleave', (e) => {
-      if (e.pointerType === 'pen') this.ring.hidden = true;
-    });
     this.canvasWrap.addEventListener(
       'touchstart',
       (e) => {
@@ -314,7 +311,6 @@ export class NoteSheet {
       this.textarea = null;
     }
     this.clearSelection();
-    this.ring.hidden = true;
     this.wrap.classList.toggle('is-view', mode === 'view');
     this.wrap.dataset.mode = mode;
     for (const b of this.tabs.querySelectorAll<HTMLButtonElement>('.qb-mode')) {
@@ -347,20 +343,22 @@ export class NoteSheet {
     const pr = PRIORITY[n.priority];
     const tag =
       this.mode === 'view'
-        ? el('span', 'qb-skew qb-tag pri', pr.label)
-        : el('span', 'qb-skew qb-tag', this.isNew ? 'New Task' : 'Editing');
+        ? el('span', 'qb-tag', STATUS_LABEL[statusOf(n)])
+        : el('span', 'qb-tag', this.isNew ? 'New task' : 'Editing');
     const meta = el(
       'span',
       'qb-note-meta',
       this.mode === 'view' ? `${BOARD_LABEL[n.board]} · Due ${DUE_LABEL(n)}` : `${pr.label} · ${DUE_LABEL(n)}`,
     );
-    this.head.replaceChildren(tag, meta, el('span', 'qb-flex'), el('span', 'qb-note-xp', `+${pr.xp} XP`));
+    const prio = el('span', 'qb-note-prio');
+    prio.innerHTML = PRIORITY_ICON[n.priority];
+    this.head.replaceChildren(tag, meta, el('span', 'qb-flex'), prio);
   }
 
   private renderHint(n: Note) {
     const t =
       this.mode === 'write'
-        ? 'One task per note · Eraser or lasso to fix ink'
+        ? 'One task per card · Eraser or lasso to fix ink'
         : this.mode === 'speak'
           ? 'Tap the mic key on the keyboard · Write over any word with the Pencil to fix it'
           : this.mode === 'photo'
@@ -397,7 +395,7 @@ export class NoteSheet {
       this.toolbar.append(el('div', 'qb-tool-sep'));
       for (const c of INK_COLORS) {
         const on = store.settings.inkColor === c.value;
-        const b = btn('qb-inkbtn' + (on ? ' on' : ''), `<span style="background:${c.value}"></span>`, () => {
+        const b = btn('qb-inkbtn' + (on ? ' on' : ''), `<span style="background:${inkColor(c.value)}"></span>`, () => {
           store.setSettings({ inkColor: c.value, tool: tool === 'eraser' || tool === 'lasso' ? 'pen' : tool });
         }, `Ink ${c.label}`);
         b.setAttribute('aria-pressed', String(on));
@@ -491,7 +489,7 @@ export class NoteSheet {
     if (!b) return;
     const active = !!this.textarea && document.activeElement === this.textarea;
     b.classList.toggle('qb-rec', active);
-    b.innerHTML = active ? '<span class="qb-rec-stop"></span>' : icon('mic', 30, '#FFFFFF', 2.4);
+    b.innerHTML = active ? '<span class="qb-rec-stop"></span>' : icon('mic', 28, 'currentColor', 2.2);
     b.setAttribute('aria-label', active ? 'Done speaking' : 'Open the keyboard to dictate');
   }
 
@@ -521,7 +519,7 @@ export class NoteSheet {
       const on = n.priority === p;
       const b = btn(
         'qb-pri' + (on ? ' on' : ''),
-        `<span class="qb-pri-name"><span class="qb-swatch" style="background:${s.grad}"></span>${s.label}</span><span class="qb-pri-xp">+${s.xp}</span>`,
+        `<span class="qb-pri-name">${PRIORITY_ICON[p]}${s.label}</span><span class="qb-pri-xp">${s.xp} XP</span>`,
         () => setPriority(n.id, p),
       );
       b.setAttribute('aria-pressed', String(on));
@@ -531,7 +529,7 @@ export class NoteSheet {
     const due = el('div', 'qb-grid3');
     for (const [zone, label] of [
       ['today', 'Today'],
-      ['week', 'This Week'],
+      ['week', 'This week'],
       ['someday', 'Someday'],
     ] as [ZoneId, string][]) {
       const on = n.zone === zone;
@@ -567,12 +565,12 @@ export class NoteSheet {
     }
 
     const reward = el('div', 'qb-reward');
-    reward.append(el('span', 'qb-reward-label', 'Reward on complete'), el('span', 'qb-reward-xp', `+${PRIORITY[n.priority].xp} XP`));
+    reward.append(el('span', 'qb-reward-label', 'Completing earns'), el('span', 'qb-reward-xp', `${PRIORITY[n.priority].xp} XP`));
 
     const ctas = el('div', 'qb-ctas');
     ctas.append(
-      btn('qb-cta qb-skew8', `<span>${icon('check', 22, '#0A1430', 3)}${this.isNew ? 'Add to Board' : 'Done'}</span>`, () => this.close()),
-      btn('qb-ghostbtn', this.isNew ? 'Discard' : 'Delete note', () => {
+      btn('btn primary qb-cta', `${icon('check', 18, 'currentColor', 2.6)}<span>${this.isNew ? 'Add task' : 'Done'}</span>`, () => this.close()),
+      btn('btn ghost qb-ghostbtn', this.isNew ? 'Discard' : 'Delete task', () => {
         const id = n.id;
         if (isEmpty(store.get(id))) {
           this.close();
@@ -596,9 +594,9 @@ export class NoteSheet {
   private viewRail(n: Note): HTMLElement[] {
     const head = el('div', 'qb-rail-head');
     const t = el('div', 'qb-col-title');
-    const eyebrow = n.zone === 'today' ? 'Daily Quest' : n.zone === 'week' ? 'Weekly Challenge' : 'Backlog';
-    t.append(el('span', 'qb-eyebrow', eyebrow), el('h2', 'qb-display qb-h3', 'Note Info'));
-    head.append(t, btn('qb-skew qb-iconbtn', `<span>${icon('close', 22, '#FFFFFF', 2.4)}</span>`, () => this.close(), 'Close'));
+    const where = `${BOARD_LABEL[n.board]} › ${n.zone === 'today' ? 'Today' : n.zone === 'week' ? 'This week' : 'Backlog'}`;
+    t.append(el('span', 'qb-crumb', where), el('h2', 'qb-rail-title', 'Details'));
+    head.append(t, btn('qb-iconbtn', icon('close', 18, 'currentColor', 2), () => this.close(), 'Close'));
 
     const rows = el('dl', 'qb-details');
     const row = (k: string, v: string, cls = '') => {
@@ -622,7 +620,7 @@ export class NoteSheet {
     const moveTo: ZoneId = n.zone === 'today' ? 'week' : 'today';
     acts.append(
       btn('qb-act', `${icon('edit', 22)}<span>Edit</span>`, () => this.setMode(hasText(n) && !n.strokes.length ? 'speak' : 'write', true)),
-      btn('qb-act', `${icon('move', 22)}<span>Move to ${moveTo === 'today' ? 'Today' : 'This Week'}</span>`, () => moveNote(n.id, { zone: moveTo })),
+      btn('qb-act', `${icon('move', 22)}<span>Move to ${moveTo === 'today' ? 'Today' : 'This week'}</span>`, () => moveNote(n.id, { zone: moveTo })),
       btn('qb-act', `${icon('bell', 22)}<span>${n.reminder ? 'Reminder' : 'Remind me'}</span>`, () => this.host.remind(n.id)),
       btn('qb-act danger', `${icon('trash', 22)}<span>Delete</span>`, () => {
         const id = n.id;
@@ -635,14 +633,14 @@ export class NoteSheet {
     const xp = PRIORITY[n.priority].xp;
     if (n.status === 'done') {
       const sent = el('div', 'qb-sent');
-      sent.innerHTML = `<span>${icon('check', 20, '#FFE14D', 3)}Sent to Vault</span><span class="qb-reward-xp">+${n.xp ?? xp} XP</span>`;
-      ctas.append(sent, btn('qb-ghostbtn', 'Undo complete', () => this.host.uncomplete(n.id)));
+      sent.innerHTML = `<span>${STATUS_ICON.done}Completed</span><span class="qb-reward-xp">+${n.xp ?? xp} XP</span>`;
+      ctas.append(sent, btn('btn ghost qb-ghostbtn', 'Mark as not done', () => this.host.uncomplete(n.id)));
     } else {
       ctas.append(
         n.startedAt
-          ? btn('qb-skew8 qb-progbtn on', `<span>${icon('pause', 20, 'currentColor', 3)}Pause · back to To do</span>`, () => setInProgress(n.id, false))
-          : btn('qb-skew8 qb-progbtn', `<span>${icon('play', 20, 'currentColor', 2.4)}Start · In progress</span>`, () => setInProgress(n.id, true)),
-        btn('qb-cta qb-skew8', `<span>${icon('check', 22, '#0A1430', 3)}Complete · +${xp} XP</span>`, (e) => {
+          ? btn('btn qb-progbtn on', `${STATUS_ICON.todo}<span>Pause · back to To do</span>`, () => setInProgress(n.id, false))
+          : btn('btn qb-progbtn', `${STATUS_ICON.progress}<span>Start</span>`, () => setInProgress(n.id, true)),
+        btn('btn primary qb-cta', `${icon('check', 18, 'currentColor', 2.6)}<span>Complete · ${xp} XP</span>`, (e) => {
           const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
           this.host.complete(n.id, r);
         }),
@@ -725,7 +723,7 @@ export class NoteSheet {
     const wantEmpty = this.mode === 'photo' && !n.imageIds?.length;
     if (wantEmpty && !this.emptyPhoto) {
       this.emptyPhoto = el('div', 'qb-emptyphoto');
-      this.emptyPhoto.innerHTML = `<div class="qb-emptyphoto-tape"></div><div class="qb-emptyphoto-in">${icon('library', 44, '#B9C8EA', 1.8)}<span>Your photo</span></div>`;
+      this.emptyPhoto.innerHTML = `<div class="qb-emptyphoto-tape"></div><div class="qb-emptyphoto-in">${icon('library', 40, 'currentColor', 1.6)}<span>Your photo</span></div>`;
       this.canvasWrap.append(this.emptyPhoto);
     } else if (!wantEmpty && this.emptyPhoto) {
       this.emptyPhoto.remove();
@@ -733,7 +731,7 @@ export class NoteSheet {
     }
     const wantExpand = (this.mode === 'view' || this.mode === 'photo') && !!n.imageIds?.length;
     if (wantExpand && !this.expandBtn) {
-      this.expandBtn = btn('qb-expand', icon('expand', 22, '#FFFFFF', 2.4), () => this.host.openViewer(n.id, 0), 'Open photo full screen');
+      this.expandBtn = btn('qb-expand', icon('expand', 20, 'currentColor', 2.2), () => this.host.openViewer(n.id, 0), 'Open photo full screen');
       this.canvasWrap.append(this.expandBtn);
     } else if (!wantExpand && this.expandBtn) {
       this.expandBtn.remove();
@@ -749,10 +747,6 @@ export class NoteSheet {
     const r = this.canvasWrap.getBoundingClientRect();
     const { k, tx, ty } = this.transform();
     return { x: (cx - r.left - tx) / k, y: (cy - r.top - ty) / k };
-  }
-
-  private canWrite() {
-    return this.mode === 'write' || this.mode === 'photo';
   }
 
   private onDown = (e: PointerEvent) => {
@@ -827,7 +821,6 @@ export class NoteSheet {
   }
 
   private onMove = (e: PointerEvent) => {
-    if (e.pointerType === 'pen') this.moveRing(e);
     if (this.cap.isPointer(e.pointerId)) {
       this.cap.move(e);
       return;
@@ -911,16 +904,6 @@ export class NoteSheet {
     this.twoTap = null;
   };
 
-  private moveRing(e: PointerEvent) {
-    if (!this.canWrite()) {
-      this.ring.hidden = true;
-      return;
-    }
-    const r = this.canvasWrap.getBoundingClientRect();
-    this.ring.hidden = false;
-    this.ring.style.transform = `translate(${e.clientX - r.left}px, ${e.clientY - r.top}px)`;
-  }
-
   // ---- strokes -------------------------------------------------------------------------
 
   private drawLive(points: InkPoint[], color: string, size: number, tilt: number, simulate: boolean, tool: 'pen' | 'highlighter') {
@@ -931,7 +914,7 @@ export class NoteSheet {
     ctx.clearRect(0, 0, this.live.width, this.live.height);
     ctx.setTransform(k * dpr, 0, 0, k * dpr, tx * dpr, ty * dpr);
     ctx.globalAlpha = strokeAlpha(tilt, tool);
-    ctx.fillStyle = color;
+    ctx.fillStyle = inkColor(color);
     ctx.fill(pathFor(points, size, tilt, false, simulate, tool));
     ctx.globalAlpha = 1;
   }
@@ -980,7 +963,7 @@ export class NoteSheet {
     ctx.setTransform(k * dpr, 0, 0, k * dpr, tx * dpr, ty * dpr);
     ctx.beginPath();
     l.points.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
-    ctx.strokeStyle = '#3BE0FF';
+    ctx.strokeStyle = accentColor();
     ctx.lineWidth = 3 / k;
     ctx.setLineDash([10 / k, 8 / k]);
     ctx.stroke();
