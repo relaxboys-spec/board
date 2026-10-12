@@ -1149,10 +1149,10 @@ html[data-appearance='glass'] .qb-col {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 10px 16px 12px;
+  gap: 6px;
+  padding: 12px 22px 14px;
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 22px;
   background: var(--surface-solid);
   box-shadow: var(--shadow-lg), var(--edge);
   -webkit-backdrop-filter: blur(24px) saturate(170%);
@@ -1164,12 +1164,12 @@ html[data-appearance='glass'] .qb-col {
   animation: fadeOut 0.3s forwards;
 }
 .qb-floathero-xp {
-  padding: 3px 9px;
+  padding: 4px 12px;
   border-radius: 999px;
   background: var(--accent);
   color: var(--on-accent);
-  font-size: 13px;
-  font-weight: 650;
+  font-size: 15px;
+  font-weight: 700;
   box-shadow: var(--shadow-lg);
 }
 @keyframes qbFloatIn {
@@ -3003,6 +3003,14 @@ html[data-appearance='glass'] .qb-lk-tab.on {
   border-color: transparent;
   background: var(--accent);
   color: var(--on-accent);
+}
+.qb-lk-vchip.locked {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-style: dashed;
+  background: transparent;
+  color: var(--text-3);
 }
 
 /* ==== Rewards: tiles, level-up, the track ============================================================== */

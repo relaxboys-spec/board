@@ -58,14 +58,15 @@ closed):
 **Profile** (her level card at the right of the top bar, or her name at the left): her avatar, level, XP,
 streak and counts, and the way into the **Locker**, **Emotes** and **Rewards**.
 
-**Completing a task** pops her avatar up in the corner for about 3.5 seconds, playing her ★ victory emote,
+**Completing a task** pops her avatar up (large) in the corner for about 3.5 seconds, playing her ★ victory emote,
 with the XP earned. **Settings → Celebrate with my avatar** turns it off.
 
 **Locker:** 33 outfits in six categories (Casual, Street, Work, Active, Evening, Traditional — including four
 sarees). Tap a card to preview, **Equip** to wear it. Under it: **Colors** (three slots per outfit,
 remembered per outfit), **Hair** (8 styles, 8 colours), **Extras** (13 accessories — a saree offers to
 apply jhumkas, bangles, bindi and a bun), **Skin** and **Emotes** (20). At the top of Emotes she picks her
-**victory emote** from the emotes she has; **Change** under the preview jumps there.
+**victory emote**: all 20 are listed, locked ones with their level (tap one to preview it); **Change**
+under the preview jumps there.
 
 **Rewards (levelling up unlocks things):** she starts with 5 outfits, 2 hairstyles, 3 hair colours,
 4 outfit colours, 2 extras, 3 emotes and every skin tone (skin is never locked). Every level up to 30 unlocks

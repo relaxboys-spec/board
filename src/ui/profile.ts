@@ -162,7 +162,7 @@ export class Profile {
     clearTimeout(this.floatTimer);
     const box = el('div', 'qb-floathero');
     const fig = el('div', 'qb-figure av-idle');
-    fig.innerHTML = avatarSvg(this.look, { width: 120 });
+    fig.innerHTML = avatarSvg(this.look, { width: 190 });
     box.append(fig, el('span', 'qb-floathero-xp', `+${xp} XP`));
     document.body.append(box);
     playEmote(fig, this.victory);

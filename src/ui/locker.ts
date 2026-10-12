@@ -356,7 +356,8 @@ export function openLocker(stats: Stats, onTrack: () => void, focus: LockerFocus
       });
       out.push(row);
     } else {
-      // Victory emote: pick from the emotes she has (it plays when she completes a task).
+      // Victory emote (plays when she completes a task): every emote is listed so she can
+      // see what's coming; locked ones preview and say when they unlock.
       const owned = EMOTES.filter((e) => has(key.emote(e.id)) || p.victoryEmote === e.id);
       const vic = el('div', 'qb-lk-victory');
       const vHead = el('div', 'qb-lk-victory-head');
@@ -372,19 +373,34 @@ export function openLocker(stats: Stats, onTrack: () => void, focus: LockerFocus
       const chips = el('div', 'qb-lk-vchips');
       chips.setAttribute('role', 'radiogroup');
       chips.setAttribute('aria-label', 'Choose your victory emote');
-      for (const e of owned) {
+      // Unlocked first, then the locked ones in the order they unlock.
+      const ordered = [...owned, ...EMOTES.filter((e) => !owned.includes(e)).sort((x, y) => levelOf(key.emote(x.id)) - levelOf(key.emote(y.id)))];
+      for (const e of ordered) {
+        const k = key.emote(e.id);
         const on = p.victoryEmote === e.id;
-        const c = btn('qb-lk-vchip' + (on ? ' on' : ''), `${on ? '★ ' : ''}${e.name}`, () => {
-          if (store.player.victoryEmote !== e.id) store.setPlayer({ victoryEmote: e.id });
-          play(e.id);
-        });
+        const locked = !owned.includes(e);
+        const c = btn(
+          'qb-lk-vchip' + (on ? ' on' : '') + (locked ? ' locked' : ''),
+          `${on ? '★ ' : ''}${e.name}${locked ? `<span class="qb-lk-lv inline">${ICON.lockSm}<span>${levelOf(k)}</span></span>` : ''}`,
+          () => {
+            if (locked) {
+              play(e.id);
+              toast(`${e.name} unlocks at Level ${levelOf(k)} · ${toGo(k)} XP to go`, undefined, 2400);
+              return;
+            }
+            if (store.player.victoryEmote !== e.id) store.setPlayer({ victoryEmote: e.id });
+            play(e.id);
+          },
+          locked ? `${e.name}, unlocks at level ${levelOf(k)}. Tap to preview.` : e.name,
+        );
         c.setAttribute('role', 'radio');
         c.setAttribute('aria-checked', String(on));
+        if (locked) c.setAttribute('aria-disabled', 'true');
         chips.append(c);
       }
       vic.append(vHead, chips);
       const lockedN = EMOTES.length - owned.length;
-      if (lockedN) vic.append(el('span', 'qb-lk-note', `${lockedN} more unlock as you level up.`));
+      if (lockedN) vic.append(el('span', 'qb-lk-note', `${lockedN} locked · tap one to preview it. They unlock as you level up.`));
       out.push(vic, label(`All ${EMOTES.length} emotes · tap to preview`));
 
       const list = el('div', 'qb-lk-emotes');
