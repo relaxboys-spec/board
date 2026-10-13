@@ -836,7 +836,7 @@ html[data-appearance='glass'] .qb-col {
 .qb-card {
   position: relative;
   min-width: 0;
-  height: 188px;
+  min-height: 188px;
   display: flex;
   border: 1px solid var(--border);
   border-radius: var(--r);
@@ -855,7 +855,7 @@ html[data-appearance='glass'] .qb-col {
 }
 .qb-card.k-week,
 .qb-card.k-someday {
-  height: 150px;
+  min-height: 150px;
 }
 .qb-card:focus-visible {
   box-shadow: 0 0 0 2px var(--accent-fg);
@@ -870,10 +870,10 @@ html[data-appearance='glass'] .qb-col {
 }
 .qb-card-top {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 5px;
+  gap: 4px 5px;
   min-height: 26px;
-  overflow: hidden;
 }
 .qb-status {
   width: 30px;
@@ -898,7 +898,12 @@ html[data-appearance='glass'] .qb-col {
 .qb-card-body {
   position: relative;
   flex: 1;
-  min-height: 0;
+  /* the writing keeps its room: when labels wrap, the card grows instead */
+  min-height: 140px;
+}
+.k-week .qb-card-body,
+.k-someday .qb-card-body {
+  min-height: 92px;
 }
 .qb-card-ink {
   position: absolute;
