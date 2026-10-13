@@ -83,38 +83,42 @@ export class Card {
     status.type = 'button';
     status.innerHTML = STATUS_ICON[st];
     status.setAttribute('aria-label', st === 'done' ? 'Done' : st === 'progress' ? 'In progress — tap to complete' : 'To do — tap to start');
-    const chips: HTMLElement[] = [];
+    // Top line: priority and (when started) In progress.
     const pill = el('span', 'qb-card-pill');
     pill.innerHTML = priorityPill(note.priority);
     pill.title = `${pr.label} priority`;
-    chips.push(pill);
-    if (st === 'progress') chips.push(el('span', 'qb-chip prog', 'In progress'));
+    const top: HTMLElement[] = [status, pill];
+    if (st === 'progress') top.push(el('span', 'qb-chip prog', 'In progress'));
+    this.top.replaceChildren(...top);
+
+    // Bottom line: the details — the day (This week / Backlog), days in Today, reminder, photo.
+    const foot: HTMLElement[] = [];
+    if (kind !== 'today') {
+      const later = !!note.dueDate && note.dueDate > weekEndKey();
+      foot.push(el('span', 'qb-chip', kind === 'someday' ? 'Someday' : note.due ? (later ? 'Next ' : '') + WEEKDAY_LABEL[note.due] : 'Any day'));
+    }
     const age = this.ageDays(note);
     if (age >= 1) {
       const c = el('span', 'qb-chip' + (age >= 2 ? ' late' : ''), `Day ${age + 1}`);
       c.title = `In Today for ${age + 1} days`;
-      chips.push(c);
+      foot.push(c);
     }
-    if (note.reminder) chips.push(this.pin(note));
+    if (note.reminder) foot.push(this.pin(note));
     if (note.imageIds?.length) {
       const c = el('span', 'qb-chip icon');
       c.innerHTML = SMALL.photo;
       c.setAttribute('aria-hidden', 'true');
-      chips.push(c);
+      foot.push(c);
     }
-    this.top.replaceChildren(status, ...chips);
-
-    if (kind === 'today') {
+    if (!foot.length) {
       this.foot?.remove();
       this.foot = null;
     } else {
-      const later = !!note.dueDate && note.dueDate > weekEndKey();
-      const label = kind === 'someday' ? 'Someday' : note.due ? (later ? 'Next ' : '') + WEEKDAY_LABEL[note.due] : 'Any day';
       if (!this.foot) {
         this.foot = el('div', 'qb-card-foot');
         this.body.after(this.foot);
       }
-      this.foot.replaceChildren(el('span', 'qb-chip', label));
+      this.foot.replaceChildren(...foot);
     }
   }
 
