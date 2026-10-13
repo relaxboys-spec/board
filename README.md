@@ -34,7 +34,7 @@ them; **Add task** / **Done** just closes it. An untouched empty task disappears
 **Status:** an empty circle is To do, a half-filled amber circle is **In progress** (the task moves to the
 front of its column), a filled circle is Done. Starting, pausing and completing are all undoable.
 
-**Writing tools:** pen, highlighter, eraser, lasso (circle strokes, then drag them, or tap the red
+**Writing tools** (tap them with a finger or the Pencil): pen, highlighter, eraser, lasso (circle strokes, then drag them, or tap the red
 bin), four inks, undo / redo. Pen strokes are always kept as ink: use the eraser, lasso or undo to remove
 them. Her inks are drawn in a readable shade for each appearance (white ink shows as near-black in Light).
 

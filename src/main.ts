@@ -10,7 +10,7 @@ import { Gestures } from './gestures';
 import { collectGarbage } from './images';
 import { resetPageLayouts } from './page';
 import { attachFiles, imageFilesFrom, pickPhotos } from './photos';
-import { preventSafariGestures, watchPenHover } from './safari';
+import { enablePenTaps, preventSafariGestures, watchPenHover } from './safari';
 import { store } from './store';
 import { appearance, applyTheme, bootTheme, onThemeChange, WALLPAPER_IMAGE_ID } from './theme';
 import { BOARD_LABEL, type BoardId, type ZoneId } from './types';
@@ -36,6 +36,7 @@ bootTheme(); // last-used appearance + accent, before the first paint
 const app = document.getElementById('app')!;
 preventSafariGestures();
 watchPenHover();
+enablePenTaps();
 
 const sidebar = new Sidebar(app, {
   onBoard: (b) => showBoard(b),

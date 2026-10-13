@@ -75,3 +75,57 @@ export function watchPenHover() {
   document.addEventListener('pointermove', near, { passive: true });
   document.addEventListener('pointerdown', near, { passive: true });
 }
+
+/**
+ * Make the Pencil press buttons reliably. Safari only turns a Pencil touch into a click
+ * when the tip barely moves, and a quick Pencil tap often drifts — so a tap on a toolbar
+ * button (eraser, inks, undo…) could do nothing. Here a Pencil down + up on the same
+ * button (within a generous 24 px) presses it; if Safari also sends its own click, that
+ * duplicate is swallowed so nothing happens twice.
+ */
+export function enablePenTaps() {
+  let down: { id: number; btn: HTMLButtonElement; x: number; y: number } | null = null;
+  let pressed: { btn: HTMLButtonElement; until: number } | null = null;
+  const buttonAt = (t: EventTarget | null) => (t instanceof Element ? t.closest<HTMLButtonElement>('button') : null);
+
+  document.addEventListener(
+    'pointerdown',
+    (e) => {
+      if (e.pointerType !== 'pen') return;
+      const btn = buttonAt(e.target);
+      down = btn && !btn.disabled ? { id: e.pointerId, btn, x: e.clientX, y: e.clientY } : null;
+    },
+    true,
+  );
+  document.addEventListener(
+    'pointerup',
+    (e) => {
+      if (!down || e.pointerId !== down.id) return;
+      const d = down;
+      down = null;
+      const btn = buttonAt(document.elementFromPoint(e.clientX, e.clientY)) ?? buttonAt(e.target);
+      if (btn !== d.btn || d.btn.disabled || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 24) return;
+      pressed = { btn: d.btn, until: performance.now() + 700 };
+      d.btn.click();
+    },
+    true,
+  );
+  document.addEventListener('pointercancel', () => (down = null), true);
+  // Swallow Safari's own click for a button we just pressed.
+  document.addEventListener(
+    'click',
+    (e) => {
+      if (!pressed || !e.isTrusted) return;
+      if (performance.now() > pressed.until) {
+        pressed = null;
+        return;
+      }
+      if (buttonAt(e.target) === pressed.btn) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        pressed = null;
+      }
+    },
+    true,
+  );
+}
