@@ -2,7 +2,7 @@ import { daysInToday, hasText } from './actions';
 import { weekEndKey } from './days';
 import { drawPage } from './page';
 import { PRIORITY, WEEKDAY_LABEL, type Note } from './types';
-import { PRIORITY_ICON, SMALL, STATUS_ICON, STATUS_LABEL, statusOf } from './ui/icons';
+import { priorityPill, SMALL, STATUS_ICON, STATUS_LABEL, statusOf } from './ui/icons';
 import { el, formatDue, isOverdue } from './util';
 
 /** A note on the board: priority frame, dotted dark surface, header/footer chips, the page drawn to fit. */
@@ -84,6 +84,10 @@ export class Card {
     status.innerHTML = STATUS_ICON[st];
     status.setAttribute('aria-label', st === 'done' ? 'Done' : st === 'progress' ? 'In progress — tap to complete' : 'To do — tap to start');
     const chips: HTMLElement[] = [];
+    const pill = el('span', 'qb-card-pill');
+    pill.innerHTML = priorityPill(note.priority);
+    pill.title = `${pr.label} priority`;
+    chips.push(pill);
     if (st === 'progress') chips.push(el('span', 'qb-chip prog', 'In progress'));
     const age = this.ageDays(note);
     if (age >= 1) {
@@ -98,10 +102,7 @@ export class Card {
       c.setAttribute('aria-hidden', 'true');
       chips.push(c);
     }
-    const prio = el('span', 'qb-card-prio');
-    prio.innerHTML = PRIORITY_ICON[note.priority];
-    prio.title = `${pr.label} priority`;
-    this.top.replaceChildren(status, ...chips, el('span', 'qb-flex'), prio);
+    this.top.replaceChildren(status, ...chips);
 
     if (kind === 'today') {
       this.foot?.remove();

@@ -38,8 +38,8 @@ front of its column), a filled circle is Done. Starting, pausing and completing 
 bin), four inks, undo / redo. Pen strokes are always kept as ink: use the eraser, lasso or undo to remove
 them. Her inks are drawn in a readable shade for each appearance (white ink shows as near-black in Light).
 
-**Priority** is a small signal-bars icon (Low, Normal, High; Urgent is a red square) and sets the XP a task
-earns: 25, 50, 100, 150. Level 1 needs 300 XP, each level after that 100 more, up to 1000 XP per level from
+**Priority** is a coloured label on each card — red **Urgent** (flame), orange **High** (double up-arrow),
+blue **Normal** (dot), grey **Low** (down-arrow) — and sets the XP a task earns: 25, 50, 100, 150. Level 1 needs 300 XP, each level after that 100 more, up to 1000 XP per level from
 Level 8 on. The streak counts days with at least one finished task. Completing shows a quiet
 "Completed · +XP" message with Undo.
 

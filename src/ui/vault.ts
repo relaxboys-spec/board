@@ -3,7 +3,7 @@ import { drawPage } from '../page';
 import { store } from '../store';
 import { BOARD_LABEL, PRIORITY, type Note } from '../types';
 import { button, dayKey, el } from '../util';
-import { PRIORITY_ICON, STATUS_ICON } from './icons';
+import { priorityPill, STATUS_ICON } from './icons';
 import { openSheet, toast } from './overlay';
 
 /** Done: every completed task, grouped by the day it was finished. */
@@ -77,12 +77,12 @@ function vaultCard(n: Note, closeSheet: () => void): HTMLElement {
     drawPage(c.getContext('2d')!, n, { w: THUMB_W, h: THUMB_H, dpr, fit: 'content', photo: 'thumb', tiltDeg: -2, onAsset: () => requestAnimationFrame(draw) });
   draw();
   const meta = el('div', 'qb-vault-meta');
-  const pri = el('span', 'qb-card-prio');
-  pri.innerHTML = PRIORITY_ICON[n.priority];
+  const pri = el('span', 'qb-card-pill');
+  pri.innerHTML = priorityPill(n.priority);
   pri.title = `${pr.label} priority`;
   const check = el('span', 'qb-vault-check');
   check.innerHTML = STATUS_ICON.done;
-  meta.append(check, el('span', 'qb-flex'), el('span', 'qb-vault-xpchip', `${n.xp ?? pr.xp} XP`), pri);
+  meta.append(check, pri, el('span', 'qb-flex'), el('span', 'qb-vault-xpchip', `${n.xp ?? pr.xp} XP`));
   const foot = el('div', 'qb-vault-foot');
   foot.append(
     el('span', 'qb-vault-board', BOARD_LABEL[n.board]),

@@ -1,6 +1,6 @@
 import { addStroke, daysInToday, eraseStrokes, hasText, isEmpty, moveNote, moveStrokes, setInProgress, setPriority, setText } from '../actions';
 import { accentColor, inkColor } from '../theme';
-import { PRIORITY_ICON, STATUS_ICON, STATUS_LABEL, statusOf } from './icons';
+import { PRIORITY_ICON, priorityPill, STATUS_ICON, STATUS_LABEL, statusOf } from './icons';
 import { dayStart, weekEndKey } from '../days';
 import { pathFor, strokeAlpha } from '../ink';
 import { drawPage, hitPhoto, pageTransform, textBox } from '../page';
@@ -351,7 +351,7 @@ export class NoteSheet {
       this.mode === 'view' ? `${BOARD_LABEL[n.board]} · Due ${DUE_LABEL(n)}` : `${pr.label} · ${DUE_LABEL(n)}`,
     );
     const prio = el('span', 'qb-note-prio');
-    prio.innerHTML = PRIORITY_ICON[n.priority];
+    prio.innerHTML = priorityPill(n.priority);
     this.head.replaceChildren(tag, meta, el('span', 'qb-flex'), prio);
   }
 

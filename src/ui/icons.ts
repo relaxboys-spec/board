@@ -13,16 +13,29 @@ export const STATUS_ICON: Record<TaskStatus, string> = {
 
 export const STATUS_LABEL: Record<TaskStatus, string> = { todo: 'To do', progress: 'In progress', done: 'Done' };
 
-const bar = (x: number, y: number, h: number, on: boolean) =>
-  `<rect x="${x}" y="${y}" width="3" height="${h}" rx="1" fill="currentColor"${on ? '' : ' opacity=".28"'}/>`;
+/** Priority icons (original): flame, double up-arrow, dot, down-arrow. Coloured by CSS (.qb-prio.<p>). */
+const pico = (p: Priority, body: string, size = 14) =>
+  `<svg class="qb-prio ${p}" width="${size}" height="${size}" viewBox="0 0 16 16" aria-hidden="true">${body}</svg>`;
+const ICON_BODY: Record<Priority, string> = {
+  urgent: '<path d="M8.4 1.2c.5 2.3 3.6 3.4 3.6 7.1a4 4 0 0 1-8 0c0-1.8 1-2.9 1.8-3.6.3 1.4 1 2.1 1.8 2.1 0-2.2-.6-3.6.8-5.6z" fill="currentColor"/>',
+  high: '<path d="M4 8.5 8 4.5l4 4M4 12.5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>',
+  normal: '<circle cx="8" cy="8" r="3.4" fill="currentColor"/>',
+  low: '<path d="M4 6.5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>',
+};
 
 export const PRIORITY_ICON: Record<Priority, string> = {
-  low: `<svg class="qb-prio low" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">${bar(2, 10, 4, true)}${bar(6.5, 6.5, 7.5, false)}${bar(11, 3, 11, false)}</svg>`,
-  normal: `<svg class="qb-prio normal" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">${bar(2, 10, 4, true)}${bar(6.5, 6.5, 7.5, true)}${bar(11, 3, 11, false)}</svg>`,
-  high: `<svg class="qb-prio high" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">${bar(2, 10, 4, true)}${bar(6.5, 6.5, 7.5, true)}${bar(11, 3, 11, true)}</svg>`,
-  urgent:
-    '<svg class="qb-prio urgent" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill="currentColor"/><path d="M8 4.5v4.2M8 11v.1" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  urgent: pico('urgent', ICON_BODY.urgent),
+  high: pico('high', ICON_BODY.high),
+  normal: pico('normal', ICON_BODY.normal),
+  low: pico('low', ICON_BODY.low),
 };
+
+const PRIORITY_WORD: Record<Priority, string> = { urgent: 'Urgent', high: 'High', normal: 'Normal', low: 'Low' };
+
+/** The coloured label on cards: icon + word ("🔥 Urgent"). */
+export function priorityPill(p: Priority): string {
+  return `<span class="qb-pill ${p}">${pico(p, ICON_BODY[p], 12)}<span>${PRIORITY_WORD[p]}</span></span>`;
+}
 
 export function statusOf(n: { status: string; startedAt?: number }): TaskStatus {
   return n.status === 'done' ? 'done' : n.startedAt ? 'progress' : 'todo';
