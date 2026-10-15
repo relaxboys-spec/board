@@ -213,6 +213,10 @@ function cleanNote(raw: any): Note {
     status: n.status,
   };
   if (n.reminder && str(n.reminder.label) && str(n.reminder.due, 40)) note.reminder = { label: n.reminder.label, due: n.reminder.due };
+  if (n.zone === 'someday') {
+    if (typeof n.dueDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(n.dueDate)) note.dueDate = n.dueDate;
+    else if (typeof n.dueWeek === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(n.dueWeek)) note.dueWeek = n.dueWeek;
+  }
   if (n.zone === 'week' && WEEKDAYS.includes(n.due)) {
     note.due = n.due;
     if (typeof n.dueDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(n.dueDate)) note.dueDate = n.dueDate;

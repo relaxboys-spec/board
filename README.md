@@ -28,11 +28,20 @@ photo), plus eight **accent colours**. The game parts (avatar, levels, Locker, r
 | Tap with two fingers | Fingers | Undo (also the ↶ button) |
 
 **In a task:** **Write**, **Speak** and **Photo** tabs; the side panel sets **priority**, **status**
-(To do / In progress), **due** (Today / This week + day / Someday) and **board**. Changes save as you make
+(To do / In progress), **due** (Today / This week + day / Someday, with an optional day or week) and **board**. Changes save as you make
 them; **Add task** / **Done** just closes it. An untouched empty task disappears on its own.
 
-**Status:** an empty circle is To do, a half-filled amber circle is **In progress** (the task moves to the
-front of its column), a filled circle is Done. Starting, pausing and completing are all undoable.
+**Status:** an empty circle is To do, a half-filled amber circle is **In progress**, a filled circle is
+Done. Starting, pausing and completing are all undoable.
+
+**Order:** each column sorts itself: **In progress** tasks first, then **Urgent → High → Normal → Low**,
+then the ones completed today. Dragging reorders tasks within the same group; changing a priority moves
+the task to its new group straight away.
+
+**Someday with a date:** choosing Someday shows **No date / A day / A week** and a small calendar. A day
+puts the task back in **This week** (with its weekday) on the Monday of that week, then in **Today** on the
+day; a week puts it back in **This week** on that Monday. The Backlog card shows the plan (**Wed 28 Oct** or
+**Week of 2 Nov**). Moving the task out of the Backlog drops the plan.
 
 **Writing tools** (tap them with a finger or the Pencil): pen, highlighter, eraser, lasso (circle strokes, then drag them, or tap the red
 bin), four inks, undo / redo. Pen strokes are always kept as ink: use the eraser, lasso or undo to remove
@@ -50,10 +59,11 @@ closed):
   (top bar), grouped by day, where you can **Put back** any of them.
 - **Unfinished Today tasks stay put.** From their second day they show a small **Day 2**, **Day 3**…
   chip, orange from day 3, so she can see what's carrying over. Nothing moves or disappears on its own.
-- **This week tasks with a day move into Today on that day**, at the front. A day picked always means
+- **This week tasks with a day move into Today on that day**, at the top of their priority group. A day picked always means
   the next time it comes round (a Wed picked on a Thursday is next week's, and its chip says
   **Next Wed**). If the app wasn't opened that day, they arrive next time, aged from their day.
 - **This week tasks without a day** stay in This week until she moves them.
+- **Planned Backlog tasks** come back as described above; the board says "N planned tasks are back".
 
 **Profile** (her level card at the right of the top bar, or her name at the left): her avatar, level, XP,
 streak and counts, and the way into the **Locker**, **Emotes** and **Rewards**.
@@ -262,7 +272,8 @@ src/
 
 - **`notes`** (key `id`, indexes `board`, `status`):
   `{ id, board: 'work'|'personal', zone: 'today'|'week'|'someday', due?: 'mon'…'sun',
-  dueDate?: 'YYYY-MM-DD' (the real date behind the day chip), todaySince? (when it entered Today), z (order),
+  dueDate?: 'YYYY-MM-DD' (the real date behind the day chip, or a Backlog task's planned day),
+  dueWeek?: 'YYYY-MM-DD' (a Backlog task's planned week, as its Monday), todaySince? (when it entered Today), z (order),
   priority: 'low'|'normal'|'high'|'urgent', strokes, text?, imageIds?, markup?, reminder?,
   createdAt, updatedAt, status: 'active'|'done', completedAt?, xp? }`
   - `strokes: [{ color, size, tilt, tool?: 'highlighter', points: [[x, y, pressure], …] }]` on the note's

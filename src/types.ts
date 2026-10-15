@@ -68,8 +68,11 @@ export interface Note {
   zone: ZoneId;
   /** Day chip for This Week notes. */
   due?: Weekday;
-  /** The actual date behind `due` ('YYYY-MM-DD'): on that day the note moves into Today. */
+  /** This week: the date behind `due`; Backlog: the day she planned it for ('YYYY-MM-DD').
+   *  On that day the task moves into Today (and into This week the week before). */
   dueDate?: string;
+  /** Backlog: the week she planned it for (its Monday, 'YYYY-MM-DD'); it moves into This week then. */
+  dueWeek?: string;
   /** When the note last entered Today (for the "Day 2" age chip). Missing = createdAt. */
   todaySince?: number;
   /** In progress since (active tasks only; cleared when completed or paused). */

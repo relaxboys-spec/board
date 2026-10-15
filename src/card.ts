@@ -1,5 +1,5 @@
 import { daysInToday, hasText } from './actions';
-import { weekEndKey } from './days';
+import { shortDate, weekEndKey, weekLabel } from './days';
 import { drawPage } from './page';
 import { PRIORITY, WEEKDAY_LABEL, type Note } from './types';
 import { priorityPill, SMALL, STATUS_ICON, STATUS_LABEL, statusOf } from './ui/icons';
@@ -65,7 +65,7 @@ export class Card {
       `${what}. ${STATUS_LABEL[st]}, ${pr.label} priority. Tap to open${st === 'done' ? '' : st === 'progress' ? ', hold to complete' : ', hold to start'}.`,
     );
 
-    const headKey = [kind, note.priority, note.due, note.dueDate, note.reminder?.due, note.status, note.startedAt, note.imageIds?.length, this.ageDays(note), weekEndKey()].join('|');
+    const headKey = [kind, note.priority, note.due, note.dueDate, note.dueWeek, note.reminder?.due, note.status, note.startedAt, note.imageIds?.length, this.ageDays(note), weekEndKey()].join('|');
     if (force || headKey !== this.headKey) {
       this.headKey = headKey;
       this.buildChrome(note, kind);
@@ -95,7 +95,12 @@ export class Card {
     const foot: HTMLElement[] = [];
     if (kind !== 'today') {
       const later = !!note.dueDate && note.dueDate > weekEndKey();
-      foot.push(el('span', 'qb-chip', kind === 'someday' ? 'Someday' : note.due ? (later ? 'Next ' : '') + WEEKDAY_LABEL[note.due] : 'Any day'));
+      const someday = note.dueDate ? shortDate(note.dueDate) : note.dueWeek ? weekLabel(note.dueWeek) : 'Someday';
+      const planned = kind === 'someday' && !!(note.dueDate || note.dueWeek);
+      const chip = el('span', 'qb-chip' + (planned ? ' plan' : ''));
+      if (planned) chip.innerHTML = SMALL.cal;
+      chip.append(kind === 'someday' ? someday : note.due ? (later ? 'Next ' : '') + WEEKDAY_LABEL[note.due] : 'Any day');
+      foot.push(chip);
     }
     const age = this.ageDays(note);
     if (age >= 1) {

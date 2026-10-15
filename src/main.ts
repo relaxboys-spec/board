@@ -213,6 +213,7 @@ const UNDO_LABEL: Record<string, string> = {
   restore: 'un-complete',
   delete: 'delete',
   priority: 'priority',
+  plan: 'plan',
   reminder: 'reminder',
   text: 'text',
   photo: 'photo',
@@ -444,7 +445,7 @@ let lastDay = dayKey(Date.now());
 function dailyCheck(announce = true) {
   const moved = rollover();
   if (moved && announce) {
-    toast(moved === 1 ? '1 task moved into Today — its day is here' : `${moved} tasks moved into Today — their day is here`, undefined, 3500);
+    toast(moved === 1 ? '1 planned task is back on the board' : `${moved} planned tasks are back on the board`, undefined, 3500);
   }
 }
 
@@ -489,7 +490,7 @@ async function boot() {
   applyPlayer();
   showBoard(board.board);
   banner = backupBanner(ui);
-  if (arrived) toast(arrived === 1 ? '1 task moved into Today — its day is here' : `${arrived} tasks moved into Today — their day is here`, undefined, 3500);
+  if (arrived) toast(arrived === 1 ? '1 planned task is back on the board' : `${arrived} planned tasks are back on the board`, undefined, 3500);
 
   // Text tasks use the system font; re-measure once fonts settle, just in case.
   void document.fonts?.ready.then(() => {

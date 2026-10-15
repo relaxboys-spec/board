@@ -10,7 +10,7 @@ import {
   type ZoneId,
 } from './types';
 import { dayKey, uid } from './util';
-import { dayStart, daysBetween, nextDateFor, weekdayInWeekOf } from './days';
+import { dayStart, daysBetween, nextDateFor, weekdayInWeekOf, weekdayOf, weekEndKey, weekStartKey } from './days';
 
 /** All note mutations go through here so each is one undoable step. */
 
@@ -31,7 +31,18 @@ export function columnNotes(board: BoardId, zone: ZoneId, now = Date.now()): Not
     if (n.board !== board || n.zone !== zone) continue;
     if (n.status === 'active' || (n.completedAt && dayKey(n.completedAt) === today)) out.push(n);
   }
-  return out.sort((a, b) => a.z - b.z);
+  return out.sort(boardOrder);
+}
+
+const PRIORITY_RANK: Record<Priority, number> = { urgent: 0, high: 1, normal: 2, low: 3 };
+
+/**
+ * Column order: In progress first, then by priority (Urgent → Low), completed last.
+ * Within a group her own order (z — new tasks and drags) still counts.
+ */
+export function boardOrder(a: Note, b: Note): number {
+  const rank = (n: Note) => (n.status === 'done' ? 20 : n.startedAt ? 0 : 10) + PRIORITY_RANK[n.priority];
+  return rank(a) - rank(b) || a.z - b.z;
 }
 
 /** New notes go to the front of their column, right after the + New Task tile. */
@@ -175,11 +186,18 @@ export function moveNote(id: string, dest: { board?: BoardId; zone?: ZoneId; due
     const dueDate = !due ? undefined : dest.due ? nextDateFor(dest.due, now) : (n.dueDate ?? nextDateFor(due, now));
     const todaySince = zone !== 'today' ? undefined : n.zone === 'today' ? n.todaySince : now;
     const moved: Note = { ...n, board, zone, due, dueDate, todaySince, updatedAt: now };
-    const others = [...store.notes.values()]
-      .filter((m) => m.id !== id && m.board === board && m.zone === zone)
-      .sort((a, b) => a.z - b.z);
+    // A Backlog plan (day or week) stays only while the task stays in the Backlog.
+    if (zone === 'someday' && n.zone === 'someday') {
+      moved.dueDate = n.dueDate;
+      moved.dueWeek = n.dueWeek;
+    } else delete moved.dueWeek;
+    // `index` is a position among the cards as shown; older completed tasks keep their place after them.
+    const shown = columnNotes(board, zone, now).filter((m) => m.id !== id);
+    const hidden = [...store.notes.values()].filter((m) => m.id !== id && m.board === board && m.zone === zone && !shown.includes(m));
+    const others = [...shown];
     const index = Math.min(Math.max(dest.index ?? others.length, 0), others.length);
     others.splice(index, 0, moved);
+    others.push(...hidden);
     others.forEach((m, i) => {
       const z = i + 1;
       if (m.id === id) tx.put({ ...moved, z });
@@ -202,12 +220,37 @@ export function daysInToday(n: Note, now = Date.now()): number {
  */
 export function rollover(now = Date.now()): number {
   const today = dayKey(now);
+  const weekEnd = weekEndKey(now);
+  const monday = weekStartKey(now);
   let moved = 0;
   store.update(
     'rollover',
     (tx) => {
       for (const n of [...store.notes.values()]) {
-        if (n.status !== 'active' || n.zone !== 'week' || !n.due) continue;
+        if (n.status !== 'active') continue;
+        // Backlog tasks planned for a day or a week arrive on the board when it comes.
+        if (n.zone === 'someday') {
+          if (n.dueDate && n.dueDate <= today) {
+            const next: Note = { ...n, zone: 'today', todaySince: dayStart(n.dueDate), z: firstZ(n.board, 'today'), updatedAt: now };
+            delete next.dueDate;
+            delete next.dueWeek;
+            tx.put(next);
+            moved++;
+          } else if (n.dueDate && n.dueDate <= weekEnd) {
+            // This week: shown with its weekday, then into Today on the day (below, next check).
+            const next: Note = { ...n, zone: 'week', due: weekdayOf(dayStart(n.dueDate)), z: firstZ(n.board, 'week'), updatedAt: now };
+            delete next.dueWeek;
+            tx.put(next);
+            moved++;
+          } else if (!n.dueDate && n.dueWeek && n.dueWeek <= monday) {
+            const next: Note = { ...n, zone: 'week', z: firstZ(n.board, 'week'), updatedAt: now };
+            delete next.dueWeek;
+            tx.put(next);
+            moved++;
+          }
+          continue;
+        }
+        if (n.zone !== 'week' || !n.due) continue;
         const dueDate = n.dueDate ?? weekdayInWeekOf(n.due, n.updatedAt);
         if (dueDate <= today) {
           const next: Note = { ...n, zone: 'today', todaySince: dayStart(dueDate), z: firstZ(n.board, 'today'), updatedAt: now };
@@ -223,6 +266,23 @@ export function rollover(now = Date.now()): number {
     { undoable: false },
   );
   return moved;
+}
+
+/** Plan a Backlog task for a day or a week (or clear the plan). Undoable. */
+export function planSomeday(id: string, plan: { day: string } | { week: string } | null) {
+  store.update('plan', (tx) => {
+    const n = tx.get(id);
+    if (!n) return;
+    const next: Note = { ...n, zone: 'someday', updatedAt: Date.now() };
+    delete next.due;
+    delete next.dueDate;
+    delete next.dueWeek;
+    delete next.todaySince;
+    if (plan && 'day' in plan) next.dueDate = plan.day;
+    if (plan && 'week' in plan) next.dueWeek = plan.week;
+    if (n.zone !== 'someday') next.z = firstZ(n.board, 'someday');
+    tx.put(next);
+  });
 }
 
 /** Start a task (in progress, moved to the front of its column) or pause it again. */

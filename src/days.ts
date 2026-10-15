@@ -44,3 +44,23 @@ export function weekdayInWeekOf(day: Weekday, t: number): string {
 export function weekEndKey(now = Date.now()): string {
   return dayKey(addDays(now, 6 - WEEKDAYS.indexOf(weekdayOf(now))));
 }
+
+/** Monday of the Monday–Sunday week containing `t`. */
+export function weekStartKey(t: number = Date.now()): string {
+  return dayKey(addDays(t, -WEEKDAYS.indexOf(weekdayOf(t))));
+}
+
+/** A day key `n` days after `key`. */
+export function addDaysKey(key: string, n: number): string {
+  return dayKey(addDays(dayStart(key), n));
+}
+
+/** "Wed 28 Oct" */
+export function shortDate(key: string): string {
+  return new Date(dayStart(key)).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+}
+
+/** "Week of 26 Oct" (from its Monday) */
+export function weekLabel(monday: string): string {
+  return 'Week of ' + new Date(dayStart(monday)).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+}

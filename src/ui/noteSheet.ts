@@ -1,7 +1,8 @@
-import { addStroke, daysInToday, eraseStrokes, hasText, isEmpty, moveNote, moveStrokes, setInProgress, setPriority, setText } from '../actions';
+import { addStroke, daysInToday, eraseStrokes, hasText, isEmpty, moveNote, moveStrokes, planSomeday, setInProgress, setPriority, setText } from '../actions';
 import { accentColor, inkColor } from '../theme';
+import { calendar } from './calendar';
 import { PRIORITY_ICON, priorityPill, STATUS_ICON, STATUS_LABEL, statusOf } from './icons';
-import { dayStart, weekEndKey } from '../days';
+import { addDaysKey, dayStart, shortDate, weekEndKey, weekLabel, weekStartKey } from '../days';
 import { pathFor, strokeAlpha } from '../ink';
 import { drawPage, hitPhoto, pageTransform, textBox } from '../page';
 import { store } from '../store';
@@ -23,7 +24,7 @@ import {
   type Weekday,
   type ZoneId,
 } from '../types';
-import { el, formatDue } from '../util';
+import { dayKey, el, formatDue } from '../util';
 
 /**
  * The note sheet (design: Write.dc.html + View.dc.html). One component, four modes:
@@ -98,7 +99,11 @@ const DUE_LABEL = (n: Note) =>
   n.zone === 'today'
     ? 'Today'
     : n.zone === 'someday'
-      ? 'Someday'
+      ? n.dueDate
+        ? shortDate(n.dueDate)
+        : n.dueWeek
+          ? weekLabel(n.dueWeek)
+          : 'Someday'
       : n.due
         ? (n.dueDate && n.dueDate > weekEndKey() ? 'Next ' : '') + WEEKDAY_LABEL[n.due]
         : 'This week';
@@ -142,6 +147,8 @@ export class NoteSheet {
   private touches = new Map<number, { sx: number; sy: number; t0: number }>();
   private twoTap: { t0: number; ok: boolean } | null = null;
   private textKey = '';
+  /** Someday plan picker: which option is open (null = follow the task's plan). */
+  private planMode: 'none' | 'day' | 'week' | null = null;
   noteId: string | null = null;
   mode: SheetMode = 'write';
   isNew = false;
@@ -166,6 +173,7 @@ export class NoteSheet {
   open(id: string, mode: SheetMode, opts: { isNew?: boolean; mergeKey?: string; autoPick?: boolean } = {}) {
     if (this.wrap) this.close();
     if (!store.get(id)) return;
+    this.planMode = null;
     this.noteId = id;
     this.isNew = !!opts.isNew;
     this.textKey = opts.mergeKey ?? `text:${id}:${Date.now()}`;
@@ -540,6 +548,7 @@ export class NoteSheet {
       due.append(b);
     }
     const dueGroup = this.group('Due', due);
+    if (n.zone === 'someday') this.planBlock(n, dueGroup);
     if (n.zone === 'week') {
       const days = el('div', 'qb-days');
       for (const d of WEEKDAYS) {
@@ -589,6 +598,55 @@ export class NoteSheet {
     }
 
     return [this.group('Priority', pri), this.group('Status', status), dueGroup, this.group('Board', board), reward, ctas];
+  }
+
+  /** Someday: plan it for a day or a whole week (it comes back onto the board then). */
+  private planBlock(n: Note, group: HTMLElement) {
+    const mode = this.planMode ?? (n.dueDate ? 'day' : n.dueWeek ? 'week' : 'none');
+    const seg = el('div', 'qb-grid3 qb-plan');
+    for (const [m, label] of [
+      ['none', 'No date'],
+      ['day', 'A day'],
+      ['week', 'A week'],
+    ] as const) {
+      const b = btn('qb-opt' + (mode === m ? ' on' : ''), label, () => {
+        this.planMode = m;
+        if (m === 'none') planSomeday(n.id, null);
+        else this.renderRail(n);
+      });
+      b.setAttribute('aria-pressed', String(mode === m));
+      seg.append(b);
+    }
+    group.append(seg);
+    if (mode === 'none') return;
+    const today = dayKey(Date.now());
+    const value = mode === 'day' ? n.dueDate : n.dueWeek;
+    group.append(
+      calendar({
+        mode,
+        value,
+        min: mode === 'day' ? addDaysKey(today, 1) : addDaysKey(weekStartKey(), 7),
+        onPick: (k) => {
+          this.planMode = mode;
+          planSomeday(n.id, mode === 'day' ? { day: k } : { week: k });
+        },
+      }),
+    );
+    group.append(
+      el(
+        'span',
+        'qb-plan-hint',
+        !value
+          ? mode === 'day'
+            ? 'Pick the day it should come back to Today.'
+            : 'Pick the week it should come back to This week.'
+          : mode === 'day'
+            ? weekStartKey(dayStart(value)) <= weekStartKey(Date.now())
+              ? `Moves to This week now, then Today on ${shortDate(value)}.`
+              : `In This week from ${shortDate(weekStartKey(dayStart(value)))}, then Today on ${shortDate(value)}.`
+            : `Back in This week on ${shortDate(value)}.`,
+      ),
+    );
   }
 
   private viewRail(n: Note): HTMLElement[] {

@@ -3865,3 +3865,82 @@ html[data-appearance='glass'] .qb-login {
     overflow: hidden;
   }
 }
+
+/* ==== Someday plan: calendar ==================================================================== */
+
+.qb-plan {
+  margin-top: 2px;
+}
+.qb-cal {
+  padding: 8px 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+.qb-cal-head {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 2px 4px 6px;
+}
+.qb-cal-title {
+  font-size: 14px;
+  font-weight: 650;
+}
+.qb-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  row-gap: 3px;
+}
+.qb-cal-dow {
+  padding: 2px 0 4px;
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-3);
+}
+.qb-cal-day {
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+.qb-cal-day.out {
+  color: var(--text-3);
+}
+.qb-cal-day:disabled {
+  opacity: 0.3;
+}
+.qb-cal-day.today {
+  box-shadow: inset 0 0 0 1.5px var(--accent-line);
+}
+.qb-cal-day.on {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+/* week mode: the whole row reads as one pill */
+.qb-cal.weeks .qb-cal-day {
+  border-radius: 0;
+}
+.qb-cal.weeks .qb-cal-day.wk-first {
+  border-radius: 9px 0 0 9px;
+}
+.qb-cal.weeks .qb-cal-day.wk-last {
+  border-radius: 0 9px 9px 0;
+}
+.qb-cal.weeks .qb-cal-day.on.out {
+  color: color-mix(in srgb, var(--on-accent) 70%, transparent);
+}
+.qb-plan-hint {
+  font-size: 12.5px;
+  color: var(--text-3);
+}
+.qb-chip.plan {
+  background: var(--accent-soft);
+  color: var(--accent-fg);
+}
